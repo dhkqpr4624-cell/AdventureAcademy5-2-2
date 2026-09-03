@@ -23,6 +23,7 @@ export type StoryStepContext = {
   ) => Promise<void>;
   checkpoint: (checkpointId: string) => void;
   resolveText: (text: string) => string;
+  resolveExpression: (actorId: string, expression?: string) => string;
 };
 
 function waitFor(durationMs: number, signal: AbortSignal) {
@@ -53,6 +54,8 @@ function resolveDuration(step: StoryStep) {
   ) {
     return step.durationMs;
   }
+
+  if (step.type === "setStagePhase") return step.durationMs ?? 0;
 
   if (step.type === "illustOverlay" && step.waitForFade) {
     return step.fadeMs ?? 250;
@@ -134,14 +137,40 @@ export class StoryStepRunner {
         });
         break;
       case "dialogue":
-        context.updateState((state) => ({
-          ...state,
-          dialogue: {
+        context.updateState((state) => {
+          const actorId = step.activeActorId;
+          const portraitId = actorId && step.expression !== undefined
+            ? context.resolveExpression(actorId, step.expression)
+            : undefined;
+          return {
+            ...state,
+            portraits: actorId && portraitId ? {
+              [actorId]: {
+                actorId,
+                portraitId,
+                position: "left",
+                transition: "fade",
+                revision: (state.portraits[actorId]?.revision ?? 0) + 1,
+              },
+            } : state.portraits,
+            dialogue: {
             kind: "dialogue",
             speakerName: context.resolveText(step.speakerName),
             text: context.resolveText(step.text),
             activeActorId: step.activeActorId,
             emphasis: step.emphasis,
+          },
+          };
+        });
+        break;
+      case "setStagePhase":
+        context.updateState((state) => ({
+          ...state,
+          dialogue: step.hideDialogue ? null : state.dialogue,
+          stage: {
+            id: step.stageId,
+            phase: step.phase,
+            revision: state.stage.revision + 1,
           },
         }));
         break;
@@ -267,6 +296,7 @@ export class StoryStepRunner {
             imageUrl: step.imageUrl ?? state.illust.imageUrl,
             visible: step.visible,
             fadeMs: step.fadeMs ?? 250,
+            revision: state.illust.revision + 1,
           },
         }));
         break;

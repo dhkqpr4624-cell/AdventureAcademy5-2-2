@@ -25,6 +25,14 @@ export type StoryActor = {
   role?: string;
   portraits: Record<string, StoryVisualAsset>;
   accentColor?: string;
+  defaultExpression?: string;
+};
+
+export type PortraitExpressionMap = Record<string, string>;
+
+export type StoryNpcPortraitDefinition = {
+  defaultExpression: string;
+  expressions: PortraitExpressionMap;
 };
 
 type AutoStoryStep = {
@@ -61,10 +69,20 @@ export type StoryStep =
       speakerId?: string;
       speakerName: string;
       activeActorId?: string;
+      expression?: string;
       text: string;
       emphasis?: "danger" | "info";
       nextStepId?: string;
       advanceMode: "click";
+    }
+  | {
+      id: string;
+      type: "setStagePhase";
+      stageId: string;
+      phase: string;
+      durationMs?: number;
+      hideDialogue?: boolean;
+      advanceMode: "auto";
     }
   | {
       id: string;
@@ -270,6 +288,12 @@ export type StoryRenderState = {
     imageUrl: string | null;
     visible: boolean;
     fadeMs: number;
+    revision: number;
+  };
+  stage: {
+    id: string | null;
+    phase: string;
+    revision: number;
   };
 };
 

@@ -22,6 +22,7 @@ import { StoryChoiceList } from "../../components/StoryChoiceList";
 import type { StoryChoiceOption } from "../../types/story";
 import { StoryNpcRenderer } from "./StoryNpcRenderer";
 import { STORY_NPC_ASSET_URLS } from "./storyNpcRegistry";
+import { CHAPTER2_INTRO_ASSET_URLS, Chapter2IntroStage } from "./Chapter2IntroStage";
 
 type StoryPlayerProps = {
   sequence: StorySequence;
@@ -49,7 +50,8 @@ const INITIAL_RENDER_STATE: StoryRenderState = {
     shakeDurationMs: 0, shakeAmplitude: 0, shakeRevision: 0,
   },
   storyNpcs: {},
-  illust: { imageUrl: null, visible: false, fadeMs: 250 },
+  illust: { imageUrl: null, visible: false, fadeMs: 250, revision: 0 },
+  stage: { id: null, phase: "", revision: 0 },
 };
 
 function createInitialRenderState(sequence: StorySequence): StoryRenderState {
@@ -90,6 +92,7 @@ function collectImageUrls(sequence: StorySequence) {
         ),
       ),
       ...STORY_NPC_ASSET_URLS,
+      ...(sequence.id.startsWith("intro-chapter2") ? CHAPTER2_INTRO_ASSET_URLS : []),
     ]),
   ];
 }
@@ -318,6 +321,16 @@ export function StoryPlayer({
           resolveText: (text) => text
             .replaceAll("(플레이어 이름)", playerName)
             .replaceAll("(플레이어이름)", playerName),
+          resolveExpression: (actorId, requestedExpression) => {
+            const actor = sequence.actors[actorId];
+            const fallbackExpression = actor?.defaultExpression ?? "default";
+            const expression = requestedExpression ?? fallbackExpression;
+            if (actor?.portraits[expression]) return expression;
+            if (import.meta.env.DEV) {
+              console.warn(`[StoryPlayer] Unknown portrait expression: ${actorId}/${expression}; using default.`);
+            }
+            return fallbackExpression;
+          },
         },
         abortController.signal,
       )
@@ -398,10 +411,10 @@ export function StoryPlayer({
   const visiblePortraits =
     Object.keys(renderState.portraits).length > 0
       ? Object.values(renderState.portraits)
-      : dialogueActor?.portraits.default
+      : dialogueActor?.portraits[dialogueActor.defaultExpression ?? "default"]
         ? [{
             actorId: dialogueActor.id,
-            portraitId: "default",
+            portraitId: dialogueActor.defaultExpression ?? "default",
             position: "left" as const,
             transition: "fade" as const,
             revision: 0,
@@ -452,6 +465,9 @@ export function StoryPlayer({
       aria-label={sequence.title}
       data-presentation-mode={presentationMode}
     >
+      {renderState.stage.id === "chapter2-intro" && (
+        <Chapter2IntroStage phase={renderState.stage.phase} revision={renderState.stage.revision} />
+      )}
       {fixedAirshipSky && (
         <div className="story-fixed-sky" aria-hidden="true">
           <div className="story-sky-scroll-track">
@@ -538,6 +554,7 @@ export function StoryPlayer({
 
       {renderState.illust.imageUrl && (
         <div
+          key={renderState.illust.revision}
           className={`story-illust-overlay has-image ${renderState.illust.visible ? "is-visible" : ""}`}
           style={{
             "--story-illust-fade": `${renderState.illust.fadeMs}ms`,

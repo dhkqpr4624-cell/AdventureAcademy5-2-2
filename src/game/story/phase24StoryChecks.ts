@@ -21,7 +21,8 @@ const initialState = (): StoryRenderState => ({
     shakeDurationMs: 0, shakeAmplitude: 0, shakeRevision: 0,
   },
   storyNpcs: {},
-  illust: { imageUrl: null, visible: false, fadeMs: 0 },
+  illust: { imageUrl: null, visible: false, fadeMs: 0, revision: 0 },
+  stage: { id: null, phase: "", revision: 0 },
 });
 
 export async function runPhase24StoryChecks() {
@@ -36,6 +37,7 @@ export async function runPhase24StoryChecks() {
     restoreBaseCampCamera: async () => undefined,
     checkpoint: () => undefined,
     resolveText: (text) => text.replaceAll("(플레이어 이름)", "모험가"),
+    resolveExpression: (_actorId, expression) => expression ?? "default",
   };
   const run = (step: StoryStep) => new StoryStepRunner().run(step, context, new AbortController().signal);
 

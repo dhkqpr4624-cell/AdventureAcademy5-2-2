@@ -27,7 +27,7 @@ export const BASE_CAMP_MAP: BaseCampMapDefinition = {
     background: baseCampAssetUrl("chapter2/background.png"),
     ground: baseCampAssetUrl("chapter2/ground.png"),
     dungeonEntrance: baseCampAssetUrl("chapter2/dungeonEntrance.png"),
-    dungeonEntranceButton: baseCampAssetUrl("chapter2/dungeonEntrance.png"),
+    dungeonEntranceButton: baseCampAssetUrl("chapter2/dungeonEntranceOutline.png"),
     foreground: baseCampAssetUrl("chapter2/foreground.png"),
   },
   focusPoints: {
