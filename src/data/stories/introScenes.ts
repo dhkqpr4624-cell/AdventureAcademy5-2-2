@@ -17,7 +17,7 @@ const SCENE_1: StorySequence = {
   replayable: true, skippable: true, onCompleteScreen: "story",
   scenes: [{ id: "chapter2-deck", steps: [
     { id: "deck-sky", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-sky", durationMs: 400, hideDialogue: true, advanceMode: "auto" },
-    { id: "deck-rise", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-raised", durationMs: 3100, advanceMode: "auto" },
+    { id: "deck-rise", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-raised", durationMs: 5500, advanceMode: "auto" },
     { id: "deck-duo", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-duo", durationMs: 2200, advanceMode: "auto" },
     d("deck-luna-01", "luna", "루나", " 오늘도 날씨 맑음! "),
     d("deck-theo-01", "theo", "테오", " 그렇군요. 포탈에 들어가면 어떨지 모르겠지만 말입니다.. "),
@@ -82,7 +82,7 @@ const SCENE_2: StorySequence = {
     d("arrival-aron-03", "aron", "아론", " 미안합니다. 저도 잠시 멍을 때렸군요. "),
     d("arrival-aron-04", "aron", "아론", " 루나 대원의 말대로, 우선 베이스캠프를 세울 위치를 살펴보죠. "),
     d("arrival-aron-05", "aron", "아론", " 그럼, 출발하겠습니다. "),
-    { id: "arrival-exit", type: "setStagePhase", stageId: "chapter2-intro", phase: "arrival-exit", durationMs: 1800, hideDialogue: true, advanceMode: "auto" },
+    { id: "arrival-exit", type: "setStagePhase", stageId: "chapter2-intro", phase: "arrival-exit", durationMs: 4500, hideDialogue: true, advanceMode: "auto" },
   ] }],
 };
 

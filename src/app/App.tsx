@@ -1,9 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { BaseCampScreen } from "../screens/BaseCampScreen/BaseCampScreen";
-import { DungeonScreen } from "../screens/DungeonScreen/DungeonScreen";
-import { StoryScreen } from "../screens/StoryScreen/StoryScreen";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { TitleScreen } from "../screens/TitleScreen/TitleScreen";
-import { QuestionScreen } from "../screens/QuestionScreen/QuestionScreen";
 import type { QuestionResult } from "../types/question";
 import type { ScreenId } from "./routes";
 import { runNpcChecks } from "../game/npc/npcChecks";
@@ -28,6 +24,11 @@ import { changeItemQuantity } from "../game/inventory/inventoryState";
 import { completeQuestStateAfterRewardClaim } from "../game/quest/questRewardCompletionResolver";
 import { playRandomizedOneShot } from "../game/audioOneShot";
 import { playBgm, stopBgm } from "../game/audioBgm";
+
+const StoryScreen = lazy(() => import("../screens/StoryScreen/StoryScreen").then((module) => ({ default: module.StoryScreen })));
+const BaseCampScreen = lazy(() => import("../screens/BaseCampScreen/BaseCampScreen").then((module) => ({ default: module.BaseCampScreen })));
+const DungeonScreen = lazy(() => import("../screens/DungeonScreen/DungeonScreen").then((module) => ({ default: module.DungeonScreen })));
+const QuestionScreen = lazy(() => import("../screens/QuestionScreen/QuestionScreen").then((module) => ({ default: module.QuestionScreen })));
 
 const BUTTON_CLICK_SFX_URL = `${import.meta.env.BASE_URL}assets/audio/button-clicked-sfx.mp3`;
 
@@ -294,7 +295,7 @@ export function App() {
       }} />;
     }
   })();
-  return <>{content}{namePopupOpen && <PlayerNamePopup onCancel={() => setNamePopupOpen(false)} onConfirm={(name) => {
+  return <><Suspense fallback={<div className="screen-loading" role="status">화면을 불러오는 중입니다.</div>}>{content}</Suspense>{namePopupOpen && <PlayerNamePopup onCancel={() => setNamePopupOpen(false)} onConfirm={(name) => {
     const nextPlayer = { ...gameRef.current.playerState, name };
     setGame((current) => ({ ...current, playerState: nextPlayer }));
     gameRef.current = { ...gameRef.current, playerState: nextPlayer };

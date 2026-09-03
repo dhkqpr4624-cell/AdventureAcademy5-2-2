@@ -1,4 +1,4 @@
-import { useEffect, useRef, type CSSProperties } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import lunaL from "../../assets/story/npcs/chapter2/luna/standing_L.png";
 import lunaR from "../../assets/story/npcs/chapter2/luna/standing_R.png";
 import theoL from "../../assets/story/npcs/chapter2/theo/standing_L.png";
@@ -7,6 +7,14 @@ import aronL from "../../assets/story/npcs/chapter2/aron/standing_L.png";
 import aronR from "../../assets/story/npcs/chapter2/aron/standing_R.png";
 import kappL from "../../assets/story/npcs/chapter2/kapp/standing_L.png";
 import kappR from "../../assets/story/npcs/chapter2/kapp/standing_R.png";
+
+const ARRIVAL_MAP = { width: 1672, height: 941, groundY: 825 } as const;
+const ARRIVAL_NPCS = {
+  luna: { mapX: 869, anchorX: 0.6158, anchorY: 0.98, width: 114 },
+  theo: { mapX: 1020, anchorX: 0.5271, anchorY: 0.985, width: 114 },
+  aron: { mapX: 1187, anchorX: 0.5118, anchorY: 0.9814, width: 114 },
+  kapp: { mapX: 1354, anchorX: 0.5378, anchorY: 0.9729, width: 114 },
+} as const;
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/story/chapter2/intro/${name}`;
 
@@ -48,8 +56,15 @@ function Clouds() {
   return <div className="chapter2-cloud-window"><div ref={trackRef} className="chapter2-cloud-track"><img src={asset("cloud-1.png")} alt=""/><img src={asset("cloud-2.png")} alt=""/></div></div>;
 }
 
-function Npc({ id, src, className = "" }: { id: string; src: string; className?: string }) {
-  return <div className={`chapter2-story-npc chapter2-story-npc-${id} ${className}`}><img src={src} alt="" draggable={false}/></div>;
+function Npc({ id, src, className = "", children, arrival = false }: { id: string; src: string; className?: string; children?: ReactNode; arrival?: boolean }) {
+  const layout = arrival ? ARRIVAL_NPCS[id as keyof typeof ARRIVAL_NPCS] : undefined;
+  const style = layout ? {
+    left: `${layout.mapX / ARRIVAL_MAP.width * 100}%`,
+    top: `${ARRIVAL_MAP.groundY / ARRIVAL_MAP.height * 100}%`,
+    width: `${layout.width / ARRIVAL_MAP.width * 100}%`,
+    transform: `translate(${-layout.anchorX * 100}%, ${-layout.anchorY * 100}%)`,
+  } : undefined;
+  return <div className={`chapter2-story-npc chapter2-story-npc-${id} ${className}`} style={style}><img src={src} alt="" draggable={false}/>{children}</div>;
 }
 
 function Exclamation({ id }: { id: string }) {
@@ -65,11 +80,11 @@ export function Chapter2IntroStage({ phase }: { phase: string; revision: number 
     return <div className="chapter2-stage chapter2-stage-deck">
       <img className="chapter2-layer chapter2-sky" src={asset("sky.png")} alt=""/><Clouds/>
       <div className={`chapter2-deck-group ${raised ? "is-raised" : ""}`}>
+        <div className="chapter2-deck-background" aria-hidden="true" />
         <img className="chapter2-layer chapter2-deck-foreground" src={asset("airship-deck-foreground.png")} alt=""/>
         <div className="chapter2-npc-layer">
-          {duo && <><Npc id="luna" src={surprise ? lunaR : lunaL} className="is-fading-in"/><Npc id="theo" src={theoR} className="is-fading-in"/></>}
+          {duo && <><Npc id="luna" src={surprise ? lunaR : lunaL} className="is-fading-in">{surprise && <Exclamation id="luna"/>}</Npc><Npc id="theo" src={theoR} className="is-fading-in">{surprise && <Exclamation id="theo"/>}</Npc></>}
           {party && <><Npc id="aron" src={aronL} className="is-fading-in"/><Npc id="kapp" src={kappL} className="is-fading-in"/></>}
-          {surprise && <><Exclamation id="luna"/><Exclamation id="theo"/></>}
         </div>
         <img className="chapter2-layer chapter2-deck-ground" src={asset("airship-deck-ground.png")} alt=""/>
       </div>
@@ -79,14 +94,16 @@ export function Chapter2IntroStage({ phase }: { phase: string; revision: number 
     const party = ["arrival-party", "arrival-exit"].includes(phase);
     const exit = phase === "arrival-exit";
     return <div className="chapter2-stage chapter2-stage-arrival">
-      <img className="chapter2-layer chapter2-sky" src={asset("sky.png")} alt=""/>
-      <div className="chapter2-arrival-fixed"><img className="chapter2-layer chapter2-arrival-background" src={asset("arrival-background.png")} alt=""/></div>
-      <div className={`chapter2-arrival-exit-group ${exit ? "is-exiting" : ""}`}>
-        <img className="chapter2-arrival-airship" src={asset("airship.png")} alt=""/>
-        <div className="chapter2-npc-layer">
-          {party && <><Npc id="luna" src={lunaR} className="is-fading-in"/><Npc id="theo" src={theoR} className="is-fading-in"/><Npc id="aron" src={aronR} className="is-fading-in"/><Npc id="kapp" src={kappR} className="is-fading-in"/></>}
+      <div className="chapter2-arrival-camera">
+        <img className="chapter2-layer chapter2-sky" src={asset("sky.png")} alt=""/>
+        <div className="chapter2-arrival-fixed"><img className="chapter2-layer chapter2-arrival-background" src={asset("arrival-background.png")} alt=""/></div>
+        <div className={`chapter2-arrival-exit-group ${exit ? "is-exiting" : ""}`}>
+          <img className="chapter2-arrival-airship" src={asset("airship.png")} alt=""/>
+          <div className="chapter2-npc-layer">
+            {party && <><Npc id="luna" src={lunaR} className="is-fading-in" arrival/><Npc id="theo" src={theoR} className="is-fading-in" arrival/><Npc id="aron" src={aronR} className="is-fading-in" arrival/><Npc id="kapp" src={kappR} className="is-fading-in" arrival/></>}
+          </div>
+          <img className="chapter2-layer chapter2-arrival-ground" src={asset("arrival-ground.png")} alt=""/>
         </div>
-        <img className="chapter2-layer chapter2-arrival-ground" src={asset("arrival-ground.png")} alt=""/>
       </div>
     </div>;
   }
