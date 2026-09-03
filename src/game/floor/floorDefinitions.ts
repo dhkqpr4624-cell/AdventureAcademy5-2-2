@@ -1,0 +1,42 @@
+import type { FloorDefinition, FloorUnlockState } from "./floorTypes";
+
+export const FLOOR_DEFINITIONS: readonly FloorDefinition[] = [
+  {
+    id: "floor-1",
+    order: 1,
+    title: "1층",
+    questId: "quest-floor-1-prehistory",
+    questionCount: 10,
+  },
+  {
+    id: "floor-2",
+    order: 2,
+    title: "2층",
+    questId: "quest-floor-2-memory-fragment",
+    questionCount: 10,
+  },
+  {
+    id: "floor-3",
+    order: 3,
+    title: "3층",
+    questId: "quest-floor-3-torn-cloth",
+    questionCount: 10,
+  },
+  {
+    id: "floor-4",
+    order: 4,
+    title: "4층",
+    questId: "quest-floor-4-jeon-rescue",
+    questionCount: 10,
+  },
+  { id: "floor-5", order: 5, title: "5층", questId: "quest-floor-5-unified-silla", questionCount: 10 },
+  { id: "floor-6", order: 6, title: "6층", questId: "quest-floor-6-balhae", questionCount: 10 },
+  { id: "floor-7", order: 7, title: "7층", questId: "quest-floor-7-goryeo-founding", questionCount: 10 },
+  { id: "floor-8", order: 8, title: "8층", questId: "quest-floor-8-goryeo-relations", questionCount: 10 },
+  { id: "floor-9", order: 9, title: "9층", questId: "quest-floor-9-goryeo-society-culture", questionCount: 10 },
+  { id: "floor-10", order: 10, title: "10층", questId: "quest-floor-10-final-source", questionCount: 0 },
+];
+
+export const INITIAL_FLOOR_UNLOCK_STATE: FloorUnlockState = {
+  unlockedFloorIds: [],
+};

@@ -1,0 +1,299 @@
+import type { Question } from "../types/question";
+
+/* 이전 개발용 문항: 런타임 문제 풀에서 완전히 비활성화됨.
+export const TEST_QUESTIONS: readonly Question[] = [
+  {
+    id: "test-mc-01",
+    lessonId: "test-general",
+    type: "multipleChoice",
+    prompt: "대한민국의 수도는 어디인가요?",
+    options: ["서울", "부산", "대전", "광주"],
+    correctAnswer: "서울",
+    explanation: "대한민국의 수도는 서울입니다.",
+    difficulty: 1,
+  },
+  {
+    id: "test-mc-02",
+    lessonId: "test-general",
+    type: "multipleChoice",
+    prompt: "물의 화학식은 무엇인가요?",
+    options: ["CO₂", "O₂", "H₂O", "NaCl"],
+    correctAnswer: "H₂O",
+    explanation: "물 분자 하나는 수소 원자 2개와 산소 원자 1개로 이루어집니다.",
+    difficulty: 1,
+  },
+  {
+    id: "test-tf-01",
+    lessonId: "test-general",
+    type: "trueFalse",
+    prompt: "지구는 태양 주위를 돕니다.",
+    correctAnswer: true,
+    explanation: "지구는 약 1년에 한 번 태양 주위를 공전합니다.",
+  },
+  {
+    id: "test-tf-02",
+    lessonId: "test-general",
+    type: "trueFalse",
+    prompt: "삼각형의 변은 네 개입니다.",
+    correctAnswer: false,
+    explanation: "삼각형은 세 개의 변과 세 개의 꼭짓점을 가집니다.",
+  },
+  {
+    id: "test-ms-01",
+    lessonId: "test-general",
+    type: "multipleSelect",
+    prompt: "다음 중 포유류를 모두 고르세요.",
+    options: ["고래", "박쥐", "참새", "거북"],
+    correctAnswers: ["고래", "박쥐"],
+    explanation: "고래와 박쥐는 새끼에게 젖을 먹이는 포유류입니다.",
+    difficulty: 2,
+  },
+  {
+    id: "test-ms-02",
+    lessonId: "test-general",
+    type: "multipleSelect",
+    prompt: "다음 중 짝수를 모두 고르세요.",
+    options: ["2", "5", "8", "11"],
+    correctAnswers: ["2", "8"],
+    explanation: "2와 8은 2로 나누어떨어지는 짝수입니다.",
+  },
+  {
+    id: "test-short-01",
+    lessonId: "test-general",
+    type: "shortAnswer",
+    prompt: "고구려의 영토를 크게 넓힌 왕의 이름을 쓰세요.",
+    acceptedAnswers: ["광개토대왕", "광개토 대왕"],
+    explanation:
+      "광개토대왕은 고구려의 영토를 크게 넓혀 전성기의 기반을 마련했습니다.",
+    difficulty: 1,
+  },
+  {
+    id: "test-short-02",
+    lessonId: "test-general",
+    type: "shortAnswer",
+    prompt: "영어로 ‘지구’를 쓰세요.",
+    acceptedAnswers: ["Earth"],
+    explanation: "‘지구’는 영어로 Earth이며, 영문 대소문자는 구분하지 않습니다.",
+  },
+  {
+    id: "elite-floor1-mc-01",
+    lessonId: "floor1-gojoseon",
+    type: "multipleChoice",
+    prompt: "고조선을 세운 인물로 알맞은 사람은 누구인가요?",
+    options: ["단군왕검", "주몽", "박혁거세", "온조"],
+    correctAnswer: "단군왕검",
+    explanation: "단군왕검은 우리 역사상 최초의 국가인 고조선을 세웠습니다.",
+    difficulty: 1,
+  },
+  {
+    id: "elite-floor1-tf-01",
+    lessonId: "floor1-gojoseon",
+    type: "trueFalse",
+    prompt: "고조선의 법 조항을 통해 당시 사회 모습을 짐작할 수 있습니다.",
+    correctAnswer: true,
+    explanation: "고조선의 8조법 중 전해지는 내용을 통해 생명과 재산을 중시한 사회였음을 짐작할 수 있습니다.",
+  },
+  {
+    id: "elite-floor1-ms-01",
+    lessonId: "floor1-gojoseon",
+    type: "multipleSelect",
+    prompt: "고조선과 관련 있는 것을 모두 고르세요.",
+    options: ["비파형 동검", "고인돌", "팔만대장경", "첨성대"],
+    correctAnswers: ["비파형 동검", "고인돌"],
+    explanation: "비파형 동검과 고인돌은 고조선의 문화 범위를 살펴보는 대표적인 유물과 유적입니다.",
+    difficulty: 2,
+  },
+  {
+    id: "floor3-three-kingdoms-mc-01",
+    lessonId: "floor3-three-kingdoms",
+    type: "multipleChoice",
+    prompt: "고구려를 세운 인물로 알맞은 사람은 누구인가요?",
+    options: ["주몽", "온조", "박혁거세", "단군왕검"],
+    correctAnswer: "주몽",
+    explanation: "주몽은 고구려를 세운 인물입니다.",
+    difficulty: 1,
+  },
+];
+
+export const FLOOR3_THREE_KINGDOMS_QUESTIONS: readonly Question[] = TEST_QUESTIONS;
+*/
+
+export const FLOOR1_PREHISTORY_QUESTIONS: readonly Question[] = [
+  {
+    id: "floor1-prehistory-short-01", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "선사시대 중 돌을 깨뜨리거나 떼어서 만든 도구를 사용하던 시기를 OOO 시대라고 한다.",
+    acceptedAnswers: ["구석기"], explanation: "돌을 깨뜨리거나 떼어서 만든 뗀석기를 사용하던 시기를 구석기 시대라고 합니다.",
+  },
+  {
+    id: "floor1-prehistory-tf-02", lessonId: "floor1-prehistory", type: "trueFalse",
+    prompt: "구석기 시대 사람들은 집을 짓지 않았다.", correctAnswer: false,
+    explanation: "구석기 시대 사람들은 동굴에서 살거나 막집을 짓고 살기도 하였습니다.",
+  },
+  {
+    id: "floor1-prehistory-ms-03", lessonId: "floor1-prehistory", type: "multipleSelect",
+    prompt: "구석기 시대 사람들의 생활 모습으로 옳은 것을 모두 고르시오.",
+    options: ["동굴에서 살기도 했다.", "불을 사용하지는 못했다.", "동물 가죽으로 옷을 만들어 입었다.", "돌을 깨뜨려서 도구로 사용했다."],
+    correctAnswers: ["동굴에서 살기도 했다.", "동물 가죽으로 옷을 만들어 입었다.", "돌을 깨뜨려서 도구로 사용했다."],
+    explanation: "구석기 시대 사람들은 동굴이나 막집에서 살았고, 불을 사용했으며, 동물 가죽으로 옷을 만들고 뗀석기를 사용했습니다.",
+  },
+  {
+    id: "floor1-prehistory-tf-04", lessonId: "floor1-prehistory", type: "trueFalse",
+    prompt: "구석기 시대 사람들은 농사를 지었다.", correctAnswer: false,
+    explanation: "구석기 시대에는 사냥과 채집으로 먹을 것을 구했으며, 농사는 신석기 시대에 시작되었습니다.",
+  },
+  {
+    id: "floor1-prehistory-tf-05", lessonId: "floor1-prehistory", type: "trueFalse",
+    prompt: "구석기 시대 사람들은 동물을 사냥하거나 열매를 채집하여 먹을 것을 구했다.", correctAnswer: true,
+    explanation: "구석기 시대 사람들은 사냥과 채집으로 먹을 것을 구했습니다.",
+  },
+  {
+    id: "floor1-prehistory-ms-06", lessonId: "floor1-prehistory", type: "multipleSelect",
+    prompt: "다음 중 구석기 시대 유물로 옳은 것을 모두 고르시오.",
+    options: ["주먹도끼", "슴베찌르개", "가락바퀴", "돌괭이"], correctAnswers: ["주먹도끼", "슴베찌르개"],
+    explanation: "주먹도끼와 슴베찌르개는 구석기 시대의 대표적인 뗀석기입니다.",
+  },
+  {
+    id: "floor1-prehistory-short-07", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "선사시대 중 돌을 갈아 만들어 도구로 사용하던 시기를 OOO 시대라고 한다.", acceptedAnswers: ["신석기"],
+    explanation: "돌을 갈아 만든 간석기를 사용하던 시기를 신석기 시대라고 합니다.",
+  },
+  {
+    id: "floor1-prehistory-short-08", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "신석기 시대 사람들은 강가나 바닷가에 OO을 짓고 모여 살았다.", acceptedAnswers: ["움집"],
+    explanation: "신석기 시대 사람들은 강가나 바닷가에 움집을 짓고 정착 생활을 했습니다.",
+  },
+  {
+    id: "floor1-prehistory-short-09", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "신석기 시대 사람들은 사냥이나 채집뿐 아니라 OO를 지어 먹을 것을 얻기 시작했다.", acceptedAnswers: ["농사"],
+    explanation: "신석기 시대에는 농사를 짓기 시작하면서 정착 생활이 발달했습니다.",
+  },
+  {
+    id: "floor1-prehistory-tf-10", lessonId: "floor1-prehistory", type: "trueFalse",
+    prompt: "신석기 시대에는 흙으로 그릇을 만들기도 했다.", correctAnswer: true,
+    explanation: "신석기 시대 사람들은 빗살무늬 토기와 같은 토기를 만들어 사용했습니다.",
+  },
+  {
+    id: "floor1-prehistory-short-11", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "신석기 시대 대표 유물로 겉면에 점과 선 무늬가 있는 그릇의 이름은?", acceptedAnswers: ["빗살무늬토기", "빗살무늬 토기"],
+    explanation: "겉면에 점과 선으로 무늬를 새긴 빗살무늬 토기는 신석기 시대의 대표 유물입니다.",
+  },
+  {
+    id: "floor1-prehistory-tf-12", lessonId: "floor1-prehistory", type: "trueFalse",
+    prompt: "신석기 시대 사람들은 실로 옷을 만들어 입었다.", correctAnswer: true,
+    explanation: "신석기 시대 사람들은 가락바퀴로 실을 뽑아 옷을 만들어 입었습니다.",
+  },
+  {
+    id: "floor1-prehistory-ms-13", lessonId: "floor1-prehistory", type: "multipleSelect",
+    prompt: "다음 중 신석기 시대 유물로 옳은 것을 모두 고르시오.",
+    options: ["가락바퀴", "빗살무늬토기", "돌괭이", "갈판과 갈돌"], correctAnswers: ["가락바퀴", "빗살무늬토기", "돌괭이", "갈판과 갈돌"],
+    explanation: "가락바퀴, 빗살무늬 토기, 돌괭이, 갈판과 갈돌은 모두 신석기 시대의 생활 모습을 보여 주는 유물입니다.",
+  },
+  {
+    id: "floor1-prehistory-short-14", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "돌을 깨뜨려 필요한 모양으로 만든 도구를 OOO라고 한다.", acceptedAnswers: ["뗀석기"],
+    explanation: "돌을 깨뜨리거나 떼어서 필요한 모양으로 만든 도구를 뗀석기라고 합니다.",
+  },
+  {
+    id: "floor1-prehistory-short-15", lessonId: "floor1-prehistory", type: "shortAnswer",
+    prompt: "돌을 갈아서 필요한 모양으로 만든 도구를 OOO라고 한다.", acceptedAnswers: ["간석기"],
+    explanation: "돌을 갈아서 필요한 모양으로 만든 도구를 간석기라고 합니다.",
+  },
+];
+
+export const FLOOR2_GOJOSEON_QUESTIONS: readonly Question[] = [
+  {
+    id: "floor2-gojoseon-short-01", lessonId: "floor2-gojoseon", type: "shortAnswer",
+    prompt: "구리, 주석, 납 따위를 녹여 만든 금속을 주로 사용하던 시대를 OOO시대라고 한다.",
+    acceptedAnswers: ["청동기", "청동 기"], explanation: "청동을 주로 사용한 시대를 청동기 시대라고 합니다.",
+  },
+  {
+    id: "floor2-gojoseon-tf-02", lessonId: "floor2-gojoseon", type: "trueFalse",
+    prompt: "청동기 시대에는 농사도구가 주로 청동기로 만들어져서 곡식을 많이 수확할 수 있었다.",
+    correctAnswer: false, explanation: "청동은 귀해 주로 지배층의 무기와 제사 도구로 쓰였고, 농기구는 주로 돌이나 나무로 만들었습니다.",
+  },
+  {
+    id: "floor2-gojoseon-ms-03", lessonId: "floor2-gojoseon", type: "multipleSelect",
+    prompt: "다음 중 청동기 시대의 생활 모습으로 옳은 것을 모두 고르시오.",
+    options: ["농사 기술이 발달하였다.", "농사를 짓지 않고 사냥과 채집만 하였다.", "마을 주변에 도랑을 파거나 울타리를 세우기도 하였다.", "집단 사이에 싸움이 일어나기도 하였다."],
+    correctAnswers: ["농사 기술이 발달하였다.", "마을 주변에 도랑을 파거나 울타리를 세우기도 하였다.", "집단 사이에 싸움이 일어나기도 하였다."],
+    explanation: "청동기 시대에는 농사가 발달하고 마을을 보호하는 시설이 생겼으며 집단 사이의 싸움도 일어났습니다.",
+  },
+  {
+    id: "floor2-gojoseon-mc-04", lessonId: "floor2-gojoseon", type: "multipleChoice",
+    prompt: "다음 중 청동기의 주된 쓰임새로 가장 알맞은 것은?",
+    options: ["농사를 짓는 농기구", "지배층의 무기와 제사 도구", "집을 짓기 위한 건축 도구", "음식을 조리하기 위한 그릇"],
+    correctAnswer: "지배층의 무기와 제사 도구", explanation: "청동기는 귀해 지배층의 무기와 제사 도구로 주로 사용되었습니다.",
+  },
+  {
+    id: "floor2-gojoseon-tf-05", lessonId: "floor2-gojoseon", type: "trueFalse",
+    prompt: "청동기 시대에는 농사가 발달하면서 사람들 사이의 재산과 힘의 차이가 나타나기 시작하였다.",
+    correctAnswer: true, explanation: "농업 생산이 늘면서 재산과 힘의 차이가 생기고 지배자가 등장했습니다.",
+  },
+  {
+    id: "floor2-gojoseon-tf-06", lessonId: "floor2-gojoseon", type: "trueFalse",
+    prompt: "고조선의 건국 이야기에서 곰과 호랑이는 모두 환웅과의 약속을 끝까지 지켜 사람이 되었다.",
+    correctAnswer: false, explanation: "곰은 약속을 지켜 웅녀가 되었지만 호랑이는 끝까지 견디지 못했습니다.",
+  },
+  {
+    id: "floor2-gojoseon-mc-07", lessonId: "floor2-gojoseon", type: "multipleChoice",
+    prompt: "고조선의 건국 이야기를 바르게 설명한 것은?",
+    options: ["환웅이 단군왕검을 낳았다.", "곰이 사람이 되어 웅녀가 되었고, 환웅과 혼인하여 단군왕검을 낳았다.", "호랑이가 사람이 되어 단군왕검을 낳았다.", "환인이 직접 고조선을 세웠다."],
+    correctAnswer: "곰이 사람이 되어 웅녀가 되었고, 환웅과 혼인하여 단군왕검을 낳았다.", explanation: "웅녀와 환웅 사이에서 태어난 단군왕검이 고조선을 세웠다고 전해집니다.",
+  },
+  {
+    id: "floor2-gojoseon-short-08", lessonId: "floor2-gojoseon", type: "shortAnswer",
+    prompt: "고조선을 세우고 나라 이름을 조선이라고 한 인물의 이름은?",
+    acceptedAnswers: ["단군왕검", "단군 왕검"], explanation: "단군왕검이 고조선을 세웠습니다.",
+  },
+  {
+    id: "floor2-gojoseon-ms-09", lessonId: "floor2-gojoseon", type: "multipleSelect",
+    prompt: "다음 중 고조선의 대표적인 문화유산으로, 고조선의 문화 범위를 짐작하는 데 이용되는 것을 모두 고르시오.",
+    options: ["비파형 동검", "탁자식 고인돌", "빗살무늬토기", "슴베찌르개"],
+    correctAnswers: ["비파형 동검", "탁자식 고인돌"], explanation: "비파형 동검과 탁자식 고인돌의 분포를 통해 고조선의 문화 범위를 짐작합니다.",
+  },
+  {
+    id: "floor2-gojoseon-short-10", lessonId: "floor2-gojoseon", type: "shortAnswer",
+    prompt: "고조선에는 사회 질서를 지키기 위해 O개의 법 조항이 있었다고 전해진다.",
+    acceptedAnswers: ["8", "여덟"], explanation: "고조선에는 8개의 법 조항이 있었다고 전해집니다.",
+  },
+  {
+    id: "floor2-gojoseon-ms-11", lessonId: "floor2-gojoseon", type: "multipleSelect",
+    prompt: "다음 중 현재까지 전해져 내려오는 고조선의 법 조항을 모두 고르시오.",
+    options: ["사람을 죽인 사람은 사형에 처한다.", "남을 다치게 한 사람은 곡식으로 갚는다.", "도둑질을 한 사람은 노비로 삼으며, 죄를 면하려면 50만 전을 낸다.", "거짓말을 한 사람은 마을에서 쫓아낸다.", "농사를 짓지 않은 사람은 곡식을 빼앗는다."],
+    correctAnswers: ["사람을 죽인 사람은 사형에 처한다.", "남을 다치게 한 사람은 곡식으로 갚는다.", "도둑질을 한 사람은 노비로 삼으며, 죄를 면하려면 50만 전을 낸다."],
+    explanation: "8조법 가운데 살인, 상해, 도둑질에 관한 세 조항이 전해집니다.",
+  },
+  {
+    id: "floor2-gojoseon-mc-12", lessonId: "floor2-gojoseon", type: "multipleChoice",
+    prompt: "다음 법 조항을 통해 알 수 있는 당시 사회의 모습으로\n가장 알맞은 것은?\n\"도둑질을 한 사람은 노비로 삼으며,\n죄를 면하려면 50만 전을 낸다.\"",
+    options: ["신분의 차이와 개인의 재산이 존재하였다.", "모든 사람이 같은 재산을 가지고 있었다.", "아직 지배자가 존재하지 않았다.", "살인죄를 엄격하게 다스렸다."],
+    correctAnswer: "신분의 차이와 개인의 재산이 존재하였다.", explanation: "노비와 배상 규정을 통해 신분 차이와 개인 재산이 있었음을 알 수 있습니다.",
+  },
+  {
+    id: "floor2-gojoseon-ms-13", lessonId: "floor2-gojoseon", type: "multipleSelect",
+    prompt: "다음 법 조항을 통해 알 수 있는 당시 사회의 모습을\n모두 고르시오.\n\"남을 다치게 한 사람은 곡식으로 갚는다.\"",
+    options: ["농사를 지었다.", "곡식을 화폐처럼 사용하기도 했다.", "신분의 차이가 존재하였다.", "모든 사람이 같은 지위였다."],
+    correctAnswers: ["농사를 지었다.", "곡식을 화폐처럼 사용하기도 했다."], explanation: "곡식으로 배상했다는 점에서 농경 생활과 곡식의 교환 가치를 알 수 있습니다.",
+  },
+  {
+    id: "floor2-gojoseon-mc-14", lessonId: "floor2-gojoseon", type: "multipleChoice",
+    prompt: "다음 법 조항을 통해 알 수 있는 당시 사회의 모습으로\n가장 알맞은 것은?\n\"사람을 죽인 사람은 사형에 처한다.\"",
+    options: ["신분 차이와 개인 재산이 있었다.", "모두 같은 재산을 가졌다.", "지배자가 없었다.", "살인을 엄격하게 처벌하였다."],
+    correctAnswer: "살인을 엄격하게 처벌하였다.", explanation: "살인한 사람을 사형에 처한 규정은 생명을 중시하고 살인을 엄격히 처벌했음을 보여 줍니다.",
+  },
+  {
+    id: "floor2-gojoseon-mc-15", lessonId: "floor2-gojoseon", type: "multipleChoice",
+    prompt: "철로 만든 도구가 널리 퍼지면서 나타난 변화로 옳지 않은 것은?",
+    options: ["다양한 농기구 제작", "농업 생산력 향상", "철제 무기 사용", "청동 농기구만 사용"],
+    correctAnswer: "청동 농기구만 사용", explanation: "철제 농기구가 널리 쓰이며 농업 생산력이 향상되었습니다.",
+  },
+  {
+    id: "floor2-gojoseon-short-16", lessonId: "floor2-gojoseon", type: "shortAnswer",
+    prompt: "청동기 문화를 바탕으로 성장한 우리 역사상 최초의 국가는 OOO이다.",
+    acceptedAnswers: ["고조선"], explanation: "청동기 문화를 바탕으로 성장한 우리 역사상 최초의 국가는 고조선입니다.",
+  },
+];
+
+// 독립 Question 화면도 실제 학습 문항만 사용한다.
+export const TEST_QUESTIONS: readonly Question[] = FLOOR1_PREHISTORY_QUESTIONS;
+export { FLOOR3_GOGURYEO_BAEKJE_QUESTIONS as FLOOR3_THREE_KINGDOMS_QUESTIONS } from "./historyQuestions";
