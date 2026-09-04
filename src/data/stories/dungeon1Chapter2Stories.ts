@@ -1,10 +1,11 @@
-import type { StoryActor, StorySequence, StoryStep } from "../../types/story";
+import type { StorySequence, StoryStep } from "../../types/story";
 import { createChapter2Actor } from "./chapter2Portraits";
 
 const luna = createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72");
-const nameless = (id: string, name: string): StoryActor => ({ id, name, portraits: {} });
-const actors = { luna, scholar: nameless("scholar", "신진사대부"), yi: nameless("yi", "이성계") };
-const d = (id: string, speakerId: keyof typeof actors, text: string, expression?: string, nextStepId?: string): StoryStep => ({ id, type: "dialogue", speakerId, speakerName: actors[speakerId].name, activeActorId: speakerId === "luna" ? "luna" : undefined, ...(expression ? { expression } : {}), text, ...(nextStepId ? { nextStepId } : {}), advanceMode: "click" });
+const scholar = createChapter2Actor("scholar", "신진사대부", "", "#c7a96b");
+const yi = createChapter2Actor("yi", "이성계", "", "#d6b56f");
+const actors = { luna, scholar, yi };
+const d = (id: string, speakerId: keyof typeof actors, text: string, expression?: string, nextStepId?: string): StoryStep => ({ id, type: "dialogue", speakerId, speakerName: actors[speakerId].name, activeActorId: speakerId, ...(expression ? { expression } : {}), text, ...(nextStepId ? { nextStepId } : {}), advanceMode: "click" });
 const base = (id: string, title: string, steps: StoryStep[]): StorySequence => ({ id, title, scenes: [{ id: `${id}-scene`, steps }], backgrounds: {}, actors, replayable: false, skippable: false, onCompleteScreen: "dungeon" });
 
 export const DUNGEON1_ENTRY_STORY = base("dungeon1-chapter2-entry", "수상한 주민", [

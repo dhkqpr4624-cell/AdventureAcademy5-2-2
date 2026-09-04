@@ -188,6 +188,7 @@ type DungeonScreenProps = {
   setInventoryState: Dispatch<SetStateAction<InventoryState>>;
   onInventoryChanged: () => void;
   firstObjectiveEventSeen: boolean;
+  floor1StartStorySeen: boolean;
   onStoryEventSeen: (eventId: string) => void;
   onCollectionRunReset: () => void;
   onObjectiveAcquired: (correctCount: number) => void;
@@ -412,6 +413,7 @@ export function DungeonScreen({
   setInventoryState,
   onInventoryChanged,
   firstObjectiveEventSeen,
+  floor1StartStorySeen,
   onStoryEventSeen,
   onCollectionRunReset,
   onObjectiveAcquired,
@@ -666,7 +668,10 @@ export function DungeonScreen({
     onDungeonEntered();
     const timer = window.setTimeout(() => {
       setFloorIntroVisible(false);
-      if (questStoryEnabled && floorId === "floor-1" && currentRoomId === dungeonMap.startRoomId && !roomProgressRef.current[currentRoomId]?.eventCompleted) setFloor1EntryStoryVisible(true);
+      if (questStoryEnabled && floorId === "floor-1" && floorQuestStarted && currentRoomId === dungeonMap.startRoomId && !floor1StartStorySeen) {
+        setDungeonMode("roomEvent");
+        setFloor1EntryStoryVisible(true);
+      }
       if (questStoryEnabled && floorId === "floor-5" && currentRoomId === dungeonMap.startRoomId) {
         setFloor5EntryStoryVisible(true);
       }

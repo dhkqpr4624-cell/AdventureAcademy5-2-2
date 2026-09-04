@@ -19,6 +19,8 @@ import kappSad from "../../assets/portraits/chapter2/kapp/sad.png";
 import kappAngry from "../../assets/portraits/chapter2/kapp/angry.png";
 import kappSurprised from "../../assets/portraits/chapter2/kapp/surprised.png";
 import sailorDefault from "../../assets/portraits/chapter2/sailor/default.png";
+import scholarDefault from "../../assets/portraits/chapter2/scholar/default.png";
+import yiDefault from "../../assets/portraits/chapter2/yi/default.png";
 
 export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
   luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry, scared: lunaScared } },
@@ -26,6 +28,8 @@ export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
   aron: { defaultExpression: "default", expressions: { default: aronDefault, smile: aronSmile, sad: aronSad, angry: aronAngry, serious: aronSerious } },
   kapp: { defaultExpression: "default", expressions: { default: kappDefault, smile: kappSmile, sad: kappSad, angry: kappAngry, surprised: kappSurprised } },
   sailor: { defaultExpression: "default", expressions: { default: sailorDefault } },
+  scholar: { defaultExpression: "default", expressions: { default: scholarDefault } },
+  yi: { defaultExpression: "default", expressions: { default: yiDefault } },
 };
 
 export function createChapter2Actor(id: string, name: string, role: string, accentColor: string): StoryActor {

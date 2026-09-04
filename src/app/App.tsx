@@ -220,6 +220,7 @@ export function App() {
         savedFloorRun={game.currentFloorRun}
         onFloorRunChanged={updateFloorRun}
         firstObjectiveEventSeen={Boolean(game.firstObjectiveEventSeen[activeFloorId])}
+        floor1StartStorySeen={Boolean(game.firstObjectiveEventSeen["floor-1:start-story"])}
         onStoryEventSeen={(eventId) => {
           setGame((current) => ({ ...current, firstObjectiveEventSeen: { ...current.firstObjectiveEventSeen, [eventId]: true } }));
           requestSave("itemAcquired");
