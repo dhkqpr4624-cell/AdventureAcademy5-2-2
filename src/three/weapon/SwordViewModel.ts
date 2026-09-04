@@ -56,6 +56,12 @@ export const BASIC_SWORD_DEFINITION: SwordDefinition = {
   ],
 };
 
+export const WOODEN_WAND_DEFINITION: SwordDefinition = {
+  ...BASIC_SWORD_DEFINITION,
+  id: "wooden-wand",
+  textureUrl: `${import.meta.env.BASE_URL}assets/swords/wooden-wand.png`,
+};
+
 export const GOJOSEON_BRONZE_SWORD_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,
   id: "gojoseon-bronze-sword",
@@ -85,6 +91,7 @@ export const CHOE_MUSEON_CANNON_DEFINITION: SwordDefinition = {
 export function getSwordDefinitionForEquippedItem(
   equippedItemId: string | null | undefined,
 ): SwordDefinition {
+  if (equippedItemId === "weapon-wooden-wand") return WOODEN_WAND_DEFINITION;
   if (equippedItemId === "weapon-gojoseon-bronze-dagger") return GOJOSEON_BRONZE_SWORD_DEFINITION;
   if (equippedItemId === "weapon-hand-axe") return HAND_AXE_DEFINITION;
   if (equippedItemId === "weapon-chiljido") return CHILJIDO_DEFINITION;

@@ -14,7 +14,7 @@ const actors = {
 
 const SCENE_1: StorySequence = {
   id: "intro-chapter2-deck", title: "2단원 인트로 - 비행선 갑판", backgrounds: {}, actors,
-  replayable: true, skippable: true, onCompleteScreen: "story",
+  replayable: true, skippable: true, skipTarget: { complete: true }, onCompleteScreen: "story",
   scenes: [{ id: "chapter2-deck", steps: [
     { id: "deck-sky", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-sky", durationMs: 400, hideDialogue: true, advanceMode: "auto" },
     { id: "deck-rise", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-raised", durationMs: 5500, advanceMode: "auto" },
@@ -63,7 +63,7 @@ const SCENE_1: StorySequence = {
 
 const SCENE_2: StorySequence = {
   id: "intro-chapter2-arrival", title: "2단원 인트로 - 포탈 내부 도착", backgrounds: {}, actors,
-  replayable: true, skippable: true, onCompleteScreen: "story",
+  replayable: true, skippable: true, skipTarget: { complete: true }, onCompleteScreen: "story",
   scenes: [{ id: "chapter2-arrival", steps: [
     { id: "arrival-airship", type: "setStagePhase", stageId: "chapter2-intro", phase: "arrival-airship", durationMs: 2800, hideDialogue: true, advanceMode: "auto" },
     { id: "arrival-party", type: "setStagePhase", stageId: "chapter2-intro", phase: "arrival-party", durationMs: 700, advanceMode: "auto" },

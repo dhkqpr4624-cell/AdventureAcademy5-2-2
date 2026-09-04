@@ -2572,8 +2572,16 @@ button:focus-visible {
 .chapter2-story-npc img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .chapter2-story-npc-luna, .chapter2-story-npc-theo { width: 6.82%; aspect-ratio: 380 / 600; }
 .chapter2-story-npc-aron, .chapter2-story-npc-kapp { width: 6.82%; aspect-ratio: 400 / 700; }
-.chapter2-stage-deck .chapter2-story-npc-luna { left: 35%; }
-.chapter2-stage-deck .chapter2-story-npc-theo { left: 46%; }
+.chapter2-stage-deck .chapter2-story-npc-luna { left: 46%; }
+.chapter2-stage-deck .chapter2-story-npc-theo { left: 35%; }
+
+.story-skip-button { position: absolute; z-index: 95; top: 20px; right: 22px; padding: 9px 18px; border: 2px solid #f3dba2; border-radius: 8px; color: #fff4d2; background: rgba(24, 18, 13, .82); cursor: pointer; }
+.story-skip-button:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.story-skip-button:disabled { opacity: .55; cursor: default; }
+.story-inline-info { color: #3197ff; font-weight: 800; }
+
+.wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 100px; height: 100px; transform: translate(-50%, -18%); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; animation: wooden-wand-fire 1s steps(8) 1 both; }
+@keyframes wooden-wand-fire { from { background-position-x: 0; } to { background-position-x: 114.2857%; } }
 .chapter2-stage-deck .chapter2-story-npc-aron { left: 66%; }
 .chapter2-stage-deck .chapter2-story-npc-kapp { left: 77%; }
 .chapter2-story-npc.is-fading-in { animation: chapter2-npc-fade 700ms ease-out both; }

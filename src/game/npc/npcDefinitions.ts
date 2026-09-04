@@ -59,8 +59,8 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       blinkFrameCount: 4,
     },
     portraits: { default: theoPortrait },
-    dialogue: { defaultStorySequenceId: "npc-theo-default" },
-    offeredQuestIds: ["quest-floor-5-unified-silla", "quest-floor-7-goryeo-founding"],
+    dialogue: { defaultStorySequenceId: "npc-theo-default", questAvailableStorySequenceId: "npc-theo-floor-1-quest-available", questActiveStorySequenceId: "npc-theo-floor-1-quest-active" },
+    offeredQuestIds: ["quest-floor-1-prehistory", "quest-floor-5-unified-silla", "quest-floor-7-goryeo-founding"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.theo),
   },
   {
@@ -83,7 +83,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-kaiden-quest-available",
       questActiveStorySequenceId: "npc-kaiden-quest-active",
     },
-    offeredQuestIds: ["quest-floor-1-prehistory", "quest-floor-2-memory-fragment", "quest-floor-6-balhae", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
+    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-6-balhae", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.kaiden),
   },
   {

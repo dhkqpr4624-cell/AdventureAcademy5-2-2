@@ -40,10 +40,6 @@ import { getQuestRareRewardCondition } from "../../game/quest/questRareRewardCon
 import { AchievementPopup } from "../../components/AchievementPopup";
 import { ACHIEVEMENT_DEFINITIONS } from "../../data/achievementDefinitions";
 import {
-  ITEM_COLLECTION_QUEST_RULES,
-  canCompleteItemCollectionQuest,
-} from "../../game/quest/itemCollectionQuestRules";
-import {
   completeQuestStateAfterRewardClaim,
   removeQuestItemsAfterRewardClaim,
   resolveQuestRewardGrant,
@@ -163,12 +159,10 @@ export function BaseCampScreen({
     ...(questState[floor8QuestId] === "completed" && questState[floor9QuestId] === "locked" ? { [floor9QuestId]: "available" as const } : {}),
     ...(questState[floor9QuestId] === "completed" && questState[floor10QuestId] === "locked" ? { [floor10QuestId]: "available" as const } : {}),
   };
-  const prehistoryCollectionRule = ITEM_COLLECTION_QUEST_RULES[0];
-  const canCompletePrehistoryQuest = canCompleteItemCollectionQuest(
-    inventoryState,
-    clearedFloorIds,
-    prehistoryCollectionRule,
-  );
+  const canCompletePrehistoryQuest = clearedFloorIds.includes("floor-1");
+  const needsEmergencyPotions = effectiveQuestState[prehistoryQuestId] !== "completed" &&
+    getItemQuantity(inventoryState, "potion-small") === 0 &&
+    getItemQuantity(inventoryState, "potion-medium") === 0 && playerState.gold < 20;
   const hasMemoryFragment = getItemQuantity(inventoryState, "quest-memory-fragment") > 0;
   const hasTornCloth = getItemQuantity(inventoryState, "quest-torn-cloth") > 0;
   const hasFoundJeon = clearedFloorIds.includes("floor-4");
@@ -250,8 +244,13 @@ export function BaseCampScreen({
     dialogueCompletedRef.current = false;
     setSelectedRegionId(null);
     await viewportRef.current?.focus(npc.baseCampSpawnId, 550);
+    if (npc.id === "theo" && needsEmergencyPotions) {
+      setStorySequenceId("npc-theo-emergency-potions");
+      interactionLockRef.current = false;
+      return;
+    }
     if (npc.id === "kaiden" && canCompletePrehistoryQuest && effectiveQuestState[prehistoryQuestId] === "active") {
-      setPrehistoryCompletionOpen(true);
+      setStorySequenceId("npc-aron-floor-1-quest-complete");
       interactionLockRef.current = false;
       return;
     }
@@ -289,6 +288,18 @@ export function BaseCampScreen({
     setStorySequenceId(null);
     onAutoSave("npcDialogueCompleted");
     if (!npc) return;
+    if (finishedSequenceId === "npc-theo-emergency-potions") {
+      setInventoryState((current) => changeItemQuantity(changeItemQuantity(current, "potion-small", 2), "potion-medium", 1));
+      onAutoSave("npcDialogueCompleted");
+      return;
+    }
+    if (finishedSequenceId === "npc-aron-floor-1-quest-complete" && effectiveQuestState[prehistoryQuestId] === "active") {
+      setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
+      setRewardClaimed(prehistoryQuestId);
+      completeQuestAfterRewardClaim(prehistoryQuestId);
+      onAutoSave("questCompleted");
+      return;
+    }
     if (finishedSequenceId === "npc-kaiden-quest-complete") {
       setPrehistoryCompletionOpen(true);
       return;

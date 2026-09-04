@@ -230,6 +230,8 @@ export type StorySequence = {
   actors: Record<string, StoryActor>;
   replayable: boolean;
   skippable: boolean;
+  /** Optional data-driven destination used by StoryPlayer's skip control. */
+  skipTarget?: { stepId?: string; screen?: ScreenId; complete?: boolean };
   onCompleteScreen: ScreenId;
 };
 

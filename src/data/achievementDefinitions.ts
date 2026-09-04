@@ -13,9 +13,6 @@ export type AchievementDefinition = {
   description: string;
 };
 
-const floor1RareRewardCondition = getQuestRareRewardCondition(
-  "quest-floor-1-prehistory",
-);
 const floor2RareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
@@ -28,18 +25,6 @@ const floor8RareRewardCondition = getQuestRareRewardCondition("quest-floor-8-gor
 const floor9RareRewardCondition = getQuestRareRewardCondition("quest-floor-9-goryeo-society-culture");
 
 export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
-  {
-    id: "achievement-floor-1-rare-reward",
-    floorId: "floor-1",
-    floorTitle: "던전 1층",
-    title: "선사시대 유물 조사",
-    rewardIcon: `${import.meta.env.BASE_URL}assets/items/hand-axe.png`,
-    rewardItemId: "weapon-hand-axe",
-    rewardStateId: "quest-floor-1-prehistory",
-    requiredCorrect: floor1RareRewardCondition.requiredCorrect,
-    totalQuestions: floor1RareRewardCondition.totalQuestions,
-    description: "던전 1층 정답",
-  },
   {
     id: "achievement-floor-2-rare-reward",
     floorId: "floor-2",

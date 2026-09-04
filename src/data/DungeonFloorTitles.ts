@@ -10,7 +10,7 @@ export const DUNGEON_FLOOR_TITLES: DungeonFloorTitle[] = [
     floor: 1,
     floorId: "floor-1",
     title: "던전 1층",
-    subtitle: "구석기와 신석기",
+    subtitle: "조선의 건국과 발전",
   },
   {
     floor: 2,

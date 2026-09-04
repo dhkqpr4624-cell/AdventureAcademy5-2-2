@@ -165,10 +165,10 @@ export function runNpcChecks() {
     );
   }
   assert(
-    resolveNpcStorySequence("kaiden", {
+    resolveNpcStorySequence("theo", {
       "quest-floor-1-prehistory": "available",
-    }) === "npc-kaiden-quest-available",
-    "Kaiden must retain the available quest story",
+    }) === "npc-theo-floor-1-quest-available",
+    "Theo must offer the chapter 2 floor 1 quest",
   );
   assert(
     resolveNpcStorySequence("kaiden", {
@@ -196,10 +196,10 @@ export function runNpcChecks() {
     resolveNpcStorySequence("luna", {
       "quest-floor-1-prehistory": "available",
     }) === "npc-luna-default" &&
-      resolveNpcStorySequence("theo", {
+      resolveNpcStorySequence("kaiden", {
         "quest-floor-1-prehistory": "available",
-      }) === "npc-theo-default",
-    "Kaiden's slot or quest status must not leak into Luna or Theo stories",
+      }) === "npc-kaiden-default",
+    "Theo's quest status must not leak into Luna or Aron stories",
   );
   for (const quest of QUEST_DEFINITIONS) {
     const giver = NPC_BY_ID[quest.giverNpcId];

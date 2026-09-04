@@ -3,18 +3,17 @@ import type { QuestDefinition, QuestState } from "./questTypes";
 export const QUEST_DEFINITIONS: readonly QuestDefinition[] = [
   {
     id: "quest-floor-1-prehistory",
-    title: "던전의 정체",
-    summary: "던전 1층을 조사하자.",
-    description:
-      "던전 1층을 살펴보고 이 던전의 정체를 파악할 수 있는 물건들을 가져온다.",
-    objectiveText: "선사시대 유물 3개 수집",
-    giverNpcId: "kaiden",
-    offerStorySequenceId: "npc-kaiden-quest-available",
-    acceptStorySequenceId: "npc-kaiden-quest-accepted",
-    activeStorySequenceId: "npc-kaiden-quest-active",
+    title: "조선의 건국과 발전",
+    summary: "루나와 함께 던전 1층의 정체를 조사하자.",
+    description: "던전 안의 주민과 살아 움직이는 역사의 정체를 파악한다.",
+    objectiveText: "던전 1층 마지막 방 조사",
+    giverNpcId: "theo",
+    offerStorySequenceId: "npc-theo-floor-1-quest-available",
+    acceptStorySequenceId: "npc-theo-floor-1-quest-accepted",
+    activeStorySequenceId: "npc-theo-floor-1-quest-active",
     targetFloorId: "floor-1",
-    completeStorySequenceId: "npc-kaiden-quest-complete",
-    rewards: { description: "5 Gold · 주먹도끼 무기 스킨(희귀)" },
+    completeStorySequenceId: "npc-aron-floor-1-quest-complete",
+    rewards: { description: "10 Gold" },
   },
   {
     id: "quest-floor-2-memory-fragment",

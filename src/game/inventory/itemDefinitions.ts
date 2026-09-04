@@ -17,6 +17,11 @@ export type ItemDefinition = {
 };
 
 export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
+  "weapon-wooden-wand": {
+    id: "weapon-wooden-wand", name: "나무 마법 지팡이", type: "weaponSkin",
+    rarity: "common", description: "2단원 원정에 지급된 기본 마법 지팡이다.",
+    icon: `${import.meta.env.BASE_URL}assets/items/wooden-wand.png`, stackable: false,
+  },
   "weapon-basic-sword": {
     id: "weapon-basic-sword", name: "기본 목검", type: "weaponSkin",
     rarity: "common", description: "아카데미에서 지급한 기본 목검이다.",

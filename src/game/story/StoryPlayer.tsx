@@ -155,14 +155,14 @@ function DialogueText({
     ]);
   };
 
-  const inlineDangerPattern = /<red><b>(.*?)<\/b><\/red>/g;
+  const inlineStylePattern = /<(red|blue)><b>(.*?)<\/b><\/(?:red|blue)>/g;
   const result: ReactNode[] = [];
   let cursor = 0;
   let match: RegExpExecArray | null;
   let index = 0;
-  while ((match = inlineDangerPattern.exec(text)) !== null) {
+  while ((match = inlineStylePattern.exec(text)) !== null) {
     result.push(...renderPlayerName(text.slice(cursor, match.index), `text-${index}`));
-    result.push(<strong className="story-inline-danger" key={`danger-${index}`}>{match[1]}</strong>);
+    result.push(<strong className={match[1] === "blue" ? "story-inline-info" : "story-inline-danger"} key={`emphasis-${index}`}>{match[2]}</strong>);
     cursor = match.index + match[0].length;
     index += 1;
   }
@@ -198,6 +198,7 @@ export function StoryPlayer({
   const baseCampReadyRef = useRef(false);
   const startedRef = useRef(false);
   const choiceLockedRef = useRef(false);
+  const skipLockedRef = useRef(false);
 
   useEffect(() => {
     if (!startedRef.current) {
@@ -382,6 +383,26 @@ export function StoryPlayer({
     setStepIndex((current) => target >= 0 ? target : current + 1);
   };
 
+  const skip = () => {
+    const target = sequence.skipTarget;
+    if (!target || skipLockedRef.current || hasNavigatedRef.current) return;
+    skipLockedRef.current = true;
+    runnerRef.current = new StoryStepRunner();
+    if (target.stepId) {
+      const index = steps.findIndex((step) => step.id === target.stepId);
+      if (index >= 0) {
+        setRenderState(createInitialRenderState(sequence));
+        setStepIndex(index);
+        return;
+      }
+    }
+    hasNavigatedRef.current = true;
+    if (target.complete) onStoryCompleted?.(sequence.id);
+    if (target.screen) onNavigate(target.screen);
+    else if (onComplete) onComplete();
+    else onNavigate(sequence.onCompleteScreen);
+  };
+
   const markImageFailed = (url: string) => {
     setFailedUrls((current) => {
       if (current.has(url)) {
@@ -465,6 +486,7 @@ export function StoryPlayer({
       aria-label={sequence.title}
       data-presentation-mode={presentationMode}
     >
+      {sequence.skipTarget && <button type="button" className="story-skip-button" disabled={skipLockedRef.current} onClick={skip}>건너뛰기</button>}
       {renderState.stage.id === "chapter2-intro" && (
         <Chapter2IntroStage phase={renderState.stage.phase} revision={renderState.stage.revision} />
       )}

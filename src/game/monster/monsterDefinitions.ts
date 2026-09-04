@@ -15,6 +15,9 @@ export type MonsterVisualDefinition = {
 export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   Record<string, MonsterVisualDefinition>
 > = {
+  "chapter2-red-turban": { id: "chapter2-red-turban", name: "홍건적", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/red-turban.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-waegu": { id: "chapter2-waegu", name: "왜구", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/waegu.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-powerful-clan": { id: "chapter2-powerful-clan", name: "권문세족", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/powerful-clan.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "garlic-king": {
     id: "garlic-king",
     name: "마늘킹",

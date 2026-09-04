@@ -11,14 +11,15 @@ const check = (value: boolean, message: string) => {
 };
 
 export function runInventoryChecks() {
-  const bought = purchaseShopItem(INITIAL_INVENTORY_STATE, 20, "potion-small");
+  const shopTestInventory = { ...INITIAL_INVENTORY_STATE, items: { ...INITIAL_INVENTORY_STATE.items, "potion-small": 2, "potion-medium": 1 } };
+  const bought = purchaseShopItem(shopTestInventory, 20, "potion-small");
   check(bought.success && bought.gold === 12, "purchase deducts gold");
   check(bought.success && getItemQuantity(bought.inventory, "potion-small") === 3, "purchase grants item");
   const capped = bought.success
     ? purchaseShopItem(bought.inventory, bought.gold, "potion-small")
     : bought;
   check(!capped.success && capped.reason === "maxQuantity", "small potion cap");
-  const medium1 = purchaseShopItem(INITIAL_INVENTORY_STATE, 50, "potion-medium");
+  const medium1 = purchaseShopItem(shopTestInventory, 50, "potion-medium");
   const medium2 = medium1.success
     ? purchaseShopItem(medium1.inventory, medium1.gold, "potion-medium")
     : medium1;

@@ -2,6 +2,19 @@ import type { StoryActor, StorySequence, StoryStep } from "../../types/story";
 import { NPC_PORTRAIT_REGISTRY } from "../../game/npc/npcPortraitRegistry";
 import { resolveNpcPresentation } from "../../game/npc/npcPresentationResolver";
 import type { NpcId } from "../../game/npc/npcTypes";
+import { createChapter2Actor } from "./chapter2Portraits";
+
+const chapter2Actors = {
+  luna: createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72"),
+  theo: createChapter2Actor("theo", "테오", "보급 담당", "#7fc8ff"),
+  aron: createChapter2Actor("aron", "아론", "지휘관", "#d9b6ff"),
+  kapp: createChapter2Actor("kapp", "카프", "부지휘관", "#ffcf80"),
+};
+
+function chapter2DialogueSequence(id: string, entries: Array<{ actor: keyof typeof chapter2Actors; text: string; expression?: string; emphasis?: "danger" | "info" }>): StorySequence {
+  return { id, title: "2단원 대화", replayable: true, skippable: false, onCompleteScreen: "baseCamp", backgrounds: {}, actors: chapter2Actors,
+    scenes: [{ id: `${id}-scene`, steps: entries.map((entry, index): StoryStep => ({ id: `${id}-${index + 1}`, type: "dialogue", speakerId: entry.actor, speakerName: chapter2Actors[entry.actor].name, activeActorId: entry.actor, expression: entry.expression ?? "default", text: entry.text, ...(entry.emphasis ? { emphasis: entry.emphasis } : {}), advanceMode: "click" })) }] };
+}
 
 function sequence(
   id: string,
@@ -119,6 +132,36 @@ function floor5QuestDialogue(id: string, npcId: NpcId, portraitId: string, text:
 }
 
 export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
+  "npc-theo-emergency-potions": chapter2DialogueSequence("npc-theo-emergency-potions", [
+    { actor: "theo", text: " 이런, (플레이어 이름), 괜찮습니까? " },
+    { actor: "theo", text: " 포션이 없군요.. 어쩔 수 없죠. 제가 가지고 있는 비상 포션을 드리겠습니다. 부디 조심해주세요. " },
+  ]),
+  "npc-theo-floor-1-quest-available": chapter2DialogueSequence("npc-theo-floor-1-quest-available", [
+    { actor: "theo", text: " 어서오십시오, (플레이어 이름). " },
+    { actor: "theo", text: " 이 베이스 캠프.. 참으로 이상하지 않습니까? 던전 입구 앞에 <blue><b>마치 예전에 누군가가 있기라도 했던 것처럼</b></blue> 텐트가 세워져있더군요. " },
+    { actor: "theo", text: " 오래된 것처럼 보이는 텐트는 아론님과 카프님께서 살펴보고 계십니다. " },
+    { actor: "theo", text: " 그나저나.. 던전 1층 이야기를 하죠. 정찰 담당인 루나가 먼저 던전을 살펴보았는데.. " },
+    { actor: "luna", expression: "scared", text: " (플레이어 이름) !!!! 같이 가줘, 엉엉!!! 무서워!! " },
+    { actor: "theo", expression: "smile", text: " 보시다시피 저런 상태입니다. " },
+    { actor: "luna", expression: "scared", text: " 던전 1층에 들어갔는데, 갑자기 던전 안에 사는 사람이 말을 걸어왔어!! 이상하다니까! " },
+    { actor: "theo", text: " 음, 확실히 이상하긴 하군요. 던전 안에 주민들이 살고 있다는 뜻입니까..? " },
+    { actor: "luna", expression: "scared", text: " 모르겠어. 자세한 건 들어가봐야 알겠지. 으으.. 소름..! " },
+    { actor: "theo", text: " (플레이어이름), 부탁드립니다. 루나와 함께 던전 1층으로 들어가서 진상을 파악해주시고, 이 던전의 정체를 파악해주셨으면 합니다. " },
+    { actor: "theo", text: " 던전 안에서 오답을 선택하면 큰 피해를 입으니, 조심하셔야 합니다. ", emphasis: "danger" },
+  ]),
+  "npc-theo-floor-1-quest-accepted": chapter2DialogueSequence("npc-theo-floor-1-quest-accepted", [{ actor: "theo", text: " 부디 조심해서 다녀오십시오. " }]),
+  "npc-theo-floor-1-quest-active": chapter2DialogueSequence("npc-theo-floor-1-quest-active", [{ actor: "theo", text: " 루나와 함께 던전 1층의 진상을 파악해주십시오. " }]),
+  "npc-aron-floor-1-quest-complete": chapter2DialogueSequence("npc-aron-floor-1-quest-complete", [
+    { actor: "aron", text: " 돌아왔군요, (플레이어이름). 테오에게 대략적인 상황은 전해들었습니다. " },
+    { actor: "aron", text: " 던전 안에, 무엇이 있었습니까? " },
+    { actor: "luna", text: " 이 던전은 특이해요, 대장. 던전 안에는 역사 속 인물들이 살아 움직이고 있어요. " },
+    { actor: "luna", text: " 무엇이 원인인지는 차차 살펴봐야겠지만.. 그들의 고민을 해결해주면 그들이 다시 역사 속으로 사라지는 것 같았어요. " },
+    { actor: "luna", text: " 아마 그들의 고민을 해결해주며 앞으로 나아가야겠어요. " },
+    { actor: "kapp", expression: "surprised", text: " 그건...! " },
+    { actor: "aron", expression: "serious", text: " (...쉿, 카프. 아직 장담할 수 없습니다.) " },
+    { actor: "theo", text: " 확실히 수상하군요. 어찌 되었든, 던전의 정체를 어느정도 알게 되었으니 앞으로 나아가는 수밖에요. " },
+    { actor: "aron", expression: "serious", text: " 수고했습니다. 루나, (플레이어 이름). 이제 다음 계획을 세우죠. " },
+  ]),
   "npc-kaiden-floor-10-quest-available": sequence(
     "npc-kaiden-floor-10-quest-available",
     "kaiden",

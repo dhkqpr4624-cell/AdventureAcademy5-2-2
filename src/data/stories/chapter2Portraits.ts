@@ -3,6 +3,7 @@ import lunaDefault from "../../assets/portraits/chapter2/luna/default.png";
 import lunaSmile from "../../assets/portraits/chapter2/luna/smile.png";
 import lunaSad from "../../assets/portraits/chapter2/luna/sad.png";
 import lunaAngry from "../../assets/portraits/chapter2/luna/angry.png";
+import lunaScared from "../../assets/portraits/chapter2/luna/scared.png";
 import theoDefault from "../../assets/portraits/chapter2/theo/default.png";
 import theoSmile from "../../assets/portraits/chapter2/theo/smile.png";
 import theoSad from "../../assets/portraits/chapter2/theo/sad.png";
@@ -20,7 +21,7 @@ import kappSurprised from "../../assets/portraits/chapter2/kapp/surprised.png";
 import sailorDefault from "../../assets/portraits/chapter2/sailor/default.png";
 
 export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
-  luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry } },
+  luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry, scared: lunaScared } },
   theo: { defaultExpression: "default", expressions: { default: theoDefault, smile: theoSmile, sad: theoSad, angry: theoAngry } },
   aron: { defaultExpression: "default", expressions: { default: aronDefault, smile: aronSmile, sad: aronSad, angry: aronAngry, serious: aronSerious } },
   kapp: { defaultExpression: "default", expressions: { default: kappDefault, smile: kappSmile, sad: kappSad, angry: kappAngry, surprised: kappSurprised } },

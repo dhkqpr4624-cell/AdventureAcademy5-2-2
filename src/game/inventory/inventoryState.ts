@@ -11,11 +11,11 @@ export type InventoryState = {
 
 export const INITIAL_INVENTORY_STATE: InventoryState = {
   items: {
-    "weapon-basic-sword": 1,
-    "potion-small": 2,
-    "potion-medium": 1,
+    "weapon-wooden-wand": 1,
+    "potion-small": 3,
+    "potion-medium": 2,
   },
-  equippedItemIds: { weaponSkin: "weapon-basic-sword", armor: null },
+  equippedItemIds: { weaponSkin: "weapon-wooden-wand", armor: null },
 };
 
 export function calculateEquippedMaxHpBonus(state: InventoryState): number {
