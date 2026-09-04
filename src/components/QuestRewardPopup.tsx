@@ -8,6 +8,7 @@ export function QuestRewardPopup({
   rareRewardItemId = "weapon-gojoseon-bronze-dagger",
   requiredCorrect = 6,
   baseGold = 5,
+  showRareReward = true,
   onClaim,
   onCancel,
 }: {
@@ -17,6 +18,7 @@ export function QuestRewardPopup({
   rareRewardItemId?: string;
   requiredCorrect?: number;
   baseGold?: number;
+  showRareReward?: boolean;
   onClaim: () => void;
   onCancel: () => void;
 }) {
@@ -27,14 +29,14 @@ export function QuestRewardPopup({
     <div className="pixel-popup-backdrop">
       <section className="pixel-rpg-popup quest-reward-popup" role="dialog" aria-modal="true" aria-labelledby="quest-reward-title">
         <header><p className="eyebrow">QUEST COMPLETE</p><h2 id="quest-reward-title">{questTitle}</h2></header>
-        <div className="quest-reward-grid">
+        <div className={`quest-reward-grid ${showRareReward ? "" : "is-base-only"}`}>
           <article><p className="eyebrow">기본 보상</p><span className="reward-icon">G</span><strong>{baseGold} Gold</strong><small>퀘스트 완료 기본 보상</small></article>
-          <article className={rareUnlocked ? "is-unlocked" : "is-locked"}>
+          {showRareReward && <article className={rareUnlocked ? "is-unlocked" : "is-locked"}>
             <p className="eyebrow">희귀 보상</p><span className="reward-icon"><ItemIcon item={rareReward} /></span><strong>{rareReward.name}</strong>
             <small className={rareUnlocked ? "" : "reward-condition-failed"}>
               희귀 보상 조건: 정답 {required}개 이상 달성<br />달성: {bestCorrect}개
             </small>
-          </article>
+          </article>}
         </div>
         <div className="quest-reward-actions">
           <button type="button" disabled={claimed} onClick={onClaim}>{claimed ? "수령 완료" : "보상 받기"}</button>

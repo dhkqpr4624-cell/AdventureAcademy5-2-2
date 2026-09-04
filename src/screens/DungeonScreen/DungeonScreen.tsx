@@ -465,6 +465,8 @@ export function DungeonScreen({
   const visualsRef = useRef<CombatVisuals | null>(null);
   const visualAssemblyRef = useRef<DungeonVisualAssembly | null>(null);
   const mountedRef = useRef(true);
+  const fireAttackTimerRef = useRef<number | null>(null);
+  const fireAttackResolveRef = useRef<(() => void) | null>(null);
   const processingRef = useRef(false);
   const interactionLockRef = useRef(false);
   const enemyTurnProcessingRef = useRef(false);
@@ -613,10 +615,16 @@ export function DungeonScreen({
     if (inventoryState.equippedItemIds.weaponSkin !== "weapon-wooden-wand") return;
     setFireAttackVisible(true);
     await new Promise<void>((resolve) => {
-      const timer = window.setTimeout(resolve, 1000);
-      if (!mountedRef.current) window.clearTimeout(timer);
+      fireAttackResolveRef.current = resolve;
+      fireAttackTimerRef.current = window.setTimeout(() => {
+        fireAttackTimerRef.current = null;
+        fireAttackResolveRef.current = null;
+        resolve();
+      }, 1000);
     });
-    if (mountedRef.current) setFireAttackVisible(false);
+    if (!mountedRef.current) return;
+    setFireAttackVisible(false);
+    playRandomizedOneShot(HIT_SFX_URL);
   };
   const activeEnemyAttackDamage = () => {
     const lastAnswerWasWrong =
@@ -728,6 +736,12 @@ export function DungeonScreen({
     }
     return () => {
       mountedRef.current = false;
+      if (fireAttackTimerRef.current !== null) {
+        window.clearTimeout(fireAttackTimerRef.current);
+        fireAttackTimerRef.current = null;
+      }
+      fireAttackResolveRef.current?.();
+      fireAttackResolveRef.current = null;
     };
   }, []);
 
@@ -1078,7 +1092,9 @@ export function DungeonScreen({
       };
       const recordHit = () => {
         recordResult();
-        playRandomizedOneShot(HIT_SFX_URL);
+        if (inventoryState.equippedItemIds.weaponSkin !== "weapon-wooden-wand") {
+          playRandomizedOneShot(HIT_SFX_URL);
+        }
       };
       const started = weapon.play(attackType, {
         onHit: attackType === "hit" ? recordHit : undefined,

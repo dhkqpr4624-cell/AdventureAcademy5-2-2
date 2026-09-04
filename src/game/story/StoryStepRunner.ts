@@ -139,7 +139,7 @@ export class StoryStepRunner {
       case "dialogue":
         context.updateState((state) => {
           const actorId = step.activeActorId;
-          const portraitId = actorId && step.expression !== undefined
+          const portraitId = actorId
             ? context.resolveExpression(actorId, step.expression)
             : undefined;
           return {
@@ -152,7 +152,7 @@ export class StoryStepRunner {
                 transition: "fade",
                 revision: (state.portraits[actorId]?.revision ?? 0) + 1,
               },
-            } : state.portraits,
+            } : {},
             dialogue: {
             kind: "dialogue",
             speakerName: context.resolveText(step.speakerName),
@@ -177,10 +177,12 @@ export class StoryStepRunner {
       case "narration":
         context.updateState((state) => ({
           ...state,
+          portraits: {},
           dialogue: { kind: "narration", text: context.resolveText(step.text) },
         }));
         break;
       case "choice":
+        context.updateState((state) => ({ ...state, portraits: {} }));
         break;
       case "checkpoint":
         context.checkpoint(step.checkpointId);
@@ -294,11 +296,40 @@ export class StoryStepRunner {
           dialogue: step.hideDialogue ? null : state.dialogue,
           illust: {
             imageUrl: step.imageUrl ?? state.illust.imageUrl,
+            previousImageUrl:
+              step.imageUrl && step.imageUrl !== state.illust.imageUrl && state.illust.visible
+                ? state.illust.imageUrl
+                : null,
             visible: step.visible,
             fadeMs: step.fadeMs ?? 250,
+            crossFadeDelayMs: step.crossFadeDelayMs ?? 0,
             revision: state.illust.revision + 1,
           },
         }));
+        if (step.removeAfterFade) {
+          await waitFor(step.fadeMs ?? 250, signal);
+          if (!signal.aborted) {
+            context.updateState((state) => ({
+              ...state,
+              illust: {
+                ...state.illust,
+                imageUrl: null,
+                previousImageUrl: null,
+              },
+            }));
+          }
+          return;
+        }
+        if ((step.crossFadeDelayMs ?? 0) > 0) {
+          await waitFor((step.fadeMs ?? 250) + (step.crossFadeDelayMs ?? 0), signal);
+          if (!signal.aborted) {
+            context.updateState((state) => ({
+              ...state,
+              illust: { ...state.illust, previousImageUrl: null },
+            }));
+          }
+          return;
+        }
         break;
       case "showBaseCamp":
         await context.showBaseCamp(step.mapId, signal);

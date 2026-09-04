@@ -21,7 +21,7 @@ const initialState = (): StoryRenderState => ({
     shakeDurationMs: 0, shakeAmplitude: 0, shakeRevision: 0,
   },
   storyNpcs: {},
-  illust: { imageUrl: null, visible: false, fadeMs: 0, revision: 0 },
+  illust: { imageUrl: null, previousImageUrl: null, visible: false, fadeMs: 0, crossFadeDelayMs: 0, revision: 0 },
   stage: { id: null, phase: "", revision: 0 },
 });
 
@@ -57,6 +57,11 @@ export async function runPhase24StoryChecks() {
   await run({ id: "shake", type: "shake", amplitude: 7, durationMs: 0, advanceMode: "auto" });
   await run({ id: "fade", type: "fade", direction: "out", durationMs: 0, advanceMode: "auto" });
   await run({ id: "illust", type: "illustOverlay", imageUrl: "/illust.png", visible: true, fadeMs: 1, advanceMode: "auto" });
+  await run({ id: "dialogue-a", type: "dialogue", speakerName: "A", activeActorId: "a", text: "A", advanceMode: "click" });
+  await run({ id: "dialogue-b", type: "dialogue", speakerName: "B", activeActorId: "b", text: "B", advanceMode: "click" });
+  if (Object.keys(state.portraits).join(",") !== "b") throw new Error("Dialogue must retain only the current speaker portrait.");
+  await run({ id: "narration-clear", type: "narration", text: "narration", advanceMode: "click" });
+  if (Object.keys(state.portraits).length !== 0) throw new Error("Narration must clear dialogue portraits.");
   await run({ id: "name", type: "dialogue", speakerName: "테오", text: "(플레이어 이름), 괜찮으십니까?", advanceMode: "click" });
   if (state.camera.x !== 12 || state.camera.zoom !== 1.4 || state.camera.shakeAmplitude !== 7) throw new Error("Camera step state mismatch.");
   if (!state.fade.visible || !state.illust.visible) throw new Error("Fade/illust state mismatch.");

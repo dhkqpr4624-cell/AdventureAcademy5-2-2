@@ -11,6 +11,8 @@ export type QuestDefinition = {
   description: string;
   objectiveText: string;
   giverNpcId: NpcId;
+  /** Optional NPC who receives the completed quest; defaults to giverNpcId. */
+  turnInNpcId?: NpcId;
   offerStorySequenceId: string;
   acceptStorySequenceId?: string;
   activeStorySequenceId?: string;

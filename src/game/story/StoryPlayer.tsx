@@ -50,7 +50,7 @@ const INITIAL_RENDER_STATE: StoryRenderState = {
     shakeDurationMs: 0, shakeAmplitude: 0, shakeRevision: 0,
   },
   storyNpcs: {},
-  illust: { imageUrl: null, visible: false, fadeMs: 250, revision: 0 },
+  illust: { imageUrl: null, previousImageUrl: null, visible: false, fadeMs: 250, crossFadeDelayMs: 0, revision: 0 },
   stage: { id: null, phase: "", revision: 0 },
 };
 
@@ -430,7 +430,9 @@ export function StoryPlayer({
       ? sequence.actors[activeActorId]
       : undefined;
   const visiblePortraits =
-    Object.keys(renderState.portraits).length > 0
+    isNarration || currentStep?.type === "choice"
+      ? []
+      : Object.keys(renderState.portraits).length > 0
       ? Object.values(renderState.portraits)
       : dialogueActor?.portraits[dialogueActor.defaultExpression ?? "default"]
         ? [{
@@ -490,6 +492,7 @@ export function StoryPlayer({
       {renderState.stage.id === "chapter2-intro" && (
         <Chapter2IntroStage phase={renderState.stage.phase} revision={renderState.stage.revision} />
       )}
+      {sequence.persistentIllustBackdrop && <div className="story-illust-backdrop" aria-hidden="true" />}
       {fixedAirshipSky && (
         <div className="story-fixed-sky" aria-hidden="true">
           <div className="story-sky-scroll-track">
@@ -576,13 +579,21 @@ export function StoryPlayer({
 
       {renderState.illust.imageUrl && (
         <div
-          key={renderState.illust.revision}
-          className={`story-illust-overlay has-image ${renderState.illust.visible ? "is-visible" : ""}`}
+          className={`story-illust-overlay has-image ${sequence.persistentIllustBackdrop ? "has-persistent-backdrop" : ""} ${renderState.illust.visible ? "is-visible" : ""}`}
           style={{
             "--story-illust-fade": `${renderState.illust.fadeMs}ms`,
           } as CSSProperties}
         >
-          <img src={renderState.illust.imageUrl} alt="" draggable={false} />
+          {renderState.illust.previousImageUrl && (
+            <img
+              className="is-previous"
+              src={renderState.illust.previousImageUrl}
+              alt=""
+              draggable={false}
+              style={{ "--story-illust-crossfade-delay": `${renderState.illust.crossFadeDelayMs}ms` } as CSSProperties}
+            />
+          )}
+          <img key={renderState.illust.imageUrl} className="is-current" src={renderState.illust.imageUrl} alt="" draggable={false} />
         </div>
       )}
 

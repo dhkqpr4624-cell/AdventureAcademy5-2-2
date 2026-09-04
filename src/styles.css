@@ -1524,6 +1524,7 @@ button:focus-visible {
 .player-name-body input { padding: 14px; border: 3px solid #765330; background: #fff4d4; color: #2b1c10; font: 700 18px inherit; }
 .player-name-body small { text-align: right; }
 .quest-reward-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; padding: 20px; }
+.quest-reward-grid.is-base-only { grid-template-columns: minmax(0, 1fr); }
 .quest-reward-grid article { display: grid; justify-items: center; gap: 8px; padding: 16px; border: 3px solid #765330; background: #f3e4bc; text-align: center; }
 .quest-reward-grid article.is-locked { filter: grayscale(1); opacity: .7; }
 .reward-icon { display: grid; place-items: center; width: 58px; height: 58px; border: 2px solid #765330; background: #d3b679; }
@@ -2580,7 +2581,7 @@ button:focus-visible {
 .story-skip-button:disabled { opacity: .55; cursor: default; }
 .story-inline-info { color: #3197ff; font-weight: 800; }
 
-.wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 100px; height: 100px; transform: translate(-50%, -18%); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; animation: wooden-wand-fire 1s steps(8) 1 both; }
+.wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 400px; height: 400px; transform: translate(-50%, -79.5%); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: wooden-wand-fire 1s steps(8) 1 both; }
 @keyframes wooden-wand-fire { from { background-position-x: 0; } to { background-position-x: 114.2857%; } }
 .chapter2-stage-deck .chapter2-story-npc-aron { left: 66%; }
 .chapter2-stage-deck .chapter2-story-npc-kapp { left: 77%; }
@@ -2769,6 +2770,24 @@ button:focus-visible {
   pointer-events: none;
 }
 
+.story-illust-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  background: #000;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.story-illust-overlay.has-persistent-backdrop {
+  background: transparent;
+  animation: none;
+}
+
+.story-illust-overlay.has-persistent-backdrop.is-visible img.is-current {
+  animation: story-portal-illust-in var(--story-illust-fade) ease both;
+}
+
 .story-illust-overlay img {
   position: absolute;
   top: 50%;
@@ -2785,9 +2804,22 @@ button:focus-visible {
   transition: opacity var(--story-illust-fade) ease;
 }
 
-.story-illust-overlay.is-visible img {
+.story-illust-overlay.is-visible img.is-current {
   opacity: 1;
   animation: story-portal-illust-in var(--story-illust-fade) 400ms ease both;
+}
+
+.story-illust-overlay img.is-previous {
+  z-index: 0;
+  opacity: 1;
+  animation: story-illust-previous-out var(--story-illust-fade) ease var(--story-illust-crossfade-delay, 0ms) both;
+}
+
+.story-illust-overlay img.is-current { z-index: 1; }
+
+@keyframes story-illust-previous-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes story-portal-backdrop-in {

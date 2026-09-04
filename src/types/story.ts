@@ -168,6 +168,8 @@ export type StoryStep =
       imageUrl?: string;
       visible: boolean;
       fadeMs?: number;
+      crossFadeDelayMs?: number;
+      removeAfterFade?: boolean;
       hideDialogue?: boolean;
       waitForFade?: boolean;
       advanceMode: "auto";
@@ -232,6 +234,8 @@ export type StorySequence = {
   skippable: boolean;
   /** Optional data-driven destination used by StoryPlayer's skip control. */
   skipTarget?: { stepId?: string; screen?: ScreenId; complete?: boolean };
+  /** Keep a solid viewport backdrop mounted independently of illustration fades. */
+  persistentIllustBackdrop?: boolean;
   onCompleteScreen: ScreenId;
 };
 
@@ -288,8 +292,10 @@ export type StoryRenderState = {
   }>;
   illust: {
     imageUrl: string | null;
+    previousImageUrl: string | null;
     visible: boolean;
     fadeMs: number;
+    crossFadeDelayMs: number;
     revision: number;
   };
   stage: {

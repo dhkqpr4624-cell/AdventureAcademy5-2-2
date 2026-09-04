@@ -51,7 +51,6 @@ const memoryQuestRareRewardCondition = getQuestRareRewardCondition(
 const tornClothQuestRareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-3-torn-cloth",
 );
-const prehistoryQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-1-prehistory");
 const jeonQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
@@ -113,6 +112,7 @@ export function BaseCampScreen({
   const viewportRef = useRef<BaseCampViewportController>(null);
   const interactionLockRef = useRef(false);
   const questAcceptProcessingRef = useRef(false);
+  const prehistoryRewardClaimProcessingRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -294,10 +294,8 @@ export function BaseCampScreen({
       return;
     }
     if (finishedSequenceId === "npc-aron-floor-1-quest-complete" && effectiveQuestState[prehistoryQuestId] === "active") {
-      setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
-      setRewardClaimed(prehistoryQuestId);
-      completeQuestAfterRewardClaim(prehistoryQuestId);
-      onAutoSave("questCompleted");
+      revealReward(prehistoryQuestId);
+      setPrehistoryRewardOpen(true);
       return;
     }
     if (finishedSequenceId === "npc-kaiden-quest-complete") {
@@ -656,22 +654,16 @@ export function BaseCampScreen({
         bestCorrect={floorBestCorrect["floor-1"] ?? 0}
         claimed={Boolean(rewardClaimed[prehistoryQuestId])}
         questTitle="던전 1층 조사 완료"
-        rareRewardItemId="weapon-hand-axe"
-        requiredCorrect={prehistoryQuestRareRewardCondition.requiredCorrect}
+        baseGold={10}
+        showRareReward={false}
         onCancel={() => setPrehistoryRewardOpen(false)}
         onClaim={() => {
-          if (rewardClaimed[prehistoryQuestId]) return;
-          const reward = resolveQuestRewardGrant(floorBestCorrect["floor-1"] ?? 0, prehistoryQuestRareRewardCondition.requiredCorrect);
-          const rareUnlocked = reward.rareUnlocked;
-          setPlayerState((current) => ({ ...current, gold: current.gold + reward.gold }));
-          setInventoryState((current) => {
-            let next = removeQuestItemsAfterRewardClaim(current, prehistoryQuestId);
-            if (rareUnlocked) next = changeItemQuantity(next, "weapon-hand-axe", 1);
-            return next;
-          });
+          if (rewardClaimed[prehistoryQuestId] || prehistoryRewardClaimProcessingRef.current) return;
+          prehistoryRewardClaimProcessingRef.current = true;
+          setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
+          setInventoryState((current) => removeQuestItemsAfterRewardClaim(current, prehistoryQuestId));
           setRewardClaimed(prehistoryQuestId);
           completeQuestAfterRewardClaim(prehistoryQuestId);
-          if (rareUnlocked) setAchievementReceived("achievement-floor-1-rare-reward");
           onAutoSave("questCompleted");
           setPrehistoryRewardOpen(false);
         }}

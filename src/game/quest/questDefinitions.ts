@@ -8,6 +8,7 @@ export const QUEST_DEFINITIONS: readonly QuestDefinition[] = [
     description: "던전 안의 주민과 살아 움직이는 역사의 정체를 파악한다.",
     objectiveText: "던전 1층 마지막 방 조사",
     giverNpcId: "theo",
+    turnInNpcId: "kaiden",
     offerStorySequenceId: "npc-theo-floor-1-quest-available",
     acceptStorySequenceId: "npc-theo-floor-1-quest-accepted",
     activeStorySequenceId: "npc-theo-floor-1-quest-active",

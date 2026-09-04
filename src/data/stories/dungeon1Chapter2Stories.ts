@@ -6,7 +6,7 @@ const scholar = createChapter2Actor("scholar", "신진사대부", "", "#c7a96b")
 const yi = createChapter2Actor("yi", "이성계", "", "#d6b56f");
 const actors = { luna, scholar, yi };
 const d = (id: string, speakerId: keyof typeof actors, text: string, expression?: string, nextStepId?: string): StoryStep => ({ id, type: "dialogue", speakerId, speakerName: actors[speakerId].name, activeActorId: speakerId, ...(expression ? { expression } : {}), text, ...(nextStepId ? { nextStepId } : {}), advanceMode: "click" });
-const base = (id: string, title: string, steps: StoryStep[]): StorySequence => ({ id, title, scenes: [{ id: `${id}-scene`, steps }], backgrounds: {}, actors, replayable: false, skippable: false, onCompleteScreen: "dungeon" });
+const base = (id: string, title: string, steps: StoryStep[], persistentIllustBackdrop = false): StorySequence => ({ id, title, scenes: [{ id: `${id}-scene`, steps }], backgrounds: {}, actors, replayable: false, skippable: false, persistentIllustBackdrop, onCompleteScreen: "dungeon" });
 
 export const DUNGEON1_ENTRY_STORY = base("dungeon1-chapter2-entry", "수상한 주민", [
   d("d1-entry-1", "scholar", " 누구냐! 여기, 수상한 자가 있다! 이 자들을 잡아라! "),
@@ -41,9 +41,9 @@ export const DUNGEON1_FINAL_STORY = base("dungeon1-chapter2-final", "조선의 �
   d("yi-answer-4", "yi", " 약속한대로 자네들을 보내주겠노라. "),
   d("scholar-2", "scholar", " 허나..! 저들은 수상한 자들이온데..! "),
   d("yi-leave-1", "yi", " 어허! "), d("yi-leave-2", "yi", " 짐은 약속을 지킨다. "), d("yi-leave-3", "yi", " 앞으로 나아가거라. "),
-  { id: "yi-hide", type: "illustOverlay", visible: false, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
+  { id: "yi-hide", type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
   { id: "yi-hide-hold", type: "wait", durationMs: 1500, advanceMode: "auto" },
-  { id: "narration", type: "narration", text: "이성계와 신진사대부는 그렇게 말하고 흔적도 없이 사라져버렸다.", advanceMode: "click" },
+  { id: "narration", type: "narration", text: "이성계와 신진사대부는 그렇게 말하고는 흔적도 없이 사라졌다", advanceMode: "click" },
   d("luna-return-1", "luna", " 던전 2층으로 가는 문이 열렸네, (플레이어 이름)! 그리고 하나 알아낸 것도 있어. "),
   d("luna-return-2", "luna", " 이 던전 안에서는.. 역사가 살아 움직이고 있어. "),
   d("luna-return-3", "luna", " 이건 절대 흔한 일이 아니야. 무엇이 원인인지.. 그것은 앞으로 차차 알아가야겠지. "),
@@ -51,8 +51,8 @@ export const DUNGEON1_FINAL_STORY = base("dungeon1-chapter2-final", "조선의 �
   d("luna-shadow-1", "luna", " 자, 잠깐.. 근데 저게 뭐지? ", "scared"),
   { id: "shadow-show", type: "illustOverlay", imageUrl: image("mysterious-figure.png"), visible: true, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
   { id: "shadow-hold", type: "wait", durationMs: 3000, advanceMode: "auto" },
-  { id: "shadow-vanish", type: "illustOverlay", imageUrl: image("vanished-figure.png"), visible: true, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
+  { id: "shadow-vanish", type: "illustOverlay", imageUrl: image("vanished-figure.png"), visible: true, fadeMs: 700, crossFadeDelayMs: 500, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
   { id: "shadow-final-hold", type: "wait", durationMs: 1500, advanceMode: "auto" },
   d("luna-shadow-2", "luna", " 응..? 방금 저기에 뭔가.. 있지 않았어? ", "scared"),
   d("luna-shadow-3", "luna", " 으으.. 뭔가 느낌이 이상한걸.. (플레이어이름)! 어서 돌아가자! ", "scared"),
-]);
+], true);

@@ -28,7 +28,7 @@ export function runQuestMarkerChecks() {
   );
   assert(
     resolveNpcQuestMarker(
-      { offeredQuestIds: ["available-quest", "ready-quest"] },
+      { id: "kaiden", offeredQuestIds: ["available-quest", "ready-quest"] },
       {
         "available-quest": "available",
         "ready-quest": "readyToComplete",
@@ -42,5 +42,15 @@ export function runQuestMarkerChecks() {
       resolveNpcQuestMarker(NPC_BY_ID.theo, { [questId]: "available" }) ===
         "none",
     "quest-less NPCs must not inherit a marker from a slot or another NPC",
+  );
+
+  const floor1QuestId = "quest-floor-1-prehistory";
+  assert(
+    resolveNpcQuestMarker(NPC_BY_ID.kaiden, { [floor1QuestId]: "readyToComplete" }) === "readyToComplete",
+    "Dungeon 1 completion marker must resolve to Aron",
+  );
+  assert(
+    resolveNpcQuestMarker(NPC_BY_ID.theo, { [floor1QuestId]: "readyToComplete" }) === "none",
+    "Dungeon 1 completion marker must not remain on Theo",
   );
 }
