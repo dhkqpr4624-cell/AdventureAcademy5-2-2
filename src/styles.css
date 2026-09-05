@@ -2581,7 +2581,7 @@ button:focus-visible {
 .story-skip-button:disabled { opacity: .55; cursor: default; }
 .story-inline-info { color: #3197ff; font-weight: 800; }
 
-.wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 400px; height: 400px; transform: translate(-50%, -79.5%); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: wooden-wand-fire 1s steps(8) 1 both; }
+.wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 800px; height: 800px; transform: translate(-50%, -89.75%); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: wooden-wand-fire 1s steps(8) 1 both; }
 @keyframes wooden-wand-fire { from { background-position-x: 0; } to { background-position-x: 114.2857%; } }
 .chapter2-stage-deck .chapter2-story-npc-aron { left: 66%; }
 .chapter2-stage-deck .chapter2-story-npc-kapp { left: 77%; }

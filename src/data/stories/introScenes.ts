@@ -79,7 +79,7 @@ const SCENE_2: StorySequence = {
     d("arrival-theo-03", "theo", "테오", " 아론님, 카프님? 무슨 일이시죠? "),
     d("arrival-kapp-02", "kapp", "카프", " ...아 "),
     d("arrival-kapp-03", "kapp", "카프", " 이런, 아무것도 아닙니다. 베이스캠프에 대해 생각하고 있었어요. "),
-    d("arrival-aron-03", "aron", "아론", " 미안합니다. 저도 잠시 멍을 때렸군요. "),
+    d("arrival-aron-03", "aron", "아론", " 저도 잠시 한눈 팔고 있었군요. 미안합니다. "),
     d("arrival-aron-04", "aron", "아론", " 루나 대원의 말대로, 우선 베이스캠프를 세울 위치를 살펴보죠. "),
     d("arrival-aron-05", "aron", "아론", " 그럼, 출발하겠습니다. "),
     { id: "arrival-exit", type: "setStagePhase", stageId: "chapter2-intro", phase: "arrival-exit", durationMs: 4500, hideDialogue: true, advanceMode: "auto" },

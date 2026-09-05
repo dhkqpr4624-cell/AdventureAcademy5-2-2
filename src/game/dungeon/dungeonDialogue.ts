@@ -26,7 +26,7 @@ export const dungeonDialogue = {
   encounter: (monsterName: string, elite = false) =>
     `${elite ? "정예 몬스터, " : ""}${withSubjectParticle(monsterName)} 나타났다!`,
   attackTitle: (actorName: string) => `${actorName}의 공격!`,
-  swingSword: (actorName: string) => `${withSubjectParticle(actorName)} 검을 휘두른다!`,
+  swingSword: (actorName: string) => `${withSubjectParticle(actorName)} 지팡이를 휘두른다.`,
   defeatedMonster: (monsterName: string) => `${withObjectParticle(monsterName)} 쓰러뜨렸다!`,
   stunned: (monsterName: string) => `${withTopicParticle(monsterName)} 기절해서 움직일 수 없다!`,
   turn: (actorName: string) => `${actorName}의 턴!`,
