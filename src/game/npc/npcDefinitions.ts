@@ -43,7 +43,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-luna-floor-3-quest-available",
       questActiveStorySequenceId: "npc-luna-floor-3-quest-active",
     },
-    offeredQuestIds: ["quest-floor-3-torn-cloth", "quest-floor-4-jeon-rescue", "quest-floor-9-goryeo-society-culture"],
+    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-3-torn-cloth", "quest-floor-4-jeon-rescue", "quest-floor-9-goryeo-society-culture"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.luna),
   },
   {
@@ -83,14 +83,14 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-kaiden-quest-available",
       questActiveStorySequenceId: "npc-kaiden-quest-active",
     },
-    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-6-balhae", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
+    offeredQuestIds: ["quest-floor-6-balhae", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.kaiden),
   },
   {
     id: "jeon",
     displayName: "카프",
-    role: "기억을 잃은 남자",
-    baseCampDisplayRole: "기억을 잃은 남자",
+    role: "부지휘관",
+    baseCampDisplayRole: "부지휘관",
     baseCampSpawnId: BASE_CAMP_NPC_SLOT_ASSIGNMENTS.jeon,
     idle: {
       ...commonIdle,

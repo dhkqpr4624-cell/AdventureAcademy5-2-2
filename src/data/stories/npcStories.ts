@@ -157,7 +157,7 @@ export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
     { actor: "luna", text: " 이 던전은 특이해요, 대장. 던전 안에는 역사 속 인물들이 살아 움직이고 있어요. " },
     { actor: "luna", text: " 무엇이 원인인지는 차차 살펴봐야겠지만.. 그들의 고민을 해결해주면 그들이 다시 역사 속으로 사라지는 것 같았어요. " },
     { actor: "luna", text: " 아마 그들의 고민을 해결해주며 앞으로 나아가야겠어요. " },
-    { actor: "kapp", expression: "surprised", text: " 던전 안에 인물들이 살아 움직인다고요..? " },
+    { actor: "kapp", expression: "surprised", text: " 던전 안에서 인물들이 살아 움직인다고요..? " },
     { actor: "theo", text: " 카프님..? 뭔가 짐작 가는 바라도 있으십니까? " },
     { actor: "kapp", expression: "surprised", text: " ... " },
     { actor: "kapp", expression: "surprised", text: " 아뇨, 아무것도 아니에요.. " },
@@ -247,9 +247,7 @@ export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
   "npc-theo-default": sequence("npc-theo-default", "theo", "default", [
     "보급품은 차근차근 정리하고 있습니다. 출발 전에는 반드시 장비를 점검해 주십시오.",
   ]),
-  "npc-kaiden-default": sequence("npc-kaiden-default", "kaiden", "serious", [
-    "던전의 흐름이 불안정하다. 방심하지 마.",
-  ]),
+  "npc-kaiden-default": sequence("npc-kaiden-default", "kaiden", "default", [" ... "]),
   "npc-kaiden-quest-available": sequence(
     "npc-kaiden-quest-available",
     "kaiden",
@@ -282,17 +280,37 @@ export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
       { text: "던전에서 오답을 선택하면 큰 피해를 입게 되니 조심하는 것도 명심해라.", emphasis: "danger" },
     ],
   ),
-  "npc-kaiden-floor-2-quest-available": sequence("npc-kaiden-floor-2-quest-available", "kaiden", "serious", [
-    "루나의 조사에 따르면, 던전 근처에서 뒤틀린 기억의 조각이 발견되었다고 한다.",
-    "분명 던전 2층 안에, 이 조각과 딱 맞는 조각이 1개 더 있을 것으로 보인다.",
-    "{{playerName}}, 던전 2층으로 내려가서 뒤틀린 기억의 조각을 찾아 오도록.",
+  "npc-luna-floor-2-quest-available": chapter2DialogueSequence("npc-luna-floor-2-quest-available", [
+    { actor: "luna", text: " (플레이어 이름), 어서와. 다음 층으로 갈 준비는 됐어? " },
+    { actor: "theo", text: " 아론님과 카프님은 여전히 이 던전에 대해서 이야기를 나누시는 것 같습니다. 뭔가 분위기로 봐서는 저희가 모르는 중요한 것이 있는 것 같은데 도통 저희에게는 알려주지를 않으시네요.." },
+    { actor: "luna", text: " .... " },
+    { actor: "luna", expression: "smile", text: " 아~ 모르겠다! 때가 되면 알려주시겠지, 뭐! " },
+    { actor: "luna", text: " 아무튼, 대장님은 우리에게 2층으로 진입해서 수상한 물건이 있는지 살펴보고 회수해 오라고 말씀하셨어. " },
+    { actor: "luna", text: " 준비가 되면 출발하자, (플레이어 이름). " },
   ]),
-  "npc-kaiden-floor-2-quest-accepted": sequence("npc-kaiden-floor-2-quest-accepted", "kaiden", "serious", ["좋다. 던전을 조사한 후 바로 보고하도록."]),
-  "npc-kaiden-floor-2-quest-active": sequence("npc-kaiden-floor-2-quest-active", "kaiden", "serious", ["기억 조각은 던전 2층에 있다. 서두르되, 주변을 꼼꼼히 살펴."]),
-  "npc-kaiden-floor-2-quest-complete": sequence("npc-kaiden-floor-2-quest-complete", "kaiden", "serious", ["기억의 조각을 가져왔군. 바로 확인해 보겠다."]),
-  "npc-jeon-default": sequence("npc-jeon-default", "jeon", "default", [
-    "...나는...\n누구지..?",
+  "npc-luna-floor-2-quest-accepted": chapter2DialogueSequence("npc-luna-floor-2-quest-accepted", [{ actor: "luna", text: " 준비가 되면 출발하자, (플레이어 이름). " }]),
+  "npc-luna-floor-2-quest-active": chapter2DialogueSequence("npc-luna-floor-2-quest-active", [{ actor: "luna", text: " 2층의 수상한 물건을 찾아보자. " }]),
+  "npc-aron-floor-2-quest-complete": chapter2DialogueSequence("npc-aron-floor-2-quest-complete", [
+    { actor: "aron", text: " 여러분, 오셨군요. 귀환이 늦어지셔서 걱정하던 참이었습니다. " },
+    { actor: "aron", text: " 그런데.. 손에 들고 있는 그것은..? " },
+    { actor: "theo", text: " 2층에서 있었던 일을 해결하고 나니 바닥에 떨어져 있었습니다. " },
+    { actor: "theo", text: " 오래된 오르골 같은데.. 이 시대의 물건은 아닌 것 같아서 말입니다. " },
+    { actor: "kapp", expression: "surprised", text: " ...! " },
+    { actor: "kapp", expression: "surprised", text: " 그 물건, 저에게 주세요. 제가 보관하죠. " },
+    { actor: "theo", expression: "worried", text: " ... " },
+    { actor: "theo", expression: "worried", text: " 그 물건이 무엇인지 자세히 살펴보지 않고 말입니까..? " },
+    { actor: "theo", expression: "worried", text: " 저에게 맡겨주시면, 그 물건에 대해 자세히 감정할 수 있습니다. " },
+    { actor: "aron", expression: "serious", text: " 아니요, 테오. " },
+    { actor: "aron", expression: "serious", text: " 이 물건은 오염된 물건이 틀림없습니다. " },
+    { actor: "aron", expression: "serious", text: " 저희가 담당하겠습니다. 신경쓰지 말고, 지금처럼 던전 토벌에 힘써주십시오. " },
+    { actor: "luna", expression: "angry", text: " 네? 잠시만요, 대장! " },
+    { actor: "luna", expression: "angry", text: " 그렇게 제대로 알아보지도 않고 어떻게..! " },
+    { actor: "aron", expression: "serious", text: " 미안합니다. " },
+    { actor: "aron", expression: "serious", text: " 제 말에 따라주십시오. " },
+    { actor: "theo", expression: "worried", text: " ... " },
+    { actor: "theo", expression: "worried", text: " 알겠습니다. " },
   ]),
+  "npc-jeon-default": sequence("npc-jeon-default", "jeon", "default", [" ... "]),
 };
 
 NPC_STORY_SEQUENCES["npc-luna-floor-4-quest-complete"] = {

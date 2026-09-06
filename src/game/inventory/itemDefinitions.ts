@@ -32,6 +32,11 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
     rarity: "rare", description: "고조선의 비파형 동검을 본뜬 희귀 무기 스킨이다.",
     icon: `${import.meta.env.BASE_URL}assets/items/bipa-bronze-sword.png`, stackable: false,
   },
+  "weapon-yangban-folding-fan": {
+    id: "weapon-yangban-folding-fan", name: "양반의 부채", type: "weaponSkin",
+    rarity: "rare", description: "조선 양반의 품격을 상징하는 희귀 무기다.",
+    icon: `${import.meta.env.BASE_URL}assets/items/yangban-folding-fan.png`, stackable: false,
+  },
   "weapon-hand-axe": {
     id: "weapon-hand-axe", name: "주먹도끼", type: "weaponSkin",
     rarity: "rare", description: "구석기 시대의 주먹도끼를 본뜬 희귀 무기 스킨이다.",

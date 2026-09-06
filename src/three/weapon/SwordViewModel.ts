@@ -67,6 +67,11 @@ export const GOJOSEON_BRONZE_SWORD_DEFINITION: SwordDefinition = {
   id: "gojoseon-bronze-sword",
   textureUrl: `${import.meta.env.BASE_URL}assets/swords/bipa-bronze-sword.png`,
 };
+export const YANGBAN_FOLDING_FAN_DEFINITION: SwordDefinition = {
+  ...BASIC_SWORD_DEFINITION,
+  id: "yangban-folding-fan",
+  textureUrl: `${import.meta.env.BASE_URL}assets/swords/yangban-folding-fan.png`,
+};
 export const HAND_AXE_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,
   id: "hand-axe",
@@ -93,6 +98,7 @@ export function getSwordDefinitionForEquippedItem(
 ): SwordDefinition {
   if (equippedItemId === "weapon-wooden-wand") return WOODEN_WAND_DEFINITION;
   if (equippedItemId === "weapon-gojoseon-bronze-dagger") return GOJOSEON_BRONZE_SWORD_DEFINITION;
+  if (equippedItemId === "weapon-yangban-folding-fan") return YANGBAN_FOLDING_FAN_DEFINITION;
   if (equippedItemId === "weapon-hand-axe") return HAND_AXE_DEFINITION;
   if (equippedItemId === "weapon-chiljido") return CHILJIDO_DEFINITION;
   if (equippedItemId === "weapon-silla-ring-pommel-sword") return SILLA_RING_POMMEL_SWORD_DEFINITION;

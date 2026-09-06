@@ -38,7 +38,7 @@ const SCENE_1: StorySequence = {
     d("branch-remember-theo-01", "theo", "테오", " 궁금해하실까봐 미리 말씀드리면, 카이든 대장님께서는 오늘 다른 임무로 같이 오지 못하셨습니다. ", "smile"),
     d("branch-remember-theo-02", "theo", "테오", " 그럼 이번에도 잘 부탁드립니다, (플레이어 이름). ", "smile", "deck-party-enter"),
     { id: "deck-party-enter", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-party", durationMs: 2200, advanceMode: "auto" },
-    d("deck-aron-01", "aron", "아론", " 여기 계셨군요. 테오님, 그리고 루나님. "),
+    d("deck-aron-01", "aron", "아론", " 여기 계셨군요. 테오 경, 그리고 루나 경. "),
     { id: "deck-surprise", type: "setStagePhase", stageId: "chapter2-intro", phase: "deck-surprise", durationMs: 3214, hideDialogue: true, advanceMode: "auto" },
     d("deck-theo-03", "theo", "테오", " 아, 이번에 저희와 함께 포탈에 들어가실 분들이죠. "),
     d("deck-theo-04", "theo", "테오", " 반갑습니다. 보급담당, 테오입니다. "),

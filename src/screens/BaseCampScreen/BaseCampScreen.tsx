@@ -163,7 +163,7 @@ export function BaseCampScreen({
   const needsEmergencyPotions = effectiveQuestState[prehistoryQuestId] !== "completed" &&
     getItemQuantity(inventoryState, "potion-small") === 0 &&
     getItemQuantity(inventoryState, "potion-medium") === 0 && playerState.gold < 20;
-  const hasMemoryFragment = getItemQuantity(inventoryState, "quest-memory-fragment") > 0;
+  const hasMemoryFragment = clearedFloorIds.includes("floor-2");
   const hasTornCloth = getItemQuantity(inventoryState, "quest-torn-cloth") > 0;
   const hasFoundJeon = clearedFloorIds.includes("floor-4");
   const hasClearedFloor5 = clearedFloorIds.includes("floor-5");
@@ -266,7 +266,7 @@ export function BaseCampScreen({
       : npc.id === "theo" && hasClearedFloor5 && effectiveQuestState[floor5QuestId] === "active"
         ? "npc-theo-floor-5-quest-complete"
       : npc.id === "kaiden" && hasMemoryFragment && effectiveQuestState[memoryQuestId] === "active"
-          ? "npc-kaiden-floor-2-quest-complete"
+          ? "npc-aron-floor-2-quest-complete"
         : npc.id === "luna" &&
             hasTornCloth &&
             effectiveQuestState[tornClothQuestId] === "active"
@@ -302,8 +302,9 @@ export function BaseCampScreen({
       setPrehistoryCompletionOpen(true);
       return;
     }
-    if (finishedSequenceId === "npc-kaiden-floor-2-quest-complete") {
-      setMemoryCompletionOpen(true);
+    if (finishedSequenceId === "npc-aron-floor-2-quest-complete") {
+      revealReward(memoryQuestId);
+      setRewardOpen(true);
       return;
     }
     if (finishedSequenceId === "npc-luna-floor-3-quest-complete") {
@@ -604,15 +605,18 @@ export function BaseCampScreen({
         bestCorrect={floorBestCorrect["floor-2"] ?? 0}
         claimed={Boolean(rewardClaimed[memoryQuestId])}
         requiredCorrect={memoryQuestRareRewardCondition.requiredCorrect}
+        questTitle="유교 질서에 따른 조선 사회의 모습 완료"
+        rareRewardItemId="weapon-yangban-folding-fan"
+        baseGold={7}
         onCancel={() => setRewardOpen(false)}
         onClaim={() => {
           if (rewardClaimed[memoryQuestId]) return;
           const reward = resolveQuestRewardGrant(floorBestCorrect["floor-2"] ?? 0, memoryQuestRareRewardCondition.requiredCorrect);
           const rareUnlocked = reward.rareUnlocked;
-          setPlayerState((current) => ({ ...current, gold: current.gold + reward.gold }));
+          setPlayerState((current) => ({ ...current, gold: current.gold + 7 }));
           setInventoryState((current) => {
             let next = removeQuestItemsAfterRewardClaim(current, memoryQuestId);
-            if (rareUnlocked) next = changeItemQuantity(next, "weapon-gojoseon-bronze-dagger", 1);
+            if (rareUnlocked) next = changeItemQuantity(next, "weapon-yangban-folding-fan", 1);
             return next;
           });
           setRewardClaimed(memoryQuestId);

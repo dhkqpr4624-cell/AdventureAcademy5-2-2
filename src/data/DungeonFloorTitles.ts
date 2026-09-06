@@ -16,7 +16,7 @@ export const DUNGEON_FLOOR_TITLES: DungeonFloorTitle[] = [
     floor: 2,
     floorId: "floor-2",
     title: "던전 2층",
-    subtitle: "청동기와 고조선",
+    subtitle: "유교 질서에 따른 조선 사회의 모습",
   },
   {
     floor: 3,
