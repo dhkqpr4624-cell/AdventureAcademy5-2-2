@@ -18,7 +18,6 @@ export function TitleScreen({ onNavigate, onOpenSettings, hasSave, onNewGame, on
   const [debugOpen, setDebugOpen] = useState(false);
 
   useEffect(() => {
-    if (!import.meta.env.DEV) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (!isDebugToggleShortcut(event) || event.repeat) return;
       event.preventDefault();
@@ -45,7 +44,7 @@ export function TitleScreen({ onNavigate, onOpenSettings, hasSave, onNewGame, on
         설정
       </button>
 
-      {import.meta.env.DEV && debugVisible && <div className="title-debug-floor-jump">
+      {debugVisible && <div className="title-debug-floor-jump">
         <button className="title-debug-toggle" type="button" onClick={() => setDebugOpen((open) => !open)}>[DEBUG]</button>
         {debugOpen && <div className="title-debug-panel" aria-label="던전 층 테스트 이동">
           {([1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as const).map((floor) => <button key={floor} type="button" onClick={() => onDebugFloorJump(`floor-${floor}`)}>Dungeon {floor}</button>)}
