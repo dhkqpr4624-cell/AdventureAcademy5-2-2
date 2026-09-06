@@ -14,14 +14,23 @@ export function runPhase29_11Checks() {
   assert(floor3Ids.every((id) => ["baekje-smile", "goguryeo-samjogo", "twisted-pensive-bodhisattva"].includes(id)), "Dungeon 3 monster assignment changed");
   assert(floor4Ids.every((id) => ["gold-crown-wraith", "corrupted-gaya-pottery", "silla-cheonma"].includes(id)), "Dungeon 4 has an old monster assignment");
 
-  const questIds = ["quest-floor-1-prehistory", "quest-floor-2-memory-fragment", "quest-floor-3-torn-cloth", "quest-floor-4-jeon-rescue"];
-  for (const [index, floor] of (["floor-1", "floor-2", "floor-3", "floor-4"] as const).entries()) {
+  const questIds = [
+    "quest-floor-1-prehistory", "quest-floor-2-memory-fragment", "quest-floor-3-torn-cloth",
+    "quest-floor-4-jeon-rescue", "quest-floor-5-unified-silla", "quest-floor-6-balhae",
+    "quest-floor-7-goryeo-founding", "quest-floor-8-goryeo-relations",
+    "quest-floor-9-goryeo-society-culture", "quest-floor-10-final-source",
+  ];
+  const floorIds = ["floor-1", "floor-2", "floor-3", "floor-4", "floor-5", "floor-6", "floor-7", "floor-8", "floor-9", "floor-10"] as const;
+  for (const [index, floor] of floorIds.entries()) {
     const state = createDebugFloorJumpState(floor);
     assert(state.questState[questIds[index]] === "available", `${floor} target quest must be available`);
     assert(state.clearedFloorIds.length === index, `${floor} cleared floor count mismatch`);
     assert(state.playerState.gold === index * 5, `${floor} gold mismatch`);
     assert(Object.keys(state.rewardClaimed).length === index, `${floor} claimed reward count mismatch`);
-    assert(Object.keys(state.achievementReceived).length === index, `${floor} achievement count mismatch`);
+    const expectedAchievementCount = Math.max(0, index - 1);
+    assert(Object.keys(state.achievementReceived).length === expectedAchievementCount, `${floor} achievement count mismatch`);
+    assert(state.floorUnlockState.unlockedFloorIds.includes(floor), `${floor} target floor must be unlocked`);
+    assert(state.questState[questIds[index]] !== "active", `${floor} target quest must remain unaccepted`);
     assert(!Object.keys(state.inventoryState.items).some((id) => id.startsWith("quest-")), `${floor} must not retain quest items`);
     for (let previous = 0; previous < index; previous += 1) assert(state.questState[questIds[previous]] === "completed", `${floor} previous quest incomplete`);
   }

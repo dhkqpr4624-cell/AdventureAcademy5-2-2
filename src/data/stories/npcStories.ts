@@ -300,7 +300,7 @@ export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
     { actor: "theo", expression: "worried", text: " ... " },
     { actor: "theo", expression: "worried", text: " 그 물건이 무엇인지 자세히 살펴보지 않고 말입니까..? " },
     { actor: "theo", expression: "worried", text: " 저에게 맡겨주시면, 그 물건에 대해 자세히 감정할 수 있습니다. " },
-    { actor: "aron", expression: "serious", text: " 아니요, 테오. " },
+    { actor: "aron", expression: "serious", text: " 아닙니다, 테오. " },
     { actor: "aron", expression: "serious", text: " 이 물건은 오염된 물건이 틀림없습니다. " },
     { actor: "aron", expression: "serious", text: " 저희가 담당하겠습니다. 신경쓰지 말고, 지금처럼 던전 토벌에 힘써주십시오. " },
     { actor: "luna", expression: "angry", text: " 네? 잠시만요, 대장! " },

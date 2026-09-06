@@ -216,7 +216,14 @@ export function App() {
         onInventoryChanged={() => requestSave("itemAcquired")}
         onGoldAwarded={() => requestSave("itemAcquired")}
         onDungeonEntered={() => { setGame((current) => ({ ...current, currentFloorId: activeFloorId })); requestSave("dungeonEntered"); }}
-        onDungeonAbandoned={() => setGame((current) => ({ ...current, currentFloorId: null, currentFloorRun: null }))}
+        onDungeonAbandoned={(reason) => setGame((current) => ({
+          ...current,
+          currentFloorId: null,
+          currentFloorRun: null,
+          playerState: reason === "defeat"
+            ? { ...current.playerState, currentHp: current.playerState.maxHp }
+            : current.playerState,
+        }))}
         savedFloorRun={game.currentFloorRun}
         onFloorRunChanged={updateFloorRun}
         firstObjectiveEventSeen={Boolean(game.firstObjectiveEventSeen[activeFloorId])}
@@ -240,6 +247,7 @@ export function App() {
             ...current,
             currentFloorId: null,
             currentFloorRun: null,
+            playerState: { ...current.playerState, currentHp: current.playerState.maxHp },
             clearedFloorIds: [...new Set([...current.clearedFloorIds, activeFloorId])],
             firstObjectiveEventSeen: { ...current.firstObjectiveEventSeen, [activeFloorId]: true },
             floorBestCorrect: { ...current.floorBestCorrect, [activeFloorId]: Math.max(current.floorBestCorrect[activeFloorId] ?? 0, correctCount) },
@@ -261,7 +269,7 @@ export function App() {
           }));
           requestSave("questCompleted");
         }}
-        onFloorCleared={() => { setGame((current) => ({ ...current, currentFloorId: null, currentFloorRun: null, clearedFloorIds: [...new Set([...current.clearedFloorIds, activeFloorId])] })); requestSave("floorCleared"); }}
+        onFloorCleared={() => { setGame((current) => ({ ...current, currentFloorId: null, currentFloorRun: null, playerState: { ...current.playerState, currentHp: current.playerState.maxHp }, clearedFloorIds: [...new Set([...current.clearedFloorIds, activeFloorId])] })); requestSave("floorCleared"); }}
         onDungeon10EndingStarted={() => {
           endingSequenceActiveRef.current = true;
           coordinatorRef.current?.dispose();

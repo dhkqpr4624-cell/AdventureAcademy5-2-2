@@ -181,7 +181,7 @@ type DungeonScreenProps = {
   playerState: PlayerState;
   setPlayerState: Dispatch<SetStateAction<PlayerState>>;
   onDungeonEntered: () => void;
-  onDungeonAbandoned: () => void;
+  onDungeonAbandoned: (reason?: "defeat" | "voluntary") => void;
   onFloorCleared: () => void;
   onGoldAwarded: () => void;
   inventoryState: InventoryState;
@@ -2147,7 +2147,7 @@ export function DungeonScreen({
     dungeonExitProcessingRef.current = true;
     setRunActionBusy(true);
     restartTestDungeon(true);
-    onDungeonAbandoned();
+    onDungeonAbandoned("defeat");
     onNavigate("baseCamp");
   };
 
@@ -2171,7 +2171,7 @@ export function DungeonScreen({
     setRunActionBusy(true);
     onCollectionRunReset();
     restartTestDungeon(false);
-    onDungeonAbandoned();
+    onDungeonAbandoned("voluntary");
     onNavigate("baseCamp");
   };
 
