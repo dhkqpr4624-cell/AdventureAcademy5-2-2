@@ -166,6 +166,7 @@ export class StoryStepRunner {
       case "setStagePhase":
         context.updateState((state) => ({
           ...state,
+          portraits: step.hideDialogue ? {} : state.portraits,
           dialogue: step.hideDialogue ? null : state.dialogue,
           stage: {
             id: step.stageId,

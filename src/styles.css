@@ -3918,7 +3918,6 @@ button:focus-visible {
   72% { transform: translateX(7px); }
   84% { transform: translateX(-4px); }
 }
-.dungeon3-completion-stage.is-flashback .story-player { filter: grayscale(1); }
 .dungeon3-flashback-stage { position: fixed; inset: 0; z-index: 8; overflow: hidden; background: #000; filter: grayscale(1); pointer-events: none; }
 .dungeon3-flashback-stage .d3-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
 .dungeon3-flashback-stage .d3-background { z-index: 0; }
@@ -3929,11 +3928,22 @@ button:focus-visible {
 .dungeon3-flashback-stage .d3-npcs { position: absolute; inset: 0; z-index: 2; }
 .dungeon3-flashback-stage .d3-npcs img { position: absolute; bottom: 10%; width: min(12vw, 150px); max-height: 54%; object-fit: contain; transform: translateX(-50%); transform-origin: bottom center; }
 .dungeon3-flashback-stage .d3-npcs.is-skill img { width: min(15vw, 180px); }
-.dungeon3-flashback-stage .d3-skill { position: absolute; bottom: 10%; width: min(24vw, 300px); aspect-ratio: 1; transform: translateX(-50%); background-repeat: no-repeat; image-rendering: pixelated; }
-.dungeon3-flashback-stage .d3-aron-skill { background-size: 600% 100%; animation: d3-aron-skill 1.2s steps(6) infinite; }
-.dungeon3-flashback-stage .d3-kapp-skill { background-size: 700% 100%; animation: d3-kapp-skill 1.4s steps(7) infinite; }
-.dungeon3-flashback-stage .d3-exclamation { position: absolute; z-index: 5; bottom: 56%; width: 60px; height: 60px; transform: translateX(-50%); background-size: 720px 60px; animation: d3-exclamation 1.714s steps(12) 1 both; }
+.dungeon3-flashback-stage .d3-npc-position { position: absolute; bottom: 10%; width: min(24vw, 300px); aspect-ratio: 1; transform: translateX(-50%); }
+.dungeon3-flashback-stage .d3-aron-position { width: min(20.5714vw, 257.143px); aspect-ratio: 6 / 7; }
+.dungeon3-flashback-stage .d3-skill { position: absolute; inset: 0; background-repeat: no-repeat; image-rendering: pixelated; }
+.dungeon3-flashback-stage .d3-aron-skill,
+.dungeon3-flashback-stage .d3-kapp-skill { background-size: 700% 100%; animation: d3-seven-frame-skill 0.875s linear infinite; }
+.dungeon3-flashback-stage .d3-exclamation { position: absolute; z-index: 5; left: 50%; width: 60px; height: 60px; transform: translate(-50%, -100%); background-size: 720px 60px; animation: d3-exclamation 1.714s steps(12) 1 both; }
+.dungeon3-flashback-stage .d3-aron-position .d3-exclamation { top: 7.5%; }
+.dungeon3-flashback-stage .d3-kapp-position .d3-exclamation { top: 13.5%; }
 @keyframes d3-world-rise { from { transform: translateY(100%); } to { transform: translateY(0); } }
-@keyframes d3-aron-skill { from { background-position-x: 0; } to { background-position-x: -600%; } }
-@keyframes d3-kapp-skill { from { background-position-x: 0; } to { background-position-x: -700%; } }
+@keyframes d3-seven-frame-skill {
+  0%, 14.284% { background-position-x: 0%; }
+  14.285%, 28.57% { background-position-x: 16.6667%; }
+  28.571%, 42.856% { background-position-x: 33.3333%; }
+  42.857%, 57.142% { background-position-x: 50%; }
+  57.143%, 71.427% { background-position-x: 66.6667%; }
+  71.428%, 85.713% { background-position-x: 83.3333%; }
+  85.714%, 100% { background-position-x: 100%; }
+}
 @keyframes d3-exclamation { from { background-position-x: 0; } to { background-position-x: -720px; } }

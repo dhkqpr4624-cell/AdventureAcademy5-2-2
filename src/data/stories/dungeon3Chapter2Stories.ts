@@ -22,6 +22,7 @@ const asset = (name: string) => `${import.meta.env.BASE_URL}assets/dungeon3/${na
 const show = (id: string, imageUrl: string, hideDialogue = false): StoryStep => ({ id, type: "illustOverlay", imageUrl, visible: true, fadeMs: 700, hideDialogue, waitForFade: true, advanceMode: "auto" });
 const hide = (id: string, hideDialogue = false): StoryStep => ({ id, type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, hideDialogue, waitForFade: true, advanceMode: "auto" });
 const hold = (id: string, durationMs: number): StoryStep => ({ id, type: "wait", durationMs, advanceMode: "auto" });
+export const DUNGEON3_WORLD_RISE_MS = 2_500;
 const seq = (id: string, title: string, steps: StoryStep[], extra: Partial<StorySequence> = {}): StorySequence => ({
   id, title, actors, backgrounds: {}, scenes: [{ id: `${id}-scene`, steps }], replayable: false,
   skippable: Boolean(extra.skipTarget), persistentIllustBackdrop: true, onCompleteScreen: "dungeon", ...extra,
@@ -93,12 +94,12 @@ export const DUNGEON3_COMPLETION_PRELUDE = seq("dungeon3-completion-prelude", "�
 export const DUNGEON3_FLASHBACK = seq("dungeon3-flashback", "7년 전", [
   hold("black-hold",1500), d("fb-1","aron"," 어디서부터 말씀드려야 할지 잘 모르겠습니다만... 아마 이것부터 말씀드려야 할 것 같습니다.","serious"),
   d("fb-2","aron"," <red><b>저희는 이 던전에 들어와 본 적이 있습니다..</b></red> ","serious"),
-  {id:"hq-stage",type:"checkpoint",checkpointId:"hq",advanceMode:"auto"}, hold("hq-rise",2500), d("hq-1","researcher"," 비... 비상입니다, ■■■님! "), d("hq-2","deneb"," 무슨 일이죠? "),
+  {id:"hq-transition",type:"setStagePhase",stageId:"dungeon3-flashback",phase:"hq",hideDialogue:true,advanceMode:"auto"}, {id:"hq-stage",type:"checkpoint",checkpointId:"hq",advanceMode:"auto"}, hold("hq-rise",DUNGEON3_WORLD_RISE_MS), hold("hq-dialogue-delay",2000), d("hq-1","researcher"," 비... 비상입니다, ■■■님! "), d("hq-2","deneb"," 무슨 일이죠? "),
   d("hq-3","researcher"," 서울 상공에 거대한 포탈이 나타났습니다. 그런데 그 규모가 매우 큽니다! "), d("hq-4","researcher"," 이대로 두면 매우 위험합니다. 부탁드립니다. 이 포탈을 막아주십시오! "),
   d("hq-5","deneb"," ... "), d("hq-6","deneb"," 알겠습니다. 위험할 수 있으니, 우선 저희 셋만 진입하겠습니다. "), d("hq-7","deneb"," 다른 분들은 혹시 모르니, 바깥에서 구조 대기를 부탁드립니다. "), d("hq-8","researcher"," 알겠습니다, ■■■님! "),
   {id:"black-between",type:"checkpoint",checkpointId:"black",advanceMode:"auto"}, d("transition-1","kapp"," 저희는 서울 상공에 있는 거대한 포탈 내부로 향했어요. "), d("transition-2","kapp"," 위험할 것이라는 것은 알고 있었습니다. 그러나... "),
   d("transition-3","kapp"," 저희가 예상했던 것보다도 훨씬 더, 이 곳은 위험한 곳이었죠. "), d("transition-4","kapp"," <red><b>저희가 포탈 안에 들어갔을 때는 이미.. 포탈이 현실세계를 반절 이상 집어삼킨 뒤였으니까요.</b></red> "),
-  {id:"ruins-stage",type:"checkpoint",checkpointId:"ruins",advanceMode:"auto"}, hold("ruins-rise",2500), d("r-1","aron"," ■■■님, 이대로는 위험합니다! ","shouting"), d("r-2","aron"," 현실의 시간은.. 이미 절반 이상이 이 던전에 잡아먹혔어요! ","shouting"),
+  {id:"ruins-transition",type:"setStagePhase",stageId:"dungeon3-flashback",phase:"ruins",hideDialogue:true,advanceMode:"auto"}, {id:"ruins-stage",type:"checkpoint",checkpointId:"ruins",advanceMode:"auto"}, hold("ruins-rise",DUNGEON3_WORLD_RISE_MS), hold("ruins-dialogue-delay",2000), d("r-1","aron"," ■■■님, 이대로는 위험합니다! ","shouting"), d("r-2","aron"," 현실의 시간은.. 이미 절반 이상이 이 던전에 잡아먹혔어요! ","shouting"),
   d("r-3","aron"," 현실의 시간을 잡아먹은 던전 속 인물들이 살아 움직이기 시작했단 말입니다!! ","shouting"), d("r-4","kapp"," ■■■, 어서 탈출해야 해요! ","shouting"),
   d("r-5","deneb"," ... "), d("r-6","deneb"," 아론님, 카프님. "), d("r-7","deneb"," 두 분은 먼저 빠져나가세요. 이 포탈은, 제가 막겠습니다. "),
   {id:"hide-for-alert",type:"setStagePhase",stageId:"dungeon3-flashback",phase:"alert",hideDialogue:true,advanceMode:"auto"}, {id:"ruins-alert",type:"checkpoint",checkpointId:"ruinsAlert",advanceMode:"auto"}, hold("alert-play",1715), {id:"ruins-resume",type:"checkpoint",checkpointId:"ruins",advanceMode:"auto"},
@@ -111,7 +112,9 @@ export const DUNGEON3_FLASHBACK = seq("dungeon3-flashback", "7년 전", [
 ], { skipTarget:{complete:true}, persistentIllustBackdrop:false, onCompleteScreen:"baseCamp" });
 
 export const DUNGEON3_CURRENT_STORY = seq("dungeon3-current-basecamp", "데네브", [
+  {id:"current-basecamp-transition",type:"setStagePhase",stageId:"dungeon3-current",phase:"entering",hideDialogue:true,advanceMode:"auto"},
   {id:"current-basecamp-map",type:"showBaseCamp",mapId:"academy-base-camp",advanceMode:"auto"},
+  hold("current-basecamp-dialogue-delay",2000),
   d("current-start","theo"," 그렇다면, 아까 던전에서 봤던 그 형체는... ","surprised"), d("c-2","kapp"," 아마 그 사람일거야. ","sad"), d("c-3","kapp"," 이 던전에 생명력을 바쳤을테니.. 그 사람의 의지가 던전 이곳 저곳에 나타나는 거겠지. ","sad"),
   d("c-4","luna"," 너..너무 슬픈 이야기였어... ","sad"), d("c-5","luna"," 그나저나, 그 분의 성함은 무엇인가요? ","sad"), d("c-6","kapp"," 그 사람의 이름은.. <blue><b>데네브</b></blue>. ","serious"), d("c-7","kapp"," 우리의 지휘관이자, 나와 친했던 동생이지. ","serious"),
   d("c-8","theo"," ...! 들어본 적이 있습니다! ","surprised"), d("c-9","theo"," 던전 안에서 전사하셨다고 들었는데.. 그런 사정이 있었군요. ","surprised"), d("c-10","aron"," ... ","sad"), d("c-11","aron"," 숨겨서 미안합니다. ","sad"), d("c-12","aron"," 섣부른 생각일수도 있으니, 여러분께 알려 혼란스럽게 해드리고 싶지 않았습니다. ","sad"),

@@ -1,9 +1,10 @@
-import {
+import { useEffect,
   useRef,
   useState,
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { playBgm, stopBgm } from "../../game/audioBgm";
 import type { ScreenId } from "../../app/routes";
 import { PlayerStatusBar } from "../../components/PlayerStatusBar";
 import { BASE_CAMP_MAP } from "../../data/baseCampMap";
@@ -128,7 +129,12 @@ export function BaseCampScreen({
   const [tornClothCompletionOpen, setTornClothCompletionOpen] = useState(false);
   const [rewardOpen, setRewardOpen] = useState(false);
   const [prehistoryRewardOpen, setPrehistoryRewardOpen] = useState(false);
-  const [tornClothRewardOpen, setTornClothRewardOpen] = useState(false);
+  const [tornClothRewardOpen, setTornClothRewardOpen] = useState(
+    Boolean(rewardRevealed["quest-floor-3-torn-cloth"] && !rewardClaimed["quest-floor-3-torn-cloth"]),
+  );
+  const reminiscenceActiveRef = useRef(
+    Boolean(rewardRevealed["quest-floor-3-torn-cloth"] && !rewardClaimed["quest-floor-3-torn-cloth"]),
+  );
   const [jeonRewardOpen, setJeonRewardOpen] = useState(false);
   const [floor5RewardOpen, setFloor5RewardOpen] = useState(false);
   const [floor6RewardOpen, setFloor6RewardOpen] = useState(false);
@@ -145,6 +151,18 @@ export function BaseCampScreen({
   const floor8QuestId = "quest-floor-8-goryeo-relations";
   const floor9QuestId = "quest-floor-9-goryeo-society-culture";
   const floor10QuestId = "quest-floor-10-final-source";
+  const startReminiscenceBgm = () => {
+    if (reminiscenceActiveRef.current) return;
+    reminiscenceActiveRef.current = true;
+    playBgm("reminiscence", undefined, { volume: 0.42, restartDelayRangeMs: [1_000, 2_000], exclusive: true });
+  };
+
+  useEffect(() => {
+    if (reminiscenceActiveRef.current) {
+      playBgm("reminiscence", undefined, { volume: 0.42, restartDelayRangeMs: [1_000, 2_000], exclusive: true });
+    }
+    return () => stopBgm("reminiscence");
+  }, []);
   const effectiveQuestState: QuestState = {
     ...questState,
     ...(questState[prehistoryQuestId] === "completed" && questState[memoryQuestId] === "locked" ? { [memoryQuestId]: "available" as const } : {}),
@@ -594,6 +612,7 @@ export function BaseCampScreen({
       }} />}
       {tornClothCompletionOpen && <Dungeon3CompletionStory
         player={playerState}
+        onReminiscenceStart={startReminiscenceBgm}
         onComplete={() => {
           setTornClothCompletionOpen(false);
           revealReward(tornClothQuestId);
@@ -649,6 +668,9 @@ export function BaseCampScreen({
           completeQuestAfterRewardClaim(tornClothQuestId);
           onAutoSave("questCompleted");
           setTornClothRewardOpen(false);
+          reminiscenceActiveRef.current = false;
+          stopBgm("reminiscence");
+          playBgm("village", undefined, { loop: true, volume: 0.42 });
         }}
       />}
       {prehistoryRewardOpen && <QuestRewardPopup

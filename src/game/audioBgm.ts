@@ -5,12 +5,15 @@ export type BgmTrackId =
   | "dungeon"
   | "boss-battle"
   | "sacrifice"
+  | "reminiscence"
   | "ending-credit";
 
 export type BgmOptions = {
   loop?: boolean;
   volume?: number;
   restartDelayMs?: number;
+  restartDelayRangeMs?: readonly [number, number];
+  exclusive?: boolean;
 };
 
 export const BGM_URLS: Readonly<Record<BgmTrackId, string>> = {
@@ -20,6 +23,7 @@ export const BGM_URLS: Readonly<Record<BgmTrackId, string>> = {
   dungeon: `${import.meta.env.BASE_URL}assets/audio/dungeon-theme.wav`,
   "boss-battle": `${import.meta.env.BASE_URL}assets/audio/boss-battle-theme.wav`,
   sacrifice: `${import.meta.env.BASE_URL}assets/audio/sacrifice-theme.wav`,
+  reminiscence: `${import.meta.env.BASE_URL}assets/audio/bgm/reminiscence-bgm.wav`,
   "ending-credit": `${import.meta.env.BASE_URL}assets/audio/ending-credit-bgm.wav`,
 };
 
@@ -27,6 +31,8 @@ type ActiveBgm = {
   id: BgmTrackId;
   audio: HTMLAudioElement;
   restartDelayMs: number;
+  restartDelayRangeMs?: readonly [number, number];
+  exclusive: boolean;
   restartTimer: number | null;
 };
 
@@ -61,6 +67,7 @@ export function playBgm(
   options: BgmOptions = {},
 ): void {
   if (typeof Audio === "undefined") return;
+  if (activeBgm?.exclusive && activeBgm.id !== id) return;
   if (activeBgm?.id === id) {
     tryPlayActive();
     return;
@@ -69,20 +76,23 @@ export function playBgm(
   disposeActive();
   const audio = new Audio(url);
   const restartDelayMs = Math.max(0, options.restartDelayMs ?? 0);
+  const restartDelayRangeMs = options.restartDelayRangeMs;
   audio.preload = "auto";
   audio.volume = Math.max(0, Math.min(1, options.volume ?? 0.42));
   audio.loop = Boolean(options.loop) && restartDelayMs === 0;
-  activeBgm = { id, audio, restartDelayMs, restartTimer: null };
+  activeBgm = { id, audio, restartDelayMs, restartDelayRangeMs, exclusive: Boolean(options.exclusive), restartTimer: null };
 
-  if (restartDelayMs > 0) {
+  if (restartDelayMs > 0 || restartDelayRangeMs) {
     audio.onended = () => {
       if (!activeBgm || activeBgm.audio !== audio) return;
+      const [minimum, maximum] = restartDelayRangeMs ?? [restartDelayMs, restartDelayMs];
+      const delay = Math.max(0, minimum) + Math.random() * Math.max(0, maximum - minimum);
       activeBgm.restartTimer = window.setTimeout(() => {
         if (!activeBgm || activeBgm.audio !== audio) return;
         activeBgm.restartTimer = null;
         audio.currentTime = 0;
         void audio.play().catch(() => undefined);
-      }, restartDelayMs);
+      }, delay);
     };
   }
 
