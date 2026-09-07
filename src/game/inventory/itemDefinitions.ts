@@ -11,6 +11,7 @@ export type ItemDefinition = {
   description: string;
   icon: string;
   stackable: boolean;
+  attackVfxId?: string;
   equipmentStats?: {
     maxHpBonus: number;
   };
@@ -20,7 +21,7 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
   "weapon-wooden-wand": {
     id: "weapon-wooden-wand", name: "나무 마법 지팡이", type: "weaponSkin",
     rarity: "common", description: "2단원 원정에 지급된 기본 마법 지팡이다.",
-    icon: `${import.meta.env.BASE_URL}assets/items/wooden-wand.png`, stackable: false,
+    icon: `${import.meta.env.BASE_URL}assets/items/wooden-wand.png`, stackable: false, attackVfxId: "fire-attack",
   },
   "weapon-basic-sword": {
     id: "weapon-basic-sword", name: "기본 목검", type: "weaponSkin",
@@ -47,6 +48,12 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
     rarity: "rare", description: "고구려의 위대한 정복 군주를 상징하는 갑옷.",
     icon: `${import.meta.env.BASE_URL}assets/items/gwanggaeto-armor.png`,
     stackable: false,
+    equipmentStats: { maxHpBonus: getArmorMaxHpBonusForFloor(3) },
+  },
+  "armor-angbuilgu-helmet": {
+    id: "armor-angbuilgu-helmet", name: "앙부일구 투구", type: "armor", rarity: "rare",
+    description: "세종대왕의 해시계, 앙부일구를 본뜬 투구",
+    icon: `${import.meta.env.BASE_URL}assets/items/angbuilgu-helmet.png`, stackable: false,
     equipmentStats: { maxHpBonus: getArmorMaxHpBonusForFloor(3) },
   },
   "weapon-chiljido": {

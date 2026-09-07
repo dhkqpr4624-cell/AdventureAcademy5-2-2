@@ -43,7 +43,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-luna-floor-3-quest-available",
       questActiveStorySequenceId: "npc-luna-floor-3-quest-active",
     },
-    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-3-torn-cloth", "quest-floor-4-jeon-rescue", "quest-floor-9-goryeo-society-culture"],
+    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-4-jeon-rescue", "quest-floor-9-goryeo-society-culture"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.luna),
   },
   {
@@ -104,7 +104,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       default: kappPortrait,
     },
     dialogue: { defaultStorySequenceId: "npc-jeon-default" },
-    offeredQuestIds: [],
+    offeredQuestIds: ["quest-floor-3-torn-cloth"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.jeon),
   },
 ];

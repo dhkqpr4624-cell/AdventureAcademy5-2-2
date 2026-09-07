@@ -199,6 +199,7 @@ export function StoryPlayer({
   const startedRef = useRef(false);
   const choiceLockedRef = useRef(false);
   const skipLockedRef = useRef(false);
+  const [completedChoiceActions, setCompletedChoiceActions] = useState<ReadonlySet<string>>(new Set());
 
   useEffect(() => {
     if (!startedRef.current) {
@@ -358,9 +359,12 @@ export function StoryPlayer({
     (currentStep?.type === "dialogue" || currentStep?.type === "narration");
 
   const choose = (option: StoryChoiceOption) => {
-    if (option.actionId) onChoiceAction?.(option.actionId);
     if (choiceLockedRef.current || isTransitioning) return;
     choiceLockedRef.current = true;
+    if (option.actionId) {
+      onChoiceAction?.(option.actionId);
+      setCompletedChoiceActions((current) => new Set(current).add(option.actionId!));
+    }
     if (option.closeStory) {
       setStepIndex(steps.length);
       return;
@@ -377,9 +381,10 @@ export function StoryPlayer({
 
     clickLockRef.current = true;
     setIsTransitioning(true);
-    const target = currentStep?.type === "dialogue" && currentStep.nextStepId
-      ? steps.findIndex((step) => step.id === currentStep.nextStepId)
-      : -1;
+    const conditional = currentStep?.type === "dialogue" ? currentStep.nextStepWhenActionsComplete : undefined;
+    const completedAfterStep = conditional?.actionIds.every((id) => completedChoiceActions.has(id));
+    const nextId = completedAfterStep ? conditional?.stepId : currentStep?.type === "dialogue" ? currentStep.nextStepId : undefined;
+    const target = nextId ? steps.findIndex((step) => step.id === nextId) : -1;
     setStepIndex((current) => target >= 0 ? target : current + 1);
   };
 
@@ -680,7 +685,7 @@ export function StoryPlayer({
 
       {renderState.dialogue && currentStep?.type === "choice" && (
         <StoryChoiceList
-          options={currentStep.options}
+          options={currentStep.options.filter((option) => !(option.hideWhenActionCompleted && option.actionId && completedChoiceActions.has(option.actionId)))}
           disabled={isTransitioning}
           onChoose={choose}
         />

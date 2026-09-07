@@ -16,7 +16,6 @@ export type AchievementDefinition = {
 const floor2RareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
-const floor3RareRewardCondition = getQuestRareRewardCondition("quest-floor-3-torn-cloth");
 const floor4RareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5RareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6RareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
@@ -36,14 +35,6 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     requiredCorrect: floor2RareRewardCondition.requiredCorrect,
     totalQuestions: floor2RareRewardCondition.totalQuestions,
     description: "던전 2층 정답",
-  },
-  {
-    id: "achievement-floor-3-rare-reward", floorId: "floor-3", floorTitle: "던전 3층",
-    title: "광개토대왕 갑옷", rewardIcon: `${import.meta.env.BASE_URL}assets/items/gwanggaeto-armor.png`,
-    rewardItemId: "armor-gwanggaeto", rewardStateId: "quest-floor-3-torn-cloth",
-    requiredCorrect: floor3RareRewardCondition.requiredCorrect,
-    totalQuestions: floor3RareRewardCondition.totalQuestions,
-    description: "던전 3층 정답",
   },
   {
     id: "achievement-floor-4-rare-reward",

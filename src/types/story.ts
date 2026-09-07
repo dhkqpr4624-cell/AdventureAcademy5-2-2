@@ -73,6 +73,7 @@ export type StoryStep =
       text: string;
       emphasis?: "danger" | "info";
       nextStepId?: string;
+      nextStepWhenActionsComplete?: { actionIds: string[]; stepId: string };
       advanceMode: "click";
     }
   | {
@@ -217,6 +218,7 @@ export type StoryChoiceOption = {
   nextStepId?: string;
   closeStory?: boolean;
   actionId?: string;
+  hideWhenActionCompleted?: boolean;
 };
 
 export type StoryScene = {

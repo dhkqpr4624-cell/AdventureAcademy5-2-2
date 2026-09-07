@@ -3918,3 +3918,22 @@ button:focus-visible {
   72% { transform: translateX(7px); }
   84% { transform: translateX(-4px); }
 }
+.dungeon3-completion-stage.is-flashback .story-player { filter: grayscale(1); }
+.dungeon3-flashback-stage { position: fixed; inset: 0; z-index: 8; overflow: hidden; background: #000; filter: grayscale(1); pointer-events: none; }
+.dungeon3-flashback-stage .d3-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.dungeon3-flashback-stage .d3-background { z-index: 0; }
+.dungeon3-flashback-stage .d3-background-overlay { z-index: 1; }
+.dungeon3-flashback-stage .d3-rising-world { position: absolute; inset: 0; z-index: 2; animation: d3-world-rise 2.5s ease-out both; }
+.dungeon3-flashback-stage .d3-foreground { z-index: 1; }
+.dungeon3-flashback-stage .d3-ground { z-index: 3; }
+.dungeon3-flashback-stage .d3-npcs { position: absolute; inset: 0; z-index: 2; }
+.dungeon3-flashback-stage .d3-npcs img { position: absolute; bottom: 10%; width: min(12vw, 150px); max-height: 54%; object-fit: contain; transform: translateX(-50%); transform-origin: bottom center; }
+.dungeon3-flashback-stage .d3-npcs.is-skill img { width: min(15vw, 180px); }
+.dungeon3-flashback-stage .d3-skill { position: absolute; bottom: 10%; width: min(24vw, 300px); aspect-ratio: 1; transform: translateX(-50%); background-repeat: no-repeat; image-rendering: pixelated; }
+.dungeon3-flashback-stage .d3-aron-skill { background-size: 600% 100%; animation: d3-aron-skill 1.2s steps(6) infinite; }
+.dungeon3-flashback-stage .d3-kapp-skill { background-size: 700% 100%; animation: d3-kapp-skill 1.4s steps(7) infinite; }
+.dungeon3-flashback-stage .d3-exclamation { position: absolute; z-index: 5; bottom: 56%; width: 60px; height: 60px; transform: translateX(-50%); background-size: 720px 60px; animation: d3-exclamation 1.714s steps(12) 1 both; }
+@keyframes d3-world-rise { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes d3-aron-skill { from { background-position-x: 0; } to { background-position-x: -600%; } }
+@keyframes d3-kapp-skill { from { background-position-x: 0; } to { background-position-x: -700%; } }
+@keyframes d3-exclamation { from { background-position-x: 0; } to { background-position-x: -720px; } }

@@ -3,6 +3,7 @@ import { NPC_PORTRAIT_REGISTRY } from "../../game/npc/npcPortraitRegistry";
 import { resolveNpcPresentation } from "../../game/npc/npcPresentationResolver";
 import type { NpcId } from "../../game/npc/npcTypes";
 import { createChapter2Actor } from "./chapter2Portraits";
+import { DUNGEON3_OFFER_STORY } from "./dungeon3Chapter2Stories";
 
 const chapter2Actors = {
   luna: createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72"),
@@ -132,6 +133,7 @@ function floor5QuestDialogue(id: string, npcId: NpcId, portraitId: string, text:
 }
 
 export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
+  [DUNGEON3_OFFER_STORY.id]: DUNGEON3_OFFER_STORY,
   "npc-theo-emergency-potions": chapter2DialogueSequence("npc-theo-emergency-potions", [
     { actor: "theo", text: " 이런, (플레이어 이름), 괜찮습니까? " },
     { actor: "theo", text: " 포션이 없군요.. 어쩔 수 없죠. 제가 가지고 있는 비상 포션을 드리겠습니다. 부디 조심해주세요. " },

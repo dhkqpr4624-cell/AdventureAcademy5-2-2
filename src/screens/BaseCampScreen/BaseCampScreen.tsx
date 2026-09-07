@@ -32,7 +32,7 @@ import { changeItemQuantity, getItemQuantity, recalculatePlayerMaxHp, type Inven
 import { purchaseShopItem } from "../../game/inventory/shopResolver";
 import { QuestRewardPopup } from "../../components/QuestRewardPopup";
 import { MemoryCompletionStory } from "../../components/MemoryCompletionStory";
-import { TornClothCompletionStory } from "../../components/TornClothCompletionStory";
+import { Dungeon3CompletionStory } from "../../components/Dungeon3CompletionStory";
 import { PrehistoryCompletionStory } from "../../components/PrehistoryCompletionStory";
 import memoryBeforeUrl from "../../assets/quest/memory-fragments-before.png";
 import memoryAfterUrl from "../../assets/quest/memory-fragments-complete.png";
@@ -47,9 +47,6 @@ import {
 
 const memoryQuestRareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
-);
-const tornClothQuestRareRewardCondition = getQuestRareRewardCondition(
-  "quest-floor-3-torn-cloth",
 );
 const jeonQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
@@ -113,6 +110,7 @@ export function BaseCampScreen({
   const interactionLockRef = useRef(false);
   const questAcceptProcessingRef = useRef(false);
   const prehistoryRewardClaimProcessingRef = useRef(false);
+  const dungeon3RewardClaimProcessingRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -164,7 +162,7 @@ export function BaseCampScreen({
     getItemQuantity(inventoryState, "potion-small") === 0 &&
     getItemQuantity(inventoryState, "potion-medium") === 0 && playerState.gold < 20;
   const hasMemoryFragment = clearedFloorIds.includes("floor-2");
-  const hasTornCloth = getItemQuantity(inventoryState, "quest-torn-cloth") > 0;
+  const hasTornCloth = clearedFloorIds.includes("floor-3");
   const hasFoundJeon = clearedFloorIds.includes("floor-4");
   const hasClearedFloor5 = clearedFloorIds.includes("floor-5");
   const hasClearedFloor6 = clearedFloorIds.includes("floor-6");
@@ -254,6 +252,11 @@ export function BaseCampScreen({
       interactionLockRef.current = false;
       return;
     }
+    if (npc.id === "kaiden" && hasTornCloth && effectiveQuestState[tornClothQuestId] === "active") {
+      setTornClothCompletionOpen(true);
+      interactionLockRef.current = false;
+      return;
+    }
     const sequenceId =
       npc.id === "luna" && hasClearedFloor9 && effectiveQuestState[floor9QuestId] === "active"
         ? "npc-luna-floor-9-quest-complete"
@@ -267,10 +270,6 @@ export function BaseCampScreen({
         ? "npc-theo-floor-5-quest-complete"
       : npc.id === "kaiden" && hasMemoryFragment && effectiveQuestState[memoryQuestId] === "active"
           ? "npc-aron-floor-2-quest-complete"
-        : npc.id === "luna" &&
-            hasTornCloth &&
-            effectiveQuestState[tornClothQuestId] === "active"
-          ? "npc-luna-floor-3-quest-complete"
         : npc.id === "luna" &&
             hasFoundJeon &&
             effectiveQuestState[jeonQuestId] === "active"
@@ -307,7 +306,7 @@ export function BaseCampScreen({
       setRewardOpen(true);
       return;
     }
-    if (finishedSequenceId === "npc-luna-floor-3-quest-complete") {
+    if (finishedSequenceId === "npc-aron-floor-3-quest-complete") {
       setTornClothCompletionOpen(true);
       return;
     }
@@ -593,8 +592,8 @@ export function BaseCampScreen({
         revealReward(prehistoryQuestId);
         setPrehistoryRewardOpen(true);
       }} />}
-      {tornClothCompletionOpen && <TornClothCompletionStory
-        playerName={playerState.name || "플레이어"}
+      {tornClothCompletionOpen && <Dungeon3CompletionStory
+        player={playerState}
         onComplete={() => {
           setTornClothCompletionOpen(false);
           revealReward(tornClothQuestId);
@@ -631,25 +630,23 @@ export function BaseCampScreen({
       {tornClothRewardOpen && <QuestRewardPopup
         bestCorrect={floorBestCorrect["floor-3"] ?? 0}
         claimed={Boolean(rewardClaimed[tornClothQuestId])}
-        questTitle="던전 3층 조사 완료"
-        rareRewardItemId="armor-gwanggaeto"
-        requiredCorrect={tornClothQuestRareRewardCondition.requiredCorrect}
+        questTitle="조선시대의 문화(학문 및 과학) 완료"
+        rareRewardItemId="armor-angbuilgu-helmet"
+        requiredCorrect={0}
+        baseGold={10}
+        guaranteedItemReward
         onCancel={() => setTornClothRewardOpen(false)}
         onClaim={() => {
-          if (rewardClaimed[tornClothQuestId]) return;
-          const reward = resolveQuestRewardGrant(floorBestCorrect["floor-3"] ?? 0, tornClothQuestRareRewardCondition.requiredCorrect);
-          const rareUnlocked = reward.rareUnlocked;
-          setPlayerState((current) => ({ ...current, gold: current.gold + reward.gold }));
+          if (rewardClaimed[tornClothQuestId] || dungeon3RewardClaimProcessingRef.current) return;
+          dungeon3RewardClaimProcessingRef.current = true;
+          setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
           setInventoryState((current) => {
             let next = removeQuestItemsAfterRewardClaim(current, tornClothQuestId);
-            if (rareUnlocked) next = changeItemQuantity(next, "armor-gwanggaeto", 1);
+            next = changeItemQuantity(next, "armor-angbuilgu-helmet", 1);
             return next;
           });
           setRewardClaimed(tornClothQuestId);
           completeQuestAfterRewardClaim(tornClothQuestId);
-          if (rareUnlocked) {
-            setAchievementReceived("achievement-floor-3-rare-reward");
-          }
           onAutoSave("questCompleted");
           setTornClothRewardOpen(false);
         }}
