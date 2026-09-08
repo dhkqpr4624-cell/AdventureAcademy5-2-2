@@ -129,7 +129,6 @@ import { resolveDungeonGoldDrop } from "../../game/dungeon/dungeonGoldDropResolv
 import { changeItemQuantity, getItemQuantity, type InventoryState } from "../../game/inventory/inventoryState";
 import { DungeonReturnPrompt } from "../../components/MemoryFragmentEvent";
 import { TornClothEvent } from "../../components/TornClothEvent";
-import { JeonDiscoveryStory } from "../../components/JeonDiscoveryStory";
 import { PrehistoryArtifactEvent, type PrehistoryArtifactId } from "../../components/PrehistoryArtifactEvent";
 import tornClothFoundUrl from "../../assets/quest/torn-cloth-found.png";
 import handAxeFoundUrl from "../../assets/quest/hand-axe-found.png";
@@ -155,6 +154,7 @@ import {
 } from "../../game/quest/itemCollectionQuestRules";
 import type { QuestStatus } from "../../game/quest/questTypes";
 import { createDungeon5Environment } from "../../three/dungeon/Dungeon5Environment";
+import { createDungeon4SeaEnvironment } from "../../three/dungeon/Dungeon4SeaEnvironment";
 import { StoryPlayer } from "../../game/story/StoryPlayer";
 import { DUNGEON5_ENTRY_STORY, DUNGEON5_GATE_STORY } from "../../data/stories/dungeon5Stories";
 import { DUNGEON6_CLUE_STORIES, DUNGEON6_ENTRY_STORY, DUNGEON6_FINAL_STORY } from "../../data/stories/dungeon6Stories";
@@ -165,6 +165,7 @@ import { DUNGEON10_ENTRY_STORY } from "../../data/stories/dungeon10Stories";
 import { DUNGEON1_ENTRY_STORY, DUNGEON1_FINAL_STORY } from "../../data/stories/dungeon1Chapter2Stories";
 import { DUNGEON2_CLUE_STORIES, DUNGEON2_ENTRY_STORY, DUNGEON2_FINAL_STORY } from "../../data/stories/dungeon2Chapter2Stories";
 import { DUNGEON3_ENTRY_STORY, DUNGEON3_FINAL_STORY } from "../../data/stories/dungeon3Chapter2Stories";
+import { DUNGEON4_FINAL_STORY } from "../../data/stories/dungeon4Chapter2Stories";
 import {
   DUNGEON10_BOSS_ROOM_ID,
   DUNGEON10_MAP,
@@ -225,7 +226,7 @@ export function applyFloorMonsterData(
           : floorId === "floor-3"
             ? "chapter2-broken-angbuilgu"
             : floorId === "floor-4"
-              ? random.next() < 0.5 ? "gold-crown-wraith" : "corrupted-gaya-pottery"
+              ? "chapter2-imjin-japanese-soldier"
             : floorId === "floor-5"
               ? random.next() < 0.5 ? "baekje-archer" : "goguryeo-cavalry"
             : floorId === "floor-6"
@@ -256,7 +257,7 @@ export function applyFloorMonsterData(
               : floorId === "floor-3"
                 ? "chapter2-corrupted-armillary-sphere"
                 : floorId === "floor-4"
-                  ? "silla-cheonma"
+                  ? "chapter2-qing-soldier"
                 : floorId === "floor-5"
                   ? "corrupted-munmu-wraith"
                 : floorId === "floor-6"
@@ -540,6 +541,7 @@ export function DungeonScreen({
   const [floor2FinalStoryVisible, setFloor2FinalStoryVisible] = useState(false);
   const [floor3EntryStoryVisible, setFloor3EntryStoryVisible] = useState(false);
   const [floor3FinalStoryVisible, setFloor3FinalStoryVisible] = useState(false);
+  const [floor4FinalStoryVisible, setFloor4FinalStoryVisible] = useState(false);
   const [floor6EntryStoryVisible, setFloor6EntryStoryVisible] = useState(false);
   const [floor10EntryStoryVisible, setFloor10EntryStoryVisible] = useState(false);
   const [floor6ClueStoryIndex, setFloor6ClueStoryIndex] = useState<number | null>(null);
@@ -596,7 +598,7 @@ export function DungeonScreen({
   );
   const [floatingText, setFloatingText] = useState<string | null>(null);
   const [damageFlash, setDamageFlash] = useState(false);
-  const [fireAttackVisible, setFireAttackVisible] = useState(false);
+  const [attackVfxVisible, setAttackVfxVisible] = useState<"fire-attack" | "water-thunderbolt" | null>(null);
   const [resolution, setResolution] =
     useState<CombatResolution | null>(null);
   const [goldDrop, setGoldDrop] = useState(0);
@@ -632,8 +634,8 @@ export function DungeonScreen({
     const weaponDefinition = weaponId ? getItemDefinition(weaponId) : null;
     if (!weaponDefinition || weaponDefinition.type !== "weaponSkin") return;
     const attackVfxId = weaponDefinition.attackVfxId ?? "fire-attack";
-    if (attackVfxId !== "fire-attack") return;
-    setFireAttackVisible(true);
+    if (attackVfxId !== "fire-attack" && attackVfxId !== "water-thunderbolt") return;
+    setAttackVfxVisible(attackVfxId);
     await new Promise<void>((resolve) => {
       fireAttackResolveRef.current = resolve;
       fireAttackTimerRef.current = window.setTimeout(() => {
@@ -643,7 +645,7 @@ export function DungeonScreen({
       }, 1000);
     });
     if (!mountedRef.current) return;
-    setFireAttackVisible(false);
+    setAttackVfxVisible(null);
   };
   const activeEnemyAttackDamage = () => {
     const lastAnswerWasWrong =
@@ -722,7 +724,7 @@ export function DungeonScreen({
     failureState === "none" &&
     !exitConfirmOpen &&
     objectiveEvent === null &&
-    !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible &&
+    !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor4FinalStoryVisible &&
     !floor5EntryStoryVisible &&
     !floor6EntryStoryVisible && floor6ClueStoryIndex === null && floor7ClueStoryIndex === null && floor9ClueStoryIndex === null &&
     !floor10EntryStoryVisible && floor10BossPhase === "idle" &&
@@ -907,12 +909,19 @@ export function DungeonScreen({
       dungeonWorld.add(corridor);
     });
     let visualAssembly: ReturnType<typeof assembleDungeonVisuals> | null = null;
+    const dungeon4Environment = floorId === "floor-4"
+      ? createDungeon4SeaEnvironment(dungeonMap)
+      : null;
     const dungeon5Environment = floorId === "floor-5"
       ? createDungeon5Environment(dungeonMap, dungeonRun.seed)
       : null;
     let dungeonTextures: Awaited<ReturnType<typeof loadDungeonTextureSet>> | null = null;
     let visualCancelled = false;
-    if (dungeon5Environment) {
+    if (dungeon4Environment) {
+      scene.background = new THREE.Color(0x77b5d1);
+      scene.fog = dungeon4Environment.fog;
+      scene.add(dungeon4Environment.root);
+    } else if (dungeon5Environment) {
       scene.background = new THREE.Color(0x7fc9f5);
       scene.fog = dungeon5Environment.fog;
       scene.add(dungeon5Environment.root);
@@ -1015,6 +1024,7 @@ export function DungeonScreen({
     const clock = new THREE.Clock();
     const render = () => {
       const delta = clock.getDelta();
+      dungeon4Environment?.update(clock.elapsedTime);
       weapon.update(delta);
       monsterAnimation.update(delta);
       bossPresentation.update(delta);
@@ -1050,6 +1060,7 @@ export function DungeonScreen({
       visualAssemblyRef.current = null;
       if (dungeonTextures) disposeDungeonTextureSet(dungeonTextures);
       dungeon5Environment?.dispose();
+      dungeon4Environment?.dispose();
       geometries.forEach((geometry) => geometry.dispose());
       materials.forEach((material) => material.dispose());
       renderer.dispose();
@@ -1949,6 +1960,10 @@ export function DungeonScreen({
         setFloor3FinalStoryVisible(true);
         return;
       }
+      if (questStoryEnabled && floorId === "floor-4" && floorQuestStarted && isFinalRoom(dungeonMap, roomId) && !firstObjectiveEventSeen) {
+        setFloor4FinalStoryVisible(true);
+        return;
+      }
       if (questStoryEnabled && floorId === "floor-1" && floorQuestStarted && (roomId === dungeonRun.generatedDungeon?.finalQuestRoomId || getDungeonRoom(roomId).type === "quest") && !firstObjectiveEventSeen) {
         setFloor1FinalStoryVisible(true);
         return;
@@ -2275,7 +2290,7 @@ export function DungeonScreen({
         } as CSSProperties : undefined}
         aria-label="고정 테스트 던전"
       />
-      {fireAttackVisible && <div className="wooden-wand-fire-vfx" style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/fire-attack.png)` }} aria-hidden="true" />}
+      {attackVfxVisible && <div className={attackVfxVisible === "water-thunderbolt" ? "weapon-water-vfx" : "wooden-wand-fire-vfx"} style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/${attackVfxVisible === "water-thunderbolt" ? "water-thunderbolt.png" : "fire-attack.png"})` }} aria-hidden="true" />}
       {floorIntroVisible && <DungeonFloorIntro floorId={floorId} />}
       {exitButtonState.visible && floorId !== "floor-10" && (
         <DungeonExitButton
@@ -2624,7 +2639,7 @@ export function DungeonScreen({
         />
       )}
 
-      {!floorIntroVisible && !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor5EntryStoryVisible && !floor6EntryStoryVisible && !floor10EntryStoryVisible && floor6ClueStoryIndex === null && floor7ClueStoryIndex === null && floor9ClueStoryIndex === null && floor10BossPhase === "idle" && (dungeonMode === "exploration" || dungeonMode === "moving") && (
+      {!floorIntroVisible && !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor4FinalStoryVisible && !floor5EntryStoryVisible && !floor6EntryStoryVisible && !floor10EntryStoryVisible && floor6ClueStoryIndex === null && floor7ClueStoryIndex === null && floor9ClueStoryIndex === null && floor10BossPhase === "idle" && (dungeonMode === "exploration" || dungeonMode === "moving") && (
         <section className="dungeon-movement-panel" aria-label="던전 이동 선택">
           {floorId !== "floor-10" && <p className="eyebrow">DUNGEON EXPLORATION</p>}
           {finalGateDialogueStep === null ? (
@@ -2704,17 +2719,6 @@ export function DungeonScreen({
         onInventoryChanged();
         onNavigate("baseCamp");
       }} />}
-      {objectiveEvent === "first" && floorId === "floor-4" && <JeonDiscoveryStory
-        playerName={playerState.name || DEFAULT_PLAYER_NAME}
-        onComplete={() => {
-          playerHpRef.current = maxHp;
-          setPlayerHp(maxHp);
-          setInventoryState((current) => changeItemQuantity(current, "quest-jeon-rescue-marker", 1));
-          onStoryEventSeen("floor-4:jeon-discovered");
-          onObjectiveAcquired(runCorrectCountRef.current);
-          onNavigate("baseCamp");
-        }}
-      />}
       {floor5EntryStoryVisible && floorId === "floor-5" && <div className="dungeon-story-overlay">
         <StoryPlayer
           sequence={DUNGEON5_ENTRY_STORY}
@@ -2763,6 +2767,11 @@ export function DungeonScreen({
       {floor3FinalStoryVisible && floorId === "floor-3" && <div className="dungeon-story-overlay">
         <StoryPlayer sequence={DUNGEON3_FINAL_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState} presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
           playerHpRef.current = maxHp; setPlayerHp(maxHp); setFloor3FinalStoryVisible(false); onStoryEventSeen("floor-3:chapter2-final"); onObjectiveAcquired(runCorrectCountRef.current); onFloorCleared(); onNavigate("baseCamp");
+        }} />
+      </div>}
+      {floor4FinalStoryVisible && floorId === "floor-4" && <div className="dungeon-story-overlay">
+        <StoryPlayer sequence={DUNGEON4_FINAL_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState} presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
+          playerHpRef.current = maxHp; setPlayerHp(maxHp); setFloor4FinalStoryVisible(false); onStoryEventSeen("floor-4:chapter2-final"); onObjectiveAcquired(runCorrectCountRef.current); onFloorCleared(); onNavigate("baseCamp");
         }} />
       </div>}
       {floor6EntryStoryVisible && floorId === "floor-6" && <div className="dungeon-story-overlay">

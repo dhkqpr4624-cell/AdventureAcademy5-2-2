@@ -58,12 +58,13 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
   },
   "weapon-chiljido": {
     id: "weapon-chiljido",
-    name: "칠지도",
+    name: "충무공(이순신) 장검",
     type: "weaponSkin",
     rarity: "rare",
-    description: "백제의 칠지도를 본뜬 희귀 무기 스킨이다.",
-    icon: `${import.meta.env.BASE_URL}assets/items/chiljido.png`,
+    description: "충무공 이순신의 장검을 본뜬 무기 스킨이다.",
+    icon: `${import.meta.env.BASE_URL}assets/items/chungmugong-long-sword.png`,
     stackable: false,
+    attackVfxId: "water-thunderbolt",
   },
   "armor-munmu": {
     id: "armor-munmu", name: "문무왕의 갑옷", type: "armor", rarity: "rare",

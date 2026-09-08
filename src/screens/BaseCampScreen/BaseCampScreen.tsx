@@ -49,7 +49,6 @@ import {
 const memoryQuestRareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
-const jeonQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
 const floor7QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-7-goryeo-founding");
@@ -112,6 +111,7 @@ export function BaseCampScreen({
   const questAcceptProcessingRef = useRef(false);
   const prehistoryRewardClaimProcessingRef = useRef(false);
   const dungeon3RewardClaimProcessingRef = useRef(false);
+  const dungeon4RewardClaimProcessingRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -129,11 +129,12 @@ export function BaseCampScreen({
   const [tornClothCompletionOpen, setTornClothCompletionOpen] = useState(false);
   const [rewardOpen, setRewardOpen] = useState(false);
   const [prehistoryRewardOpen, setPrehistoryRewardOpen] = useState(false);
+  const dungeon3RewardRevealKey = "reward-revealed:quest-floor-3-torn-cloth";
   const [tornClothRewardOpen, setTornClothRewardOpen] = useState(
-    Boolean(rewardRevealed["quest-floor-3-torn-cloth"] && !rewardClaimed["quest-floor-3-torn-cloth"]),
+    Boolean(rewardRevealed[dungeon3RewardRevealKey] && !rewardClaimed["quest-floor-3-torn-cloth"]),
   );
   const reminiscenceActiveRef = useRef(
-    Boolean(rewardRevealed["quest-floor-3-torn-cloth"] && !rewardClaimed["quest-floor-3-torn-cloth"]),
+    Boolean(rewardRevealed[dungeon3RewardRevealKey] && !rewardClaimed["quest-floor-3-torn-cloth"]),
   );
   const [jeonRewardOpen, setJeonRewardOpen] = useState(false);
   const [floor5RewardOpen, setFloor5RewardOpen] = useState(false);
@@ -155,6 +156,12 @@ export function BaseCampScreen({
     if (reminiscenceActiveRef.current) return;
     reminiscenceActiveRef.current = true;
     playBgm("reminiscence", undefined, { volume: 0.42, restartDelayRangeMs: [1_000, 2_000], exclusive: true });
+  };
+  const endReminiscenceBgm = () => {
+    if (!reminiscenceActiveRef.current) return;
+    reminiscenceActiveRef.current = false;
+    stopBgm("reminiscence");
+    playBgm("village", undefined, { loop: true, volume: 0.42 });
   };
 
   useEffect(() => {
@@ -271,7 +278,11 @@ export function BaseCampScreen({
       return;
     }
     if (npc.id === "kaiden" && hasTornCloth && effectiveQuestState[tornClothQuestId] === "active") {
-      setTornClothCompletionOpen(true);
+      if (rewardRevealed[dungeon3RewardRevealKey] && !rewardClaimed[tornClothQuestId]) {
+        setTornClothRewardOpen(true);
+      } else {
+        setTornClothCompletionOpen(true);
+      }
       interactionLockRef.current = false;
       return;
     }
@@ -288,11 +299,17 @@ export function BaseCampScreen({
         ? "npc-theo-floor-5-quest-complete"
       : npc.id === "kaiden" && hasMemoryFragment && effectiveQuestState[memoryQuestId] === "active"
           ? "npc-aron-floor-2-quest-complete"
-        : npc.id === "luna" &&
+        : npc.id === "theo" &&
             hasFoundJeon &&
             effectiveQuestState[jeonQuestId] === "active"
-          ? "npc-luna-floor-4-quest-complete"
-          : resolveNpcStorySequence(npc.id, effectiveQuestState);
+          ? "npc-theo-floor-4-quest-complete"
+          : (() => {
+              const resolved = resolveNpcStorySequence(npc.id, effectiveQuestState);
+              const dungeon3Done = effectiveQuestState[tornClothQuestId] === "completed" && Boolean(rewardClaimed[tornClothQuestId]);
+              if (dungeon3Done && resolved === "npc-kaiden-default") return "npc-aron-post-dungeon3-default";
+              if (dungeon3Done && resolved === "npc-jeon-default") return "npc-kapp-post-dungeon3-default";
+              return resolved;
+            })();
     setStorySequenceId(sequenceId);
     interactionLockRef.current = false;
   };
@@ -328,7 +345,7 @@ export function BaseCampScreen({
       setTornClothCompletionOpen(true);
       return;
     }
-    if (finishedSequenceId === "npc-luna-floor-4-quest-complete") {
+    if (finishedSequenceId === "npc-theo-floor-4-quest-complete") {
       revealReward(jeonQuestId);
       setJeonRewardOpen(true);
       return;
@@ -654,7 +671,7 @@ export function BaseCampScreen({
         requiredCorrect={0}
         baseGold={10}
         guaranteedItemReward
-        onCancel={() => setTornClothRewardOpen(false)}
+        onCancel={() => { endReminiscenceBgm(); setTornClothRewardOpen(false); }}
         onClaim={() => {
           if (rewardClaimed[tornClothQuestId] || dungeon3RewardClaimProcessingRef.current) return;
           dungeon3RewardClaimProcessingRef.current = true;
@@ -668,9 +685,7 @@ export function BaseCampScreen({
           completeQuestAfterRewardClaim(tornClothQuestId);
           onAutoSave("questCompleted");
           setTornClothRewardOpen(false);
-          reminiscenceActiveRef.current = false;
-          stopBgm("reminiscence");
-          playBgm("village", undefined, { loop: true, volume: 0.42 });
+          endReminiscenceBgm();
         }}
       />}
       {prehistoryRewardOpen && <QuestRewardPopup
@@ -696,21 +711,19 @@ export function BaseCampScreen({
         claimed={Boolean(rewardClaimed[jeonQuestId])}
         questTitle="던전 4층 조사 완료"
         rareRewardItemId="weapon-chiljido"
-        requiredCorrect={jeonQuestRareRewardCondition.requiredCorrect}
+        requiredCorrect={0}
+        baseGold={10}
+        guaranteedItemReward
         onCancel={() => setJeonRewardOpen(false)}
         onClaim={() => {
-          if (rewardClaimed[jeonQuestId]) return;
-          const reward = resolveQuestRewardGrant(floorBestCorrect["floor-4"] ?? 0, jeonQuestRareRewardCondition.requiredCorrect);
-          const rareUnlocked = reward.rareUnlocked;
-          setPlayerState((current) => ({ ...current, gold: current.gold + reward.gold }));
+          if (rewardClaimed[jeonQuestId] || dungeon4RewardClaimProcessingRef.current) return;
+          dungeon4RewardClaimProcessingRef.current = true;
+          setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
           setInventoryState((current) => {
             let next = removeQuestItemsAfterRewardClaim(current, jeonQuestId);
-            if (rareUnlocked) next = changeItemQuantity(next, "weapon-chiljido", 1);
+            next = changeItemQuantity(next, "weapon-chiljido", 1);
             return next;
           });
-          if (rareUnlocked) {
-            setAchievementReceived("achievement-floor-4-rare-reward");
-          }
           setRewardClaimed(jeonQuestId);
           completeQuestAfterRewardClaim(jeonQuestId);
           onAutoSave("questCompleted");

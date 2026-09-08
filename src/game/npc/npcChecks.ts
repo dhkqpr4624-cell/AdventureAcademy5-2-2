@@ -115,8 +115,8 @@ export function runNpcChecks() {
     },
     jeon: {
       displayName: "카프",
-      role: "기억을 잃은 남자",
-      baseCampDisplayRole: "기억을 잃은 남자",
+      role: "부지휘관",
+      baseCampDisplayRole: "부지휘관",
       defaultStorySequenceId: "npc-jeon-default",
     },
   } as const satisfies Record<

@@ -236,6 +236,8 @@ export type StorySequence = {
   skippable: boolean;
   /** Optional data-driven destination used by StoryPlayer's skip control. */
   skipTarget?: { stepId?: string; screen?: ScreenId; complete?: boolean };
+  /** Enables the in-dialogue skip control. Completion still uses the normal caller callback. */
+  dialogueSkip?: boolean;
   /** Keep a solid viewport backdrop mounted independently of illustration fades. */
   persistentIllustBackdrop?: boolean;
   onCompleteScreen: ScreenId;

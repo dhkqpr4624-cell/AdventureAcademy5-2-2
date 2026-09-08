@@ -29,7 +29,7 @@ export function runItemCollectionQuestRulesChecks() {
   );
   const cleaned = removeCollectionQuestItems(inventory, rule);
   check(rule.itemIds.every((itemId) => getItemQuantity(cleaned, itemId) === 0), "run items are removed");
-  check(getItemQuantity(cleaned, "potion-small") === 1, "consumed potion stays consumed");
+  check(getItemQuantity(cleaned, "potion-small") === 2, "consumed potion stays consumed");
   const flags = clearCollectionQuestEventFlags(
     Object.fromEntries(Object.values(rule.eventByItemId).map((id) => [id, true])),
     rule,

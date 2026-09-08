@@ -25,7 +25,7 @@ const hold = (id: string, durationMs: number): StoryStep => ({ id, type: "wait",
 export const DUNGEON3_WORLD_RISE_MS = 2_500;
 const seq = (id: string, title: string, steps: StoryStep[], extra: Partial<StorySequence> = {}): StorySequence => ({
   id, title, actors, backgrounds: {}, scenes: [{ id: `${id}-scene`, steps }], replayable: false,
-  skippable: Boolean(extra.skipTarget), persistentIllustBackdrop: true, onCompleteScreen: "dungeon", ...extra,
+  skippable: Boolean(extra.skipTarget), dialogueSkip: true, persistentIllustBackdrop: true, onCompleteScreen: "dungeon", ...extra,
 });
 
 export const DUNGEON3_OFFER_STORY = seq("npc-kapp-floor-3-quest-available", "조선시대의 문화(학문 및 과학)", [
@@ -105,7 +105,16 @@ export const DUNGEON3_FLASHBACK = seq("dungeon3-flashback", "7년 전", [
   {id:"hide-for-alert",type:"setStagePhase",stageId:"dungeon3-flashback",phase:"alert",hideDialogue:true,advanceMode:"auto"}, {id:"ruins-alert",type:"checkpoint",checkpointId:"ruinsAlert",advanceMode:"auto"}, hold("alert-play",1715), {id:"ruins-resume",type:"checkpoint",checkpointId:"ruins",advanceMode:"auto"},
   d("r-8","kapp"," ■■■, 그게 무슨 말이에요! ","shouting"), d("r-9","deneb"," 이 포탈은 <red><b>탐욕</b></red> 그 자체입니다. "), d("r-10","deneb"," 가만히 놔두면, 현실세계의 시간을 모조리 먹어치우겠죠. "),
   d("r-11","deneb"," 누군가가 남아서 이 포탈을 막고 있어야만 해요. "), d("r-12","deneb"," 그리고 그건.. <blue><b>저만이 할 수 있는 일입니다.</b></blue> "),
-  d("r-13","aron"," 그렇지만, ■■■님..! ","shouting"), d("r-14","kapp"," ■■■..! 말도 안되는 소리 하지 마요!! ","shouting"), d("r-15","deneb"," 전 괜찮습니다. "),
+  d("r-13","aron"," 그렇지만, ■■■님..! ","shouting"), d("r-14","kapp"," ■■■..! 말도 안되는 소리 하지 마요!! ","shouting"),
+  d("r-14a","kapp"," 다 함께 탈출해야 해요! 빠르게 재정비 하고 다시 들어오면 가능성이 있을 거예요! ","shouting"),
+  d("r-14b","deneb"," 이대로 나가면 이 포탈은 더욱 빠른 속도로 현실 세계를 잡아먹을 거예요. "),
+  d("r-14c","deneb"," 던전 속에 있어야 할 과거의 인물들은.. 시간의 힘을 얻고 이 세계를 더욱 어지럽히겠죠. "),
+  d("r-14d","aron"," 그렇다면 차라리 함께하게 해 주십시오! 셋이 함께라면, 늘 그랬듯이..! ","shouting"),
+  d("r-14e","deneb"," ... "), d("r-14f","deneb"," 이 던전 안에 남는다면, 세 사람 모두 무사하지 못할 거예요. "),
+  d("r-14g","deneb"," 여러분을 데리고 포탈 안으로 들어온 것은 저입니다. 그런데 여러분이 잘못된다면... "),
+  d("r-14h","deneb"," 미안해요. 이건 내 고집입니다. 여러분을 위험에 빠뜨릴 순 없어요. "),
+  d("r-14i","deneb"," 나를 이해해줘요.. "), d("r-14j","aron"," 하지만... ","sad"),
+  d("r-15","deneb"," 난 괜찮아요. "),
   d("r-16","deneb"," 언젠가 이 준비가 되었을 때, 다시 한 번 이 던전을 공략하러 와 주세요. "), d("r-17","deneb"," 이곳에서 여러분을 기다리고 있겠습니다. "),
   d("r-18","aron"," ... ","sad"), d("r-19","aron"," 최대한 빨리 돌아오겠습니다, ■■■님..! ","sad"), d("r-20","kapp"," ... ","sad"), d("r-21","kapp"," 기다리고 있어요, ■■■! 반드시 돌아올테니까.. ","sad"),
   {id:"flashback-end-black",type:"checkpoint",checkpointId:"black",advanceMode:"auto"}, d("end-1","aron"," 그리고 저희는 그 분을 두고 던전을 탈출했죠. ","serious"), d("end-2","aron"," 인원을 모아 다시 들어가려고 했지만.. 어째서인지 포탈은 이미 닫혀 있었습니다.. ","serious"), d("end-3","aron"," 그 뒤로, 이 던전을 찾아 헤맨지 벌써 7년이 지났군요.. ","serious"),

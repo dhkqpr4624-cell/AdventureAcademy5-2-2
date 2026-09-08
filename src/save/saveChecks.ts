@@ -78,7 +78,8 @@ export function runSaveMigrationChecks() {
   check(
     migratedV2.success &&
       migratedV2.migratedFromVersion === 2 &&
-      migratedV2.data.inventory.items["potion-small"] === 2,
+      migratedV2.data.inventory.items["potion-small"] === 3 &&
+      migratedV2.data.inventory.items["potion-medium"] === 2,
     "v2 initializes inventory and potion quantities",
   );
   const v5 = createSaveDataFromGameState(createInitialGameSaveState()) as unknown as Record<string, unknown>;

@@ -80,7 +80,7 @@ export const HAND_AXE_DEFINITION: SwordDefinition = {
 export const CHILJIDO_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,
   id: "chiljido",
-  textureUrl: `${import.meta.env.BASE_URL}assets/swords/chiljido.png`,
+  textureUrl: `${import.meta.env.BASE_URL}assets/swords/chungmugong-long-sword.png`,
 };
 export const SILLA_RING_POMMEL_SWORD_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,

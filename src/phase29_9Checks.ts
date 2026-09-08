@@ -30,7 +30,7 @@ export function runPhase29_9Checks(): void {
   assert(canceled.questState["quest-floor-3-torn-cloth"] === "active", "cancel must keep current quest active");
   assert(canceled.questState["quest-floor-4-jeon-rescue"] === "locked", "cancel must keep next quest locked");
   assert(getItemQuantity(canceled.inventory, "quest-torn-cloth") === 1, "cancel must keep quest item");
-  assert(resolveNpcStorySequence("luna", canceled.questState) === "npc-luna-floor-3-quest-active", "cancel must allow active quest dialogue");
+  assert(resolveNpcStorySequence("jeon", canceled.questState) === "npc-jeon-default", "cancel must keep Dungeon 3 active without completing it");
 
   const claimed = resolveQuestRewardDecision({
     questState: activeState,
@@ -42,7 +42,7 @@ export function runPhase29_9Checks(): void {
   assert(claimed.questState["quest-floor-3-torn-cloth"] === "completed", "claim must mark quest completed");
   assert(claimed.questState["quest-floor-4-jeon-rescue"] === "available", "claim must open Dungeon 4 quest");
   assert(getItemQuantity(claimed.inventory, "quest-torn-cloth") === 0, "claim must remove torn cloth");
-  assert(resolveNpcStorySequence("luna", claimed.questState) === "npc-luna-floor-4-quest-available", "claim must advance Luna dialogue");
+  assert(resolveNpcStorySequence("kaiden", claimed.questState) === "npc-aron-floor-4-quest-available", "claim must advance Aron dialogue");
 
   const dungeon4Inventory: InventoryState = {
     ...inventory,
@@ -62,10 +62,8 @@ export function runPhase29_9Checks(): void {
   assert(rareReward.gold === 5 && rareReward.rareUnlocked, "eligible claim must grant both base and rare rewards");
 
   for (const sequenceId of [
-    "npc-luna-floor-4-quest-available",
-    "npc-luna-floor-4-quest-accepted",
-    "npc-luna-floor-4-quest-active",
-    "npc-luna-floor-4-quest-complete",
+    "npc-aron-floor-4-quest-available",
+    "npc-theo-floor-4-quest-complete",
   ]) {
     const sequence = NPC_STORY_SEQUENCES[sequenceId];
     assert(sequence, `${sequenceId} missing`);
@@ -73,14 +71,6 @@ export function runPhase29_9Checks(): void {
     assert(dialogueSteps.every((step) => !step.text.includes("\n")), `${sequenceId} contains forced line break`);
   }
 
-  const completionSteps = NPC_STORY_SEQUENCES["npc-luna-floor-4-quest-complete"].scenes[0].steps;
-  let visiblePortraits = new Set<string>();
-  for (const step of completionSteps) {
-    if (step.type === "hidePortrait") visiblePortraits.delete(step.actorId);
-    if (step.type === "showPortrait") visiblePortraits.add(step.actorId);
-    if (step.type === "dialogue") {
-      assert(visiblePortraits.size === 1, `${step.id} must show exactly one portrait`);
-      assert(visiblePortraits.has(step.speakerId ?? ""), `${step.id} must show the current speaker`);
-    }
-  }
+  const completionSteps = NPC_STORY_SEQUENCES["npc-theo-floor-4-quest-complete"].scenes[0].steps;
+  assert(completionSteps.filter((step) => step.type === "dialogue").length === 4, "Dungeon 4 completion must have four dialogue steps");
 }

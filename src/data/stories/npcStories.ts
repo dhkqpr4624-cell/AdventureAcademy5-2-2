@@ -13,7 +13,7 @@ const chapter2Actors = {
 };
 
 function chapter2DialogueSequence(id: string, entries: Array<{ actor: keyof typeof chapter2Actors; text: string; expression?: string; emphasis?: "danger" | "info" }>): StorySequence {
-  return { id, title: "2단원 대화", replayable: true, skippable: false, onCompleteScreen: "baseCamp", backgrounds: {}, actors: chapter2Actors,
+  return { id, title: "2단원 대화", replayable: true, skippable: false, dialogueSkip: true, onCompleteScreen: "baseCamp", backgrounds: {}, actors: chapter2Actors,
     scenes: [{ id: `${id}-scene`, steps: entries.map((entry, index): StoryStep => ({ id: `${id}-${index + 1}`, type: "dialogue", speakerId: entry.actor, speakerName: chapter2Actors[entry.actor].name, activeActorId: entry.actor, expression: entry.expression ?? "default", text: entry.text, ...(entry.emphasis ? { emphasis: entry.emphasis } : {}), advanceMode: "click" })) }] };
 }
 
@@ -49,6 +49,7 @@ function sequence(
     title: `${npc.displayName} 대화`,
     replayable: true,
     skippable: false,
+    dialogueSkip: true,
     onCompleteScreen: "baseCamp",
     backgrounds: {},
     actors: {
@@ -314,6 +315,25 @@ export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
   ]),
   "npc-jeon-default": sequence("npc-jeon-default", "jeon", "default", [" ... "]),
 };
+
+NPC_STORY_SEQUENCES["npc-aron-post-dungeon3-default"] = chapter2DialogueSequence("npc-aron-post-dungeon3-default", [
+  { actor: "aron", expression: "default", text: " 이 던전은 매우 위험합니다. 조심해서 앞으로 나아갑시다. " },
+]);
+NPC_STORY_SEQUENCES["npc-kapp-post-dungeon3-default"] = chapter2DialogueSequence("npc-kapp-post-dungeon3-default", [
+  { actor: "kapp", expression: "default", text: " 위험한 것이 있다면 제가 먼저 살펴볼게요. 안심하고 앞으로 나아가세요. " },
+]);
+NPC_STORY_SEQUENCES["npc-aron-floor-4-quest-available"] = chapter2DialogueSequence("npc-aron-floor-4-quest-available", [
+  { actor: "aron", expression: "default", text: " (플레이어 이름), 오셨군요. " },
+  { actor: "aron", expression: "default", text: " 던전에서 나온 지 얼마 되지 않았는데 죄송하지만, 바로 4층으로 향하려고 합니다. " },
+  { actor: "aron", expression: "default", text: " 시간이 지날 수록 던전의 흐름이 불안정해지는 것이 느껴집니다.. 하루 빨리 데네브님을 구출하고 던전 포탈을 닫아야만 해요. " },
+  { actor: "aron", expression: "default", text: " 이번에는 제가 당신과 함께 가겠습니다. 잘 부탁합니다, (플레이어 이름). " },
+]);
+NPC_STORY_SEQUENCES["npc-theo-floor-4-quest-complete"] = chapter2DialogueSequence("npc-theo-floor-4-quest-complete", [
+  { actor: "theo", expression: "default", text: "오셨군요. 별 문제는 없었습니까? " },
+  { actor: "theo", expression: "default", text: " 데네브님의 목소리가 더욱 선명하게 들렸다고요? " },
+  { actor: "theo", expression: "default", text: " 데네브님과 가까워지고 있다는 뜻이군요! 하루 빨리 데네브님을 구출해야겠습니다. " },
+  { actor: "theo", expression: "default", text: " 카프님과 루나에게는 제가 알릴테니, 당신은 조금 휴식하고 계십시오. 얼마 안 가 다음 층으로 들어가야 할테니까요. " },
+]);
 
 NPC_STORY_SEQUENCES["npc-luna-floor-4-quest-complete"] = {
   id: "npc-luna-floor-4-quest-complete",

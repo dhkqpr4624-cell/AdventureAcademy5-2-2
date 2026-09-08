@@ -1,5 +1,7 @@
 import { DUNGEON_FLOOR_TITLES } from "./data/DungeonFloorTitles";
 import { NPC_STORY_SEQUENCES } from "./data/stories/npcStories";
+import { DUNGEON3_FLASHBACK } from "./data/stories/dungeon3Chapter2Stories";
+import { DUNGEON4_FINAL_STORY } from "./data/stories/dungeon4Chapter2Stories";
 import { ACHIEVEMENT_DEFINITIONS } from "./data/achievementDefinitions";
 import { allocateDungeonRunQuestions } from "./game/dungeon/dungeonRunQuestionAllocator";
 import { createDungeonRun } from "./game/dungeon/generation/floor1DungeonRuntime";
@@ -16,6 +18,15 @@ function assert(condition: unknown, message: string): asserts condition {
 }
 
 export function runPhase29_8Checks(): void {
+  const flashbackSteps = DUNGEON3_FLASHBACK.scenes.flatMap((scene) => scene.steps);
+  const insertedIds = Array.from({ length: 10 }, (_, index) => `r-14${String.fromCharCode(97 + index)}`);
+  const insertionStart = flashbackSteps.findIndex((step) => step.id === "r-14a");
+  assert(flashbackSteps.findIndex((step) => step.id === "r-14") + 1 === insertionStart, "Dungeon 3 added dialogue insertion point mismatch");
+  assert(insertedIds.every((id, index) => flashbackSteps[insertionStart + index]?.id === id), "Dungeon 3 added dialogue order mismatch");
+  assert(flashbackSteps[insertionStart + 10]?.id === "r-15", "Dungeon 3 dialogue must continue to r-15");
+  const r15 = flashbackSteps.find((step) => step.id === "r-15");
+  assert(r15?.type === "dialogue" && r15.text === " 난 괜찮아요. ", "Dungeon 3 continuation dialogue mismatch");
+
   const floorIds: FloorId[] = ["floor-1", "floor-2", "floor-3", "floor-4"];
   for (const floorId of floorIds) {
     const floor = FLOOR_DEFINITIONS.find((entry) => entry.id === floorId);
@@ -31,29 +42,37 @@ export function runPhase29_8Checks(): void {
 
   const floor3Title = DUNGEON_FLOOR_TITLES.find((entry) => entry.floorId === "floor-3");
   const floor4Title = DUNGEON_FLOOR_TITLES.find((entry) => entry.floorId === "floor-4");
-  assert(floor3Title?.subtitle === "삼국의 발전 : 고구려와 백제", "floor 3 title mismatch");
-  assert(floor4Title?.subtitle === "삼국의 발전 : 신라와 가야", "floor 4 title mismatch");
+  assert(floor3Title?.subtitle === "조선시대의 문화(학문 및 과학)", "floor 3 title mismatch");
+  assert(floor4Title?.subtitle === "임진왜란과 병자호란", "floor 4 title mismatch");
 
   const floor3Run = createDungeonRun("floor-3", "phase29-8-floor3-monsters");
   const floor3Map = applyFloorMonsterData(prepareFloorDungeonMap(floor3Run.map, "floor-3", floor3Run.seed), floor3Run.seed, "floor-3");
   const normalMonsterIds = floor3Map.rooms.filter((room) => room.type === "combat").map((room) => room.combatConfig?.monsterId);
   const eliteMonsterIds = floor3Map.rooms.filter((room) => room.type === "elite").map((room) => room.eliteConfig?.monsterId);
-  assert(normalMonsterIds.every((id) => id === "baekje-smile" || id === "goguryeo-samjogo"), "floor 3 normal monster roster mismatch");
-  assert(eliteMonsterIds.every((id) => id === "twisted-pensive-bodhisattva"), "floor 3 elite monster mismatch");
-  assert(Boolean(MONSTER_VISUAL_DEFINITIONS["baekje-smile"]), "Baekje monster missing");
-  assert(Boolean(MONSTER_VISUAL_DEFINITIONS["goguryeo-samjogo"]), "Goguryeo monster missing");
-  assert(Boolean(MONSTER_VISUAL_DEFINITIONS["twisted-pensive-bodhisattva"]), "elite monster missing");
+  assert(normalMonsterIds.every((id) => id === "chapter2-broken-angbuilgu"), "floor 3 normal monster roster mismatch");
+  assert(eliteMonsterIds.every((id) => id === "chapter2-corrupted-armillary-sphere"), "floor 3 elite monster mismatch");
+  assert(Boolean(MONSTER_VISUAL_DEFINITIONS["chapter2-broken-angbuilgu"]), "Dungeon 3 normal monster missing");
+  assert(Boolean(MONSTER_VISUAL_DEFINITIONS["chapter2-corrupted-armillary-sphere"]), "Dungeon 3 elite monster missing");
 
   const floor4Run = createDungeonRun("floor-4", "phase29-8-floor4-story");
   const floor4Map = prepareFloorDungeonMap(floor4Run.map, "floor-4", floor4Run.seed);
   assert(!floor4Map.rooms.some((room) => room.id.startsWith("room-story-")), "floor 4 must not contain story rooms");
   assert(Boolean(floor4Run.generatedDungeon?.finalQuestRoomId), "floor 4 final quest room missing");
+  assert(floor4Map.connections.length === floor4Map.rooms.length - 1, "floor 4 must be a single chain");
+  assert(floor4Map.connections.every((connection) => connection.directionFromSource === "forward" && connection.directionFromTarget === "back"), "floor 4 must expose only forward/back routes");
+  assert(floor4Map.rooms.every((room) => floor4Map.connections.filter((connection) => connection.fromRoomId === room.id || connection.toRoomId === room.id).length <= 2), "floor 4 must not branch");
 
   const quest = QUEST_DEFINITIONS.find((entry) => entry.id === "quest-floor-4-jeon-rescue");
-  assert(quest?.giverNpcId === "luna" && quest.targetFloorId === "floor-4", "floor 4 quest linkage mismatch");
-  assert(Boolean(NPC_STORY_SEQUENCES["npc-luna-floor-4-quest-available"]), "floor 4 offer story missing");
-  assert(Boolean(NPC_STORY_SEQUENCES["npc-luna-floor-4-quest-complete"]), "floor 4 completion story missing");
+  assert(quest?.giverNpcId === "kaiden" && quest.turnInNpcId === "theo" && quest.targetFloorId === "floor-4", "floor 4 quest linkage mismatch");
+  assert(Boolean(NPC_STORY_SEQUENCES["npc-aron-floor-4-quest-available"]), "floor 4 offer story missing");
+  assert(Boolean(NPC_STORY_SEQUENCES["npc-theo-floor-4-quest-complete"]), "floor 4 completion story missing");
+  assert(NPC_STORY_SEQUENCES["npc-aron-floor-4-quest-available"].scenes[0].steps.filter((step) => step.type === "dialogue").length === 4, "floor 4 offer story must have four dialogues");
+  assert(NPC_STORY_SEQUENCES["npc-theo-floor-4-quest-complete"].scenes[0].steps.filter((step) => step.type === "dialogue").length === 4, "floor 4 completion story must have four dialogues");
   assert(NPC_BY_ID.jeon.dialogue.defaultStorySequenceId === "npc-jeon-default", "Jeon idle story missing");
-  assert(getItemDefinition("weapon-chiljido")?.type === "weaponSkin", "Chiljido reward missing");
-  assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.rewardItemId === "weapon-chiljido"), "floor 4 achievement reward missing");
+  assert(getItemDefinition("weapon-chiljido")?.name === "충무공(이순신) 장검", "Dungeon 4 weapon reward missing");
+  assert(getItemDefinition("weapon-chiljido")?.attackVfxId === "water-thunderbolt", "Dungeon 4 weapon VFX mapping missing");
+  const dungeon4Steps = DUNGEON4_FINAL_STORY.scenes.flatMap((scene) => scene.steps);
+  assert(dungeon4Steps.filter((step) => step.type === "choice").length === 2, "Dungeon 4 final story must have two choices");
+  assert(DUNGEON4_FINAL_STORY.dialogueSkip === true, "Dungeon 4 final story must support generic skip");
+  assert(!ACHIEVEMENT_DEFINITIONS.some((entry) => entry.rewardItemId === "weapon-chiljido"), "guaranteed Dungeon 4 reward must not use rare achievement state");
 }

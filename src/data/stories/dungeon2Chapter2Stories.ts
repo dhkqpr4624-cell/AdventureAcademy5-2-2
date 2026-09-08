@@ -18,7 +18,7 @@ const n = (id: string, text: string): StoryStep => ({ id, type: "narration", tex
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/story/chapter2/dungeon2/${name}`;
 const sequence = (id: string, title: string, steps: StoryStep[], persistentIllustBackdrop = true): StorySequence => ({
   id, title, backgrounds: {}, actors, scenes: [{ id: `${id}-scene`, steps }],
-  replayable: false, skippable: false, persistentIllustBackdrop, onCompleteScreen: "dungeon",
+  replayable: false, skippable: false, dialogueSkip: true, persistentIllustBackdrop, onCompleteScreen: "dungeon",
 });
 const show = (id: string, imageUrl: string): StoryStep => ({ id, type: "illustOverlay", imageUrl, visible: true, fadeMs: 700, waitForFade: true, advanceMode: "auto" });
 const hide = (id: string): StoryStep => ({ id, type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, waitForFade: true, advanceMode: "auto" });

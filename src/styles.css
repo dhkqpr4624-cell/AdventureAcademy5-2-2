@@ -2583,6 +2583,8 @@ button:focus-visible {
 
 .wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 800px; height: 800px; transform: translate(-50%, -89.75%); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: wooden-wand-fire 1s steps(8) 1 both; }
 @keyframes wooden-wand-fire { from { background-position-x: 0; } to { background-position-x: 114.2857%; } }
+.weapon-water-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 1200px; height: 800px; transform: translate(-50%, -89.75%); pointer-events: none; background-position: 0 0; background-size: 1200% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: weapon-water-vfx 1s steps(12) 1 both; }
+@keyframes weapon-water-vfx { from { background-position-x: 0; } to { background-position-x: 109.0909%; } }
 .chapter2-stage-deck .chapter2-story-npc-aron { left: 66%; }
 .chapter2-stage-deck .chapter2-story-npc-kapp { left: 77%; }
 .chapter2-story-npc.is-fading-in { animation: chapter2-npc-fade 700ms ease-out both; }
@@ -3365,6 +3367,9 @@ button:focus-visible {
   opacity: 0.42;
   transform: none;
 }
+.story-dialogue-skip-button { position: absolute; right: 7.5rem; bottom: 1rem; min-width: 6.5rem; min-height: 2.75rem; border: 2px solid #927847; border-radius: 6px; background: #251e16; color: #f6e5bd; font: inherit; cursor: pointer; z-index: 4; }
+.story-dialogue-skip-button:hover:not(:disabled), .story-dialogue-skip-button:focus-visible { background: #3a2d1e; outline: 2px solid #f1c86c; outline-offset: 2px; }
+.story-dialogue-skip-button:disabled { opacity: .55; cursor: default; }
 
 .story-choice-list {
   position: absolute;

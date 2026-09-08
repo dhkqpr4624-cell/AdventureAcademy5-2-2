@@ -16,7 +16,6 @@ export type AchievementDefinition = {
 const floor2RareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
-const floor4RareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5RareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6RareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
 const floor7RareRewardCondition = getQuestRareRewardCondition("quest-floor-7-goryeo-founding");
@@ -35,18 +34,6 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     requiredCorrect: floor2RareRewardCondition.requiredCorrect,
     totalQuestions: floor2RareRewardCondition.totalQuestions,
     description: "던전 2층 정답",
-  },
-  {
-    id: "achievement-floor-4-rare-reward",
-    floorId: "floor-4",
-    floorTitle: "던전 4층",
-    title: "가야의 감옥 조사",
-    rewardIcon: `${import.meta.env.BASE_URL}assets/items/chiljido.png`,
-    rewardItemId: "weapon-chiljido",
-    rewardStateId: "quest-floor-4-jeon-rescue",
-    requiredCorrect: floor4RareRewardCondition.requiredCorrect,
-    totalQuestions: floor4RareRewardCondition.totalQuestions,
-    description: "던전 4층 정답",
   },
   {
     id: "achievement-floor-5-rare-reward", floorId: "floor-5", floorTitle: "던전 5층",

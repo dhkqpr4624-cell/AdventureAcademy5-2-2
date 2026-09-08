@@ -7,12 +7,17 @@ function assert(condition: unknown, message: string): asserts condition {
 
 export function runQuestMarkerChecks() {
   const kaiden = NPC_BY_ID.kaiden;
-  const questId = kaiden.offeredQuestIds[0];
+  const questId = kaiden.offeredQuestIds.find((id) => id === "quest-floor-6-balhae")!;
 
   assert(
     resolveNpcQuestMarker(kaiden, { [questId]: "available" }) === "available",
     "available quest must resolve to !",
   );
+
+  const floor4QuestId = "quest-floor-4-jeon-rescue";
+  assert(resolveNpcQuestMarker(kaiden, { [floor4QuestId]: "available" }) === "available", "Dungeon 4 offer marker must resolve to Aron");
+  assert(resolveNpcQuestMarker(NPC_BY_ID.theo, { [floor4QuestId]: "readyToComplete" }) === "readyToComplete", "Dungeon 4 completion marker must resolve to Theo");
+  assert(resolveNpcQuestMarker(kaiden, { [floor4QuestId]: "readyToComplete" }) === "none", "Dungeon 4 completion marker must leave Aron");
   assert(
     resolveNpcQuestMarker(kaiden, { [questId]: "readyToComplete" }) ===
       "readyToComplete",

@@ -194,6 +194,7 @@ export function StoryPlayer({
   const clickLockRef = useRef(false);
   const hasNavigatedRef = useRef(false);
   const runnerRef = useRef(new StoryStepRunner());
+  const activeStepAbortRef = useRef<AbortController | null>(null);
   const baseCampControllerRef = useRef<BaseCampStoryController>(null);
   const baseCampReadyRef = useRef(false);
   const startedRef = useRef(false);
@@ -274,6 +275,8 @@ export function StoryPlayer({
     }
 
     const abortController = new AbortController();
+    activeStepAbortRef.current?.abort();
+    activeStepAbortRef.current = abortController;
     const isClickStep =
       step.type === "dialogue" || step.type === "narration" || step.type === "choice";
 
@@ -350,7 +353,10 @@ export function StoryPlayer({
         setStepIndex((current) => current + 1);
       });
 
-    return () => abortController.abort();
+    return () => {
+      abortController.abort();
+      if (activeStepAbortRef.current === abortController) activeStepAbortRef.current = null;
+    };
   }, [onCheckpointReached, onComplete, onNavigate, sequence.id, sequence.onCompleteScreen, stepIndex, steps]);
 
   const currentStep = steps[stepIndex];
@@ -392,6 +398,7 @@ export function StoryPlayer({
     const target = sequence.skipTarget;
     if (!target || skipLockedRef.current || hasNavigatedRef.current) return;
     skipLockedRef.current = true;
+    activeStepAbortRef.current?.abort();
     runnerRef.current = new StoryStepRunner();
     if (target.stepId) {
       const index = steps.findIndex((step) => step.id === target.stepId);
@@ -405,6 +412,17 @@ export function StoryPlayer({
     if (target.complete) onStoryCompleted?.(sequence.id);
     if (target.screen) onNavigate(target.screen);
     else if (onComplete) onComplete();
+    else onNavigate(sequence.onCompleteScreen);
+  };
+
+  const skipDialogue = () => {
+    if (!sequence.dialogueSkip || skipLockedRef.current || hasNavigatedRef.current) return;
+    skipLockedRef.current = true;
+    activeStepAbortRef.current?.abort();
+    runnerRef.current = new StoryStepRunner();
+    hasNavigatedRef.current = true;
+    onStoryCompleted?.(sequence.id);
+    if (onComplete) onComplete();
     else onNavigate(sequence.onCompleteScreen);
   };
 
@@ -675,6 +693,12 @@ export function StoryPlayer({
           >
             다음
           </button>}
+          {sequence.dialogueSkip && !sequence.skipTarget && <button
+            type="button"
+            className="story-dialogue-skip-button"
+            disabled={skipLockedRef.current}
+            onClick={skipDialogue}
+          >건너뛰기</button>}
           {showPlayerStatus && playerStatus && (
             <footer className="story-player-status">
               <PlayerStatusBar {...playerStatus} />

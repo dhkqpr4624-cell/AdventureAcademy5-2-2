@@ -22,6 +22,8 @@ export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   "chapter2-angry-cheonin": { id: "chapter2-angry-cheonin", name: "화난 천인", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/angry-cheonin.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-broken-angbuilgu": { id: "chapter2-broken-angbuilgu", name: "부서진 앙부일구", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/broken-angbuilgu.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-corrupted-armillary-sphere": { id: "chapter2-corrupted-armillary-sphere", name: "오염된 혼천의", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-armillary-sphere.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-imjin-japanese-soldier": { id: "chapter2-imjin-japanese-soldier", name: "임진왜란 일본군", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/imjin-japanese-soldier.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-qing-soldier": { id: "chapter2-qing-soldier", name: "병자호란 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/qing-soldier.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "garlic-king": {
     id: "garlic-king",
     name: "마늘킹",
