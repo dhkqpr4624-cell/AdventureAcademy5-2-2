@@ -58,10 +58,10 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
   },
   "weapon-chiljido": {
     id: "weapon-chiljido",
-    name: "충무공(이순신) 장검",
+    name: "충무공(이순신) 장검 모양 지팡이",
     type: "weaponSkin",
     rarity: "rare",
-    description: "충무공 이순신의 장검을 본뜬 무기 스킨이다.",
+    description: "충무공 이순신의 장검을 본뜬 마법 지팡이형 무기 스킨이다.",
     icon: `${import.meta.env.BASE_URL}assets/items/chungmugong-long-sword.png`,
     stackable: false,
     attackVfxId: "water-thunderbolt",

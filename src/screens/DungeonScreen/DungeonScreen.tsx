@@ -165,7 +165,7 @@ import { DUNGEON10_ENTRY_STORY } from "../../data/stories/dungeon10Stories";
 import { DUNGEON1_ENTRY_STORY, DUNGEON1_FINAL_STORY } from "../../data/stories/dungeon1Chapter2Stories";
 import { DUNGEON2_CLUE_STORIES, DUNGEON2_ENTRY_STORY, DUNGEON2_FINAL_STORY } from "../../data/stories/dungeon2Chapter2Stories";
 import { DUNGEON3_ENTRY_STORY, DUNGEON3_FINAL_STORY } from "../../data/stories/dungeon3Chapter2Stories";
-import { DUNGEON4_FINAL_STORY } from "../../data/stories/dungeon4Chapter2Stories";
+import { DUNGEON4_ENTRY_STORY, DUNGEON4_FINAL_STORY } from "../../data/stories/dungeon4Chapter2Stories";
 import {
   DUNGEON10_BOSS_ROOM_ID,
   DUNGEON10_MAP,
@@ -525,7 +525,7 @@ export function DungeonScreen({
         }
       });
     }
-    if ((floorId === "floor-2" || floorId === "floor-3") && !shouldRestoreSavedFloorRun && restored[dungeonMap.startRoomId]) {
+    if ((floorId === "floor-2" || floorId === "floor-3" || floorId === "floor-4") && !shouldRestoreSavedFloorRun && restored[dungeonMap.startRoomId]) {
       restored[dungeonMap.startRoomId] = { roomId: dungeonMap.startRoomId, eventCompleted: false };
     }
     return restored;
@@ -541,6 +541,7 @@ export function DungeonScreen({
   const [floor2FinalStoryVisible, setFloor2FinalStoryVisible] = useState(false);
   const [floor3EntryStoryVisible, setFloor3EntryStoryVisible] = useState(false);
   const [floor3FinalStoryVisible, setFloor3FinalStoryVisible] = useState(false);
+  const [floor4EntryStoryVisible, setFloor4EntryStoryVisible] = useState(false);
   const [floor4FinalStoryVisible, setFloor4FinalStoryVisible] = useState(false);
   const [floor6EntryStoryVisible, setFloor6EntryStoryVisible] = useState(false);
   const [floor10EntryStoryVisible, setFloor10EntryStoryVisible] = useState(false);
@@ -709,6 +710,10 @@ export function DungeonScreen({
         setDungeonMode("roomEvent");
         setFloor3EntryStoryVisible(true);
       }
+      if (questStoryEnabled && floorId === "floor-4" && floorQuestStarted && currentRoomId === dungeonMap.startRoomId && !roomProgressRef.current[dungeonMap.startRoomId]?.eventCompleted) {
+        setDungeonMode("roomEvent");
+        setFloor4EntryStoryVisible(true);
+      }
       if (questStoryEnabled && floorId === "floor-5" && currentRoomId === dungeonMap.startRoomId) {
         setFloor5EntryStoryVisible(true);
       }
@@ -724,7 +729,7 @@ export function DungeonScreen({
     failureState === "none" &&
     !exitConfirmOpen &&
     objectiveEvent === null &&
-    !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor4FinalStoryVisible &&
+    !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor4EntryStoryVisible && !floor4FinalStoryVisible &&
     !floor5EntryStoryVisible &&
     !floor6EntryStoryVisible && floor6ClueStoryIndex === null && floor7ClueStoryIndex === null && floor9ClueStoryIndex === null &&
     !floor10EntryStoryVisible && floor10BossPhase === "idle" &&
@@ -2639,7 +2644,7 @@ export function DungeonScreen({
         />
       )}
 
-      {!floorIntroVisible && !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor4FinalStoryVisible && !floor5EntryStoryVisible && !floor6EntryStoryVisible && !floor10EntryStoryVisible && floor6ClueStoryIndex === null && floor7ClueStoryIndex === null && floor9ClueStoryIndex === null && floor10BossPhase === "idle" && (dungeonMode === "exploration" || dungeonMode === "moving") && (
+      {!floorIntroVisible && !floor1EntryStoryVisible && !floor1FinalStoryVisible && !floor2EntryStoryVisible && !floor2FinalStoryVisible && floor2ClueStoryIndex === null && !floor3EntryStoryVisible && !floor3FinalStoryVisible && !floor4EntryStoryVisible && !floor4FinalStoryVisible && !floor5EntryStoryVisible && !floor6EntryStoryVisible && !floor10EntryStoryVisible && floor6ClueStoryIndex === null && floor7ClueStoryIndex === null && floor9ClueStoryIndex === null && floor10BossPhase === "idle" && (dungeonMode === "exploration" || dungeonMode === "moving") && (
         <section className="dungeon-movement-panel" aria-label="던전 이동 선택">
           {floorId !== "floor-10" && <p className="eyebrow">DUNGEON EXPLORATION</p>}
           {finalGateDialogueStep === null ? (
@@ -2767,6 +2772,11 @@ export function DungeonScreen({
       {floor3FinalStoryVisible && floorId === "floor-3" && <div className="dungeon-story-overlay">
         <StoryPlayer sequence={DUNGEON3_FINAL_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState} presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
           playerHpRef.current = maxHp; setPlayerHp(maxHp); setFloor3FinalStoryVisible(false); onStoryEventSeen("floor-3:chapter2-final"); onObjectiveAcquired(runCorrectCountRef.current); onFloorCleared(); onNavigate("baseCamp");
+        }} />
+      </div>}
+      {floor4EntryStoryVisible && floorId === "floor-4" && <div className="dungeon-story-overlay">
+        <StoryPlayer sequence={DUNGEON4_ENTRY_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState} presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
+          const next = completeRoomEvent(roomProgressRef.current, dungeonMap.startRoomId); roomProgressRef.current = next; setRoomProgress(next); setFloor4EntryStoryVisible(false); setDungeonMode("exploration");
         }} />
       </div>}
       {floor4FinalStoryVisible && floorId === "floor-4" && <div className="dungeon-story-overlay">

@@ -86,6 +86,57 @@ export function createDungeon4SeaEnvironment(map: DungeonMapDefinition): Dungeon
     materials.push(islandMaterial);
   });
 
+  const startRoom = map.rooms.find((room) => room.id === map.startRoomId) ?? map.rooms[0];
+  const startConnection = map.connections.find((connection) =>
+    connection.fromRoomId === startRoom?.id || connection.toRoomId === startRoom?.id
+  );
+  const nextRoomId = startConnection
+    ? startConnection.fromRoomId === startRoom?.id ? startConnection.toRoomId : startConnection.fromRoomId
+    : undefined;
+  const nextRoom = map.rooms.find((room) => room.id === nextRoomId);
+  const forward = new THREE.Vector2(
+    (nextRoom?.position.x ?? 0) - (startRoom?.position.x ?? 0),
+    (nextRoom?.position.z ?? 1) - (startRoom?.position.z ?? 0),
+  ).normalize();
+  if (forward.lengthSq() === 0) forward.set(0, 1);
+  const lateral = new THREE.Vector2(-forward.y, forward.x);
+  const horizonCenter = new THREE.Vector2(startRoom?.position.x ?? 0, startRoom?.position.z ?? centerZ)
+    .addScaledVector(forward, 105);
+  const distantLand = new THREE.Group();
+  distantLand.name = "Dungeon4DistantLandGroup";
+  const landMaterial = new THREE.MeshBasicMaterial({ color: 0x58747d, fog: true });
+  const ridgeMaterial = new THREE.MeshBasicMaterial({ color: 0x4b6672, fog: true });
+  materials.push(landMaterial, ridgeMaterial);
+
+  [-58, -39, -20, 0, 22, 43, 61].forEach((lateralOffset, index) => {
+    const landGeometry = new THREE.SphereGeometry(14 + (index % 3) * 3, 8, 5);
+    const land = new THREE.Mesh(landGeometry, landMaterial);
+    land.name = `Dungeon4LowIsland-${index + 1}`;
+    land.scale.set(1.35, 0.22 + (index % 2) * 0.04, 0.7);
+    const position = horizonCenter.clone()
+      .addScaledVector(lateral, lateralOffset)
+      .addScaledVector(forward, (index % 2) * 6);
+    land.position.set(position.x, -5.2, position.y);
+    land.renderOrder = -6;
+    distantLand.add(land);
+    geometries.push(landGeometry);
+  });
+
+  [-44, -26, -8, 13, 34, 52].forEach((lateralOffset, index) => {
+    const ridgeGeometry = new THREE.ConeGeometry(12 + (index % 2) * 4, 15 + (index % 3) * 3, 6);
+    const ridge = new THREE.Mesh(ridgeGeometry, ridgeMaterial);
+    ridge.name = `Dungeon4MountainRidge-${index + 1}`;
+    ridge.scale.z = 0.55;
+    const position = horizonCenter.clone()
+      .addScaledVector(lateral, lateralOffset)
+      .addScaledVector(forward, 8 + (index % 2) * 5);
+    ridge.position.set(position.x, -4.5, position.y);
+    ridge.renderOrder = -7;
+    distantLand.add(ridge);
+    geometries.push(ridgeGeometry);
+  });
+  root.add(distantLand);
+
   return {
     root,
     fog: new THREE.Fog(0x7fb5cb, 38, 125),

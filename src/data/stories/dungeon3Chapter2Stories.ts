@@ -125,7 +125,7 @@ export const DUNGEON3_CURRENT_STORY = seq("dungeon3-current-basecamp", "데네�
   {id:"current-basecamp-map",type:"showBaseCamp",mapId:"academy-base-camp",advanceMode:"auto"},
   hold("current-basecamp-dialogue-delay",2000),
   d("current-start","theo"," 그렇다면, 아까 던전에서 봤던 그 형체는... ","surprised"), d("c-2","kapp"," 아마 그 사람일거야. ","sad"), d("c-3","kapp"," 이 던전에 생명력을 바쳤을테니.. 그 사람의 의지가 던전 이곳 저곳에 나타나는 거겠지. ","sad"),
-  d("c-4","luna"," 너..너무 슬픈 이야기였어... ","sad"), d("c-5","luna"," 그나저나, 그 분의 성함은 무엇인가요? ","sad"), d("c-6","kapp"," 그 사람의 이름은.. <blue><b>데네브</b></blue>. ","serious"), d("c-7","kapp"," 우리의 지휘관이자, 나와 친했던 동생이지. ","serious"),
+  d("c-4","luna"," 너..너무 슬픈 이야기였어... ","sad"), d("c-5","luna"," 그나저나, 그 분의 성함은 무엇인가요? ","sad"), d("c-6","kapp"," 그 사람의 이름은.. <blue><b>데네브</b></blue>. ","serious"), d("c-7","kapp"," 저희의 지휘관이자... 저의 친구였습니다. ","serious"),
   d("c-8","theo"," ...! 들어본 적이 있습니다! ","surprised"), d("c-9","theo"," 던전 안에서 전사하셨다고 들었는데.. 그런 사정이 있었군요. ","surprised"), d("c-10","aron"," ... ","sad"), d("c-11","aron"," 숨겨서 미안합니다. ","sad"), d("c-12","aron"," 섣부른 생각일수도 있으니, 여러분께 알려 혼란스럽게 해드리고 싶지 않았습니다. ","sad"),
   d("c-13","kapp"," ... "), d("c-14","kapp"," 하지만.. 결과적으로는 여러분을 속인 꼴이 되었죠. 정말 미안해요. "), d("c-15","theo"," 사과하지 마십시오. 저라도 그랬을 겁니다. "), d("c-16","theo"," 지휘관님과 부지휘관님으로서, 해야만 했던 일이니까요. "), d("c-17","theo"," 알려주셔서 감사합니다. "),
   d("c-18","luna"," 고마워요. 대장, 부대장! "), d("c-19","luna"," 그럼 이제 우리가 뭘 해야 할지 잘 알겠네요! ","smile"), d("c-20","luna"," 함께 데네브님을 구출해야죠! 모두 기운을 내세요! 어서요! ","smile"), d("c-21","aron"," ... ","smile"), d("c-22","aron"," 그래야죠. 고맙습니다, 모두. ","smile"),

@@ -49,6 +49,7 @@ import {
 const memoryQuestRareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
+const jeonQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
 const floor7QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-7-goryeo-founding");
@@ -683,6 +684,7 @@ export function BaseCampScreen({
           });
           setRewardClaimed(tornClothQuestId);
           completeQuestAfterRewardClaim(tornClothQuestId);
+          setAchievementReceived("achievement-floor-3-guaranteed-reward");
           onAutoSave("questCompleted");
           setTornClothRewardOpen(false);
           endReminiscenceBgm();
@@ -711,21 +713,25 @@ export function BaseCampScreen({
         claimed={Boolean(rewardClaimed[jeonQuestId])}
         questTitle="던전 4층 조사 완료"
         rareRewardItemId="weapon-chiljido"
-        requiredCorrect={0}
+        requiredCorrect={jeonQuestRareRewardCondition.requiredCorrect}
         baseGold={10}
-        guaranteedItemReward
         onCancel={() => setJeonRewardOpen(false)}
         onClaim={() => {
           if (rewardClaimed[jeonQuestId] || dungeon4RewardClaimProcessingRef.current) return;
           dungeon4RewardClaimProcessingRef.current = true;
+          const reward = resolveQuestRewardGrant(
+            floorBestCorrect["floor-4"] ?? 0,
+            jeonQuestRareRewardCondition.requiredCorrect,
+          );
           setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
           setInventoryState((current) => {
             let next = removeQuestItemsAfterRewardClaim(current, jeonQuestId);
-            next = changeItemQuantity(next, "weapon-chiljido", 1);
+            if (reward.rareUnlocked) next = changeItemQuantity(next, "weapon-chiljido", 1);
             return next;
           });
           setRewardClaimed(jeonQuestId);
           completeQuestAfterRewardClaim(jeonQuestId);
+          if (reward.rareUnlocked) setAchievementReceived("achievement-floor-4-rare-reward");
           onAutoSave("questCompleted");
           setJeonRewardOpen(false);
         }}

@@ -693,12 +693,6 @@ export function StoryPlayer({
           >
             다음
           </button>}
-          {sequence.dialogueSkip && !sequence.skipTarget && <button
-            type="button"
-            className="story-dialogue-skip-button"
-            disabled={skipLockedRef.current}
-            onClick={skipDialogue}
-          >건너뛰기</button>}
           {showPlayerStatus && playerStatus && (
             <footer className="story-player-status">
               <PlayerStatusBar {...playerStatus} />
@@ -706,6 +700,13 @@ export function StoryPlayer({
           )}
         </section>
       )}
+
+      {renderState.dialogue && sequence.dialogueSkip && !sequence.skipTarget && <button
+        type="button"
+        className="story-dialogue-skip-button"
+        disabled={skipLockedRef.current}
+        onClick={skipDialogue}
+      >건너뛰기</button>}
 
       {renderState.dialogue && currentStep?.type === "choice" && (
         <StoryChoiceList

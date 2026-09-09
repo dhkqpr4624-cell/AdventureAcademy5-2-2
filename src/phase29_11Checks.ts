@@ -1,6 +1,7 @@
 import { applyFloorMonsterData } from "./screens/DungeonScreen/DungeonScreen";
 import { createDungeonRun } from "./game/dungeon/generation/floor1DungeonRuntime";
 import { createDebugFloorJumpState } from "./debug/debugFloorJump";
+import { getItemQuantity } from "./game/inventory/inventoryState";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -27,13 +28,13 @@ export function runPhase29_11Checks() {
     assert(state.clearedFloorIds.length === index, `${floor} cleared floor count mismatch`);
     assert(state.playerState.gold === index * 5, `${floor} gold mismatch`);
     assert(Object.keys(state.rewardClaimed).length === index, `${floor} claimed reward count mismatch`);
-    const expectedAchievementCount = questIds.slice(0, index).filter((questId) =>
-      ["quest-floor-2-memory-fragment", "quest-floor-5-unified-silla", "quest-floor-6-balhae", "quest-floor-7-goryeo-founding", "quest-floor-8-goryeo-relations", "quest-floor-9-goryeo-society-culture"].includes(questId)
-    ).length;
+    const expectedAchievementCount = index > 2 ? 1 : 0;
     assert(Object.keys(state.achievementReceived).length === expectedAchievementCount, `${floor} achievement count mismatch`);
     assert(state.floorUnlockState.unlockedFloorIds.includes(floor), `${floor} target floor must be unlocked`);
     assert(state.questState[questIds[index]] !== "active", `${floor} target quest must remain unaccepted`);
     assert(!Object.keys(state.inventoryState.items).some((id) => id.startsWith("quest-")), `${floor} must not retain quest items`);
     for (let previous = 0; previous < index; previous += 1) assert(state.questState[questIds[previous]] === "completed", `${floor} previous quest incomplete`);
+    assert(getItemQuantity(state.inventoryState, "armor-angbuilgu-helmet") === (index > 2 ? 1 : 0), `${floor} Dungeon 3 guaranteed helmet mismatch`);
+    assert(getItemQuantity(state.inventoryState, "weapon-chiljido") === 0, `${floor} debug jump must not force Dungeon 4 rare reward`);
   }
 }

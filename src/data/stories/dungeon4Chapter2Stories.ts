@@ -22,6 +22,17 @@ const n = (id: string, text: string): StoryStep => ({ id, type: "narration", tex
 const show: StoryStep = { id: "d4-illust-in", type: "illustOverlay", imageUrl: asset("yi-gwak-illustration.png"), visible: true, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" };
 const hide: StoryStep = { id: "d4-illust-out", type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, hideDialogue: true, waitForFade: true, advanceMode: "auto" };
 
+export const DUNGEON4_ENTRY_STORY: StorySequence = {
+  id: "dungeon4-chapter2-entry", title: "임진왜란과 병자호란", replayable: false, skippable: false,
+  dialogueSkip: true, onCompleteScreen: "dungeon", backgrounds: {}, actors,
+  scenes: [{ id: "dungeon4-chapter2-entry-scene", steps: [
+    d("d4-entry-1", "aron", " 이곳은.. "),
+    d("d4-entry-2", "aron", " 바다 위... 인 것 같군요. "),
+    d("d4-entry-3", "aron", " 물 위를 걸어다닐 수 있는 것으로 보니 진짜 바다는 아니고, 이 또한 던전이 만든 허상의 일부가 틀림없습니다. "),
+    d("d4-entry-4", "aron", " 조심해서 앞으로 나아가죠, (플레이어 이름). "),
+  ] }],
+};
+
 export const DUNGEON4_FINAL_STORY: StorySequence = {
   id: "dungeon4-chapter2-final", title: "임진왜란과 병자호란", replayable: false, skippable: false,
   dialogueSkip: true, persistentIllustBackdrop: true, onCompleteScreen: "dungeon", backgrounds: {}, actors,
@@ -43,13 +54,13 @@ export const DUNGEON4_FINAL_STORY: StorySequence = {
       { id:"retreat", label:"우선 후퇴하여 상황을 지켜봐야 합니다.", nextStepId:"gwak-wrong" },
     ]},
     d("gwak-right","gwakJaeU"," 허, 내가 생각한 바와 똑같구나. ","default","yi-problem"),
-    d("gwak-wrong","gwakJaeU"," 흠...? ","default","yi-problem"),
+    d("gwak-wrong","gwakJaeU"," 흠...? ","default","gwak-choice"),
     d("yi-problem","yiSunSin","이번엔 나의 고민도 들어주겠나? 일본이 배를 통해 침략을 해 오니, 이를 어찌하면 막을 수 있겠는가? "),
     { id:"yi-choice", type:"choice", advanceMode:"click", options:[
       { id:"ambush", label:"일본군이 바다에 상륙하는 그 순간 기습해야 합니다.", nextStepId:"yi-wrong" },
       { id:"turtle-ship", label:"배 위에 지붕과 갑판을 얹은 거북선으로 바다에서 건너오는 일본군을 무찔러야 합니다.", nextStepId:"yi-right" },
     ]},
-    d("yi-wrong","yiSunSin"," 그것도 나쁘지는 않은 생각이다만... ","default","common-1"),
+    d("yi-wrong","yiSunSin"," 그것도 나쁘지는 않은 생각이다만... ","default","yi-choice"),
     d("yi-right","yiSunSin"," 허허, 거북선! 내가 생각했던 그대로군! ","default","common-1"),
     d("common-1","yiSunSin"," 우리의 고민을 해결해주어 아주 고맙네. 자네들은 앞으로 나아갈 자격이 있는 자들이로군. "),
     d("common-2","yiSunSin"," 우리가 힘 내어 과거를 지킬테니, 자네들은 어서 나아가 현재와 미래를 지키게 "),

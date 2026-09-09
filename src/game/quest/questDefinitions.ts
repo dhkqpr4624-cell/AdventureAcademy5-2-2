@@ -56,7 +56,7 @@ export const QUEST_DEFINITIONS: readonly QuestDefinition[] = [
     activeStorySequenceId: "npc-aron-post-dungeon3-default",
     targetFloorId: "floor-4",
     completeStorySequenceId: "npc-theo-floor-4-quest-complete",
-    rewards: { description: "10 Gold · 충무공(이순신) 장검" },
+    rewards: { description: "10 Gold · 충무공(이순신) 장검 모양 지팡이(희귀)" },
   },
   {
     id: "quest-floor-5-unified-silla", title: "삼국 통일의 과정", summary: "던전 5층을 동료들과 조사하자.",

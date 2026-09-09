@@ -1,7 +1,7 @@
 import { DUNGEON_FLOOR_TITLES } from "./data/DungeonFloorTitles";
 import { NPC_STORY_SEQUENCES } from "./data/stories/npcStories";
 import { DUNGEON3_FLASHBACK } from "./data/stories/dungeon3Chapter2Stories";
-import { DUNGEON4_FINAL_STORY } from "./data/stories/dungeon4Chapter2Stories";
+import { DUNGEON4_ENTRY_STORY, DUNGEON4_FINAL_STORY } from "./data/stories/dungeon4Chapter2Stories";
 import { ACHIEVEMENT_DEFINITIONS } from "./data/achievementDefinitions";
 import { allocateDungeonRunQuestions } from "./game/dungeon/dungeonRunQuestionAllocator";
 import { createDungeonRun } from "./game/dungeon/generation/floor1DungeonRuntime";
@@ -12,6 +12,7 @@ import { MONSTER_VISUAL_DEFINITIONS } from "./game/monster/monsterDefinitions";
 import { NPC_BY_ID } from "./game/npc/npcDefinitions";
 import { QUEST_DEFINITIONS } from "./game/quest/questDefinitions";
 import { applyFloorMonsterData, prepareFloorDungeonMap } from "./screens/DungeonScreen/DungeonScreen";
+import { createDungeon4SeaEnvironment } from "./three/dungeon/Dungeon4SeaEnvironment";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(`[phase29_8Checks] ${message}`);
@@ -69,10 +70,22 @@ export function runPhase29_8Checks(): void {
   assert(NPC_STORY_SEQUENCES["npc-aron-floor-4-quest-available"].scenes[0].steps.filter((step) => step.type === "dialogue").length === 4, "floor 4 offer story must have four dialogues");
   assert(NPC_STORY_SEQUENCES["npc-theo-floor-4-quest-complete"].scenes[0].steps.filter((step) => step.type === "dialogue").length === 4, "floor 4 completion story must have four dialogues");
   assert(NPC_BY_ID.jeon.dialogue.defaultStorySequenceId === "npc-jeon-default", "Jeon idle story missing");
-  assert(getItemDefinition("weapon-chiljido")?.name === "충무공(이순신) 장검", "Dungeon 4 weapon reward missing");
+  assert(getItemDefinition("weapon-chiljido")?.name === "충무공(이순신) 장검 모양 지팡이", "Dungeon 4 weapon reward name mismatch");
   assert(getItemDefinition("weapon-chiljido")?.attackVfxId === "water-thunderbolt", "Dungeon 4 weapon VFX mapping missing");
   const dungeon4Steps = DUNGEON4_FINAL_STORY.scenes.flatMap((scene) => scene.steps);
+  const dungeon4EntrySteps = DUNGEON4_ENTRY_STORY.scenes.flatMap((scene) => scene.steps);
+  assert(dungeon4EntrySteps.length === 4 && dungeon4EntrySteps.every((step) => step.type === "dialogue"), "Dungeon 4 entry story must contain four dialogues");
   assert(dungeon4Steps.filter((step) => step.type === "choice").length === 2, "Dungeon 4 final story must have two choices");
+  const gwakWrong = dungeon4Steps.find((step) => step.id === "gwak-wrong");
+  const yiWrong = dungeon4Steps.find((step) => step.id === "yi-wrong");
+  assert(gwakWrong?.type === "dialogue" && gwakWrong.nextStepId === "gwak-choice", "Gwak wrong answer must repeat its choice");
+  assert(yiWrong?.type === "dialogue" && yiWrong.nextStepId === "yi-choice", "Yi wrong answer must repeat its choice");
   assert(DUNGEON4_FINAL_STORY.dialogueSkip === true, "Dungeon 4 final story must support generic skip");
-  assert(!ACHIEVEMENT_DEFINITIONS.some((entry) => entry.rewardItemId === "weapon-chiljido"), "guaranteed Dungeon 4 reward must not use rare achievement state");
+  assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-3-guaranteed-reward" && entry.rewardItemId === "armor-angbuilgu-helmet"), "Dungeon 3 guaranteed reward achievement missing");
+  assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-4-rare-reward" && entry.rewardItemId === "weapon-chiljido"), "Dungeon 4 rare reward achievement missing");
+  const seaEnvironment = createDungeon4SeaEnvironment(floor4Map);
+  assert(Boolean(seaEnvironment.root.getObjectByName("Dungeon4DistantIsland-1")), "existing Dungeon 4 triangular island missing");
+  assert(Boolean(seaEnvironment.root.getObjectByName("Dungeon4DistantLandGroup")), "Dungeon 4 distant land group missing");
+  assert(seaEnvironment.root.children.filter((child) => child.name === "Dungeon4DistantLandGroup").length === 1, "Dungeon 4 distant land group duplicated");
+  seaEnvironment.dispose();
 }

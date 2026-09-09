@@ -1,4 +1,3 @@
-import { ACHIEVEMENT_DEFINITIONS } from "../data/achievementDefinitions";
 import { getQuestFloorUnlockActionId } from "../game/floor/FloorUnlockResolver";
 import type { FloorId } from "../game/floor/floorTypes";
 import { changeItemQuantity } from "../game/inventory/inventoryState";
@@ -7,6 +6,12 @@ import { getQuestRareRewardCondition } from "../game/quest/questRareRewardCondit
 import { createInitialGameSaveState, type GameSaveState } from "../save/saveStateAdapter";
 
 const FLOOR_IDS: readonly FloorId[] = ["floor-1", "floor-2", "floor-3", "floor-4", "floor-5", "floor-6", "floor-7", "floor-8", "floor-9", "floor-10"];
+const GUARANTEED_ITEM_REWARDS: Readonly<Record<string, { itemId: string; achievementId?: string }>> = {
+  "quest-floor-3-torn-cloth": {
+    itemId: "armor-angbuilgu-helmet",
+    achievementId: "achievement-floor-3-guaranteed-reward",
+  },
+};
 
 export function createDebugFloorJumpState(targetFloor: FloorId, playerName = "DEBUG"): GameSaveState {
   const state = createInitialGameSaveState();
@@ -29,16 +34,18 @@ export function createDebugFloorJumpState(targetFloor: FloorId, playerName = "DE
     const questId = quest.id;
     const floorId = completedFloorIds[index];
     const condition = getQuestRareRewardCondition(questId);
-    const achievement = ACHIEVEMENT_DEFINITIONS.find((entry) => entry.rewardStateId === questId);
     questState[questId] = "completed";
     rewardClaimed[questId] = true;
-    if (achievement) {
-      achievementReceived[achievement.id] = true;
-      inventoryState = changeItemQuantity(inventoryState, achievement.rewardItemId, 1);
+    const guaranteedReward = GUARANTEED_ITEM_REWARDS[questId];
+    if (guaranteedReward) {
+      if ((inventoryState.items[guaranteedReward.itemId] ?? 0) < 1) {
+        inventoryState = changeItemQuantity(inventoryState, guaranteedReward.itemId, 1);
+      }
+      if (guaranteedReward.achievementId) achievementReceived[guaranteedReward.achievementId] = true;
     }
     firstObjectiveEventSeen[floorId] = true;
     firstObjectiveEventSeen[`reward-revealed:${questId}`] = true;
-    floorBestCorrect[floorId] = condition.totalQuestions;
+    floorBestCorrect[floorId] = guaranteedReward ? condition.totalQuestions : 0;
   });
   const targetQuest = QUEST_DEFINITIONS.find((quest) => quest.targetFloorId === targetFloor);
   if (!targetQuest) throw new Error(`Missing quest definition for ${targetFloor}`);
