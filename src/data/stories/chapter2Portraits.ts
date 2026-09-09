@@ -33,6 +33,7 @@ import denebDefault from "../../assets/portraits/chapter2/deneb/default.png";
 import researcherDefault from "../../assets/portraits/chapter2/researcher/default.png";
 import sejongDefault from "../../assets/portraits/chapter2/sejong/default.png";
 import chiefMinisterDefault from "../../assets/portraits/chapter2/chief-minister/default.png";
+import yeongjoDefault from "../../assets/portraits/chapter2/yeongjo/default.png";
 
 export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
   luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry, scared: lunaScared, serious: lunaSerious } },
@@ -49,6 +50,7 @@ export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
   researcher: { defaultExpression: "default", expressions: { default: researcherDefault } },
   sejong: { defaultExpression: "default", expressions: { default: sejongDefault } },
   chiefMinister: { defaultExpression: "default", expressions: { default: chiefMinisterDefault } },
+  yeongjo: { defaultExpression: "default", expressions: { default: yeongjoDefault } },
 };
 
 export function createChapter2Actor(id: string, name: string, role: string, accentColor: string): StoryActor {
