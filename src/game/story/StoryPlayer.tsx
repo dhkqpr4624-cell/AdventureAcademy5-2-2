@@ -323,9 +323,14 @@ export function StoryPlayer({
             await controller?.restore(durationMs, signal);
           },
           checkpoint: (checkpointId) => onCheckpointReached?.(sequence.id, checkpointId),
-          resolveText: (text) => text
-            .replaceAll("(플레이어 이름)", playerName)
-            .replaceAll("(플레이어이름)", playerName),
+          resolveText: (text) => {
+            const normalizedName = playerName.trim() || "플레이어";
+            const lastCharacter = Array.from(normalizedName).at(-1) ?? "어";
+            return text
+              .replaceAll("{{playerNameLastCharacter}}", lastCharacter)
+              .replaceAll("(플레이어 이름)", normalizedName)
+              .replaceAll("(플레이어이름)", normalizedName);
+          },
           resolveExpression: (actorId, requestedExpression) => {
             const actor = sequence.actors[actorId];
             const fallbackExpression = actor?.defaultExpression ?? "default";

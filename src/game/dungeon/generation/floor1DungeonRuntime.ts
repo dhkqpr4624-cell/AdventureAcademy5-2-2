@@ -53,7 +53,7 @@ export function createDungeonRun(
     questionSetPool: FLOOR1_QUESTION_SET_POOL,
   });
   if (generationResult.success) {
-    const map = floorId === "floor-4" || floorId === "floor-5"
+    const map = floorId === "floor-4"
       ? createDungeon5LinearLayout(generationResult.dungeon)
       : generationResult.dungeon;
     return {
@@ -72,7 +72,7 @@ export function createDungeonRun(
   }
   return {
     seed,
-    map: floorId === "floor-4" || floorId === "floor-5"
+    map: floorId === "floor-4"
       ? createDungeon5LinearLayout(TEST_DUNGEON_MAP)
       : TEST_DUNGEON_MAP,
     generationResult,

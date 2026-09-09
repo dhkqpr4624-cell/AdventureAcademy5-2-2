@@ -43,7 +43,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-luna-floor-3-quest-available",
       questActiveStorySequenceId: "npc-luna-floor-3-quest-active",
     },
-    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-9-goryeo-society-culture"],
+    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-5-unified-silla", "quest-floor-9-goryeo-society-culture"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.luna),
   },
   {
@@ -60,7 +60,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
     },
     portraits: { default: theoPortrait },
     dialogue: { defaultStorySequenceId: "npc-theo-default", questAvailableStorySequenceId: "npc-theo-floor-1-quest-available", questActiveStorySequenceId: "npc-theo-floor-1-quest-active" },
-    offeredQuestIds: ["quest-floor-1-prehistory", "quest-floor-5-unified-silla", "quest-floor-7-goryeo-founding"],
+    offeredQuestIds: ["quest-floor-1-prehistory", "quest-floor-7-goryeo-founding"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.theo),
   },
   {

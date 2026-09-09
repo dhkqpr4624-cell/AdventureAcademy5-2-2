@@ -369,33 +369,45 @@ NPC_STORY_SEQUENCES["npc-luna-floor-4-quest-complete"] = {
   }],
 };
 
-NPC_STORY_SEQUENCES["npc-theo-floor-5-quest-available"] = {
-  id: "npc-theo-floor-5-quest-available", title: "던전 5층 의뢰", replayable: true, skippable: false,
-  onCompleteScreen: "baseCamp", backgrounds: {},
-  actors: { theo: actor("theo", "default"), kaiden: actor("kaiden", "serious"), jeon: actor("jeon", "default") },
-  scenes: [{ id: "npc-theo-floor-5-quest-available-scene", steps: [
-    ...floor5QuestDialogue("floor5-theo-1", "theo", "default", "어서오십시오, {{playerName}}."),
-    ...floor5QuestDialogue("floor5-theo-2", "theo", "default", "이제 던전 5층으로 향할 차례이지요."),
-    ...floor5QuestDialogue("floor5-theo-3", "theo", "default", "루나가 먼저 정찰을 다녀왔는데, 입구에서는 어떤 수상한 것도 발견하지 못했다고 합니다."),
-    ...floor5QuestDialogue("floor5-theo-4", "theo", "default", "즉.. 아무런 정보가 없는 셈이지요."),
-    ...floor5QuestDialogue("floor5-kaiden-1", "kaiden", "serious", "그래. 그래서 이번에는 아무래도 다 같이 들어가는 게 좋을 것 같다."),
-    ...floor5QuestDialogue("floor5-kaiden-2", "kaiden", "serious", "안에 어떤 단서가 있을지 모르니 위험하더라도 같이 움직이는 것이 파악하기에 수월할테니.."),
-    ...floor5QuestDialogue("floor5-jeon-1", "jeon", "default", "도움이 될지는 모르겠으나, 저 또한 힘내겠습니다."),
+NPC_STORY_SEQUENCES["npc-luna-floor-5-quest-available"] = chapter2DialogueSequence("npc-luna-floor-5-quest-available", [
+  { actor: "luna", text: "(플레이어 이름)! 소식은 테오에게 들었어." },
+  { actor: "luna", text: "데네브님의 목소리가 더 크게 들렸다고..! 그렇다는 건 데네브님과 가까워졌다는 말이겠지!" },
+  { actor: "luna", text: "하루빨리 데네브님을 찾아야만 해. 그러기 위해서는 계속 앞으로 나아가야겠지!" },
+  { actor: "theo", text: "맞는 말씀입니다. 하지만 다급해져서는 안 됩니다." },
+  { actor: "theo", text: "주위에는 위험이 도사리고 있으니까요." },
+  { actor: "luna", text: "이번에는 나와 테오가 함께 가기로 했어." },
+  { actor: "luna", text: "하지만 조심해야 해, (플레이어 이름)." },
+  { actor: "luna", text: "아론 대장이 먼저 던전 5층을 살펴보셨는데, 데네브님과 가까워진 탓일지, 던전 곳곳에 균열이 보이기 시작한다 했어." },
+  { actor: "theo", expression: "worried", text: "이런.." },
+  { actor: "theo", text: "들으셨죠, (플레이어 이름). 균열에 발이 빠지지 않도록 조심해서 나아가야겠습니다." },
+  { actor: "theo", text: "준비가 되면 어서 출발하시지요." },
+]);
+NPC_STORY_SEQUENCES["npc-luna-floor-5-quest-accepted"] = chapter2DialogueSequence("npc-luna-floor-5-quest-accepted", [{ actor: "luna", text: "조심해서 다녀오자, (플레이어 이름)." }]);
+NPC_STORY_SEQUENCES["npc-luna-floor-5-quest-active"] = chapter2DialogueSequence("npc-luna-floor-5-quest-active", [{ actor: "luna", text: "준비가 되면 던전 5층으로 출발하자." }]);
+NPC_STORY_SEQUENCES["npc-aron-floor-5-quest-complete"] = {
+  id: "npc-aron-floor-5-quest-complete", title: "던전 5층 조사 완료", replayable: false, skippable: false,
+  dialogueSkip: true, onCompleteScreen: "baseCamp", backgrounds: {}, actors: chapter2Actors,
+  scenes: [{ id: "npc-aron-floor-5-quest-complete-scene", steps: [
+    { id: "d5-complete-1", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "default", text: "돌아왔군요. 별일은 없었습니까?", advanceMode: "click" },
+    { id: "d5-complete-2", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "default", text: "..루나 경?! 무슨 일이 있으셨습니까?", advanceMode: "click" },
+    { id: "d5-complete-3", type: "dialogue", speakerId: "luna", speakerName: "루나", activeActorId: "luna", expression: "smile", text: "헤헤, 아니에요! 발목을 살짝 삐끗한 것 뿐이니 걱정하지 마세요.", advanceMode: "click" },
+    { id: "d5-complete-4", type: "dialogue", speakerId: "luna", speakerName: "루나", activeActorId: "luna", expression: "smile", text: "대장, 그나저나 그것보다 중요한게 있어요.", advanceMode: "click" },
+    { id: "d5-complete-5", type: "narration", text: "당신은 모두에게 던전 속에서 들린 목소리에 대해 설명했다.", advanceMode: "click" },
+    { id: "d5-complete-6", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "serious", text: "데네브님께서 그런 말씀을 하셨다고요.", advanceMode: "click" },
+    { id: "d5-complete-7", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "serious", text: "저희에게는 아무것도 들리지 않았는데..", advanceMode: "click" },
+    { id: "d5-complete-8", type: "dialogue", speakerId: "kapp", speakerName: "카프", activeActorId: "kapp", expression: "default", text: "데네브는 이미 많이 약해져 있어. 애초에 데네브가 이 던전을 막는 힘이 약해졌기 때문에 이 포탈이 열렸을테니까.", advanceMode: "click" },
+    { id: "d5-complete-9", type: "dialogue", speakerId: "kapp", speakerName: "카프", activeActorId: "kapp", expression: "default", text: "아마도.. 마지막 힘을 쥐어짜내서 (플레이어이름)에게 말을 전한 거겠지.", advanceMode: "click" },
+    { id: "d5-complete-10", type: "dialogue", speakerId: "luna", speakerName: "루나", activeActorId: "luna", expression: "serious", text: "데네브씨는 우리에게 어서 피하라고 했지만, 우리는 피하지 않을 거예요. 그렇죠, 대장?!", advanceMode: "click" },
+    { id: "d5-complete-11", type: "dialogue", speakerId: "theo", speakerName: "테오", activeActorId: "theo", expression: "smile", text: "여기까지 와서 데네브님을 두고 갈 순 없습니다.", advanceMode: "click" },
+    { id: "d5-complete-12", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "default", text: "...", advanceMode: "click" },
+    { id: "d5-complete-13", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "default", text: "물론입니다.", advanceMode: "click" },
+    { id: "d5-complete-14", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "default", text: "자, 다음 계획을 세우죠. 앞으로는 더더욱 신중해야 할 겁니다.", advanceMode: "click" },
+    { id: "d5-complete-15", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "smile", text: "그리고, 루나 경. 잊지 말고 발목을 치료하십시오.", advanceMode: "click" },
+    { id: "d5-complete-16", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "smile", text: "귀찮다고 미루면 더 심해질 수 있으니까요.", advanceMode: "click" },
+    { id: "d5-complete-17", type: "dialogue", speakerId: "luna", speakerName: "루나", activeActorId: "luna", expression: "scared", text: "어, 어떻게 알았지..", advanceMode: "click" },
+    { id: "d5-complete-18", type: "dialogue", speakerId: "luna", speakerName: "루나", activeActorId: "luna", expression: "scared", text: "알겠어요, 대장..", advanceMode: "click" },
   ] }],
 };
-NPC_STORY_SEQUENCES["npc-theo-floor-5-quest-accepted"] = sequence("npc-theo-floor-5-quest-accepted", "theo", "default", ["{{playerName}}, 준비를 마치고 함께 5층으로 들어갑시다."]);
-NPC_STORY_SEQUENCES["npc-theo-floor-5-quest-active"] = sequence("npc-theo-floor-5-quest-active", "theo", "default", ["준비가 되면 함께 던전 5층으로 들어갑시다."]);
-NPC_STORY_SEQUENCES["npc-theo-floor-5-quest-active"].scenes[0].steps.push({
-  id: "npc-theo-floor-5-quest-active-choice",
-  type: "choice",
-  prompt: "무엇을 하시겠습니까?",
-  advanceMode: "click",
-  options: [
-    { id: "buy-items", label: "아이템 사기", actionId: "open-theo-shop", closeStory: true },
-    { id: "end-dialogue", label: "대화 끝내기", closeStory: true },
-  ],
-});
-NPC_STORY_SEQUENCES["npc-theo-floor-5-quest-complete"] = sequence("npc-theo-floor-5-quest-complete", "theo", "default", ["{{playerName}}, 수고하셨습니다. 이제 다음 계획을 세우지요."]);
 
 NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-available"] = {
   id: "npc-kaiden-floor-6-quest-available", title: "던전 6층 의뢰", replayable: true, skippable: false,

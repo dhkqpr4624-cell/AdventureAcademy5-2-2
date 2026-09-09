@@ -114,6 +114,7 @@ export function BaseCampScreen({
   const prehistoryRewardClaimProcessingRef = useRef(false);
   const dungeon3RewardClaimProcessingRef = useRef(false);
   const dungeon4RewardClaimProcessingRef = useRef(false);
+  const dungeon5RewardClaimProcessingRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -297,8 +298,8 @@ export function BaseCampScreen({
         ? "npc-theo-floor-7-quest-complete"
       : npc.id === "kaiden" && hasClearedFloor6 && effectiveQuestState[floor6QuestId] === "active"
         ? "npc-kaiden-floor-6-quest-complete"
-      : npc.id === "theo" && hasClearedFloor5 && effectiveQuestState[floor5QuestId] === "active"
-        ? "npc-theo-floor-5-quest-complete"
+      : npc.id === "kaiden" && hasClearedFloor5 && effectiveQuestState[floor5QuestId] === "active"
+        ? "npc-aron-floor-5-quest-complete"
       : npc.id === "kaiden" && hasMemoryFragment && effectiveQuestState[memoryQuestId] === "active"
           ? "npc-aron-floor-2-quest-complete"
         : npc.id === "theo" &&
@@ -352,7 +353,7 @@ export function BaseCampScreen({
       setJeonRewardOpen(true);
       return;
     }
-    if (finishedSequenceId === "npc-theo-floor-5-quest-complete") {
+    if (finishedSequenceId === "npc-aron-floor-5-quest-complete") {
       revealReward(floor5QuestId);
       setFloor5RewardOpen(true);
       return;
@@ -436,12 +437,13 @@ export function BaseCampScreen({
   };
 
   const claimFloor5Reward = () => {
-    if (rewardClaimed[floor5QuestId]) return;
+    if (rewardClaimed[floor5QuestId] || dungeon5RewardClaimProcessingRef.current) return;
+    dungeon5RewardClaimProcessingRef.current = true;
     const reward = resolveQuestRewardGrant(
       floorBestCorrect["floor-5"] ?? 12,
       floor5QuestRareRewardCondition.requiredCorrect,
     );
-    setPlayerState((current) => ({ ...current, gold: current.gold + reward.gold }));
+    setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
     if (reward.rareUnlocked) {
       setInventoryState((current) => changeItemQuantity(current, "armor-munmu", 1));
       setAchievementReceived("achievement-floor-5-rare-reward");
@@ -742,8 +744,9 @@ export function BaseCampScreen({
         }}
       />}
       {floor5RewardOpen && <QuestRewardPopup
-        bestCorrect={floorBestCorrect["floor-5"] ?? 12} claimed={Boolean(rewardClaimed[floor5QuestId])}
+        bestCorrect={floorBestCorrect["floor-5"] ?? 0} claimed={Boolean(rewardClaimed[floor5QuestId])}
         questTitle="던전 5층 조사 완료" rareRewardItemId="armor-munmu" requiredCorrect={floor5QuestRareRewardCondition.requiredCorrect}
+        baseGold={10}
         onCancel={() => setFloor5RewardOpen(false)} onClaim={claimFloor5Reward}
       />}
       {floor6RewardOpen && <QuestRewardPopup

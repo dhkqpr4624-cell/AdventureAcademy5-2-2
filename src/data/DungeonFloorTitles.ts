@@ -30,7 +30,7 @@ export const DUNGEON_FLOOR_TITLES: DungeonFloorTitle[] = [
     title: "던전 4층",
     subtitle: "임진왜란과 병자호란",
   },
-  { floor: 5, floorId: "floor-5", title: "던전 5층", subtitle: "통일 신라" },
+  { floor: 5, floorId: "floor-5", title: "던전 5층", subtitle: "조선후기 개혁정치" },
   { floor: 6, floorId: "floor-6", title: "던전 6층", subtitle: "남북국시대 : 발해" },
   { floor: 7, floorId: "floor-7", title: "던전 7층", subtitle: "후삼국 시대와 고려 건국" },
   { floor: 8, floorId: "floor-8", title: "던전 8층", subtitle: "고려와 주변 국가의 관계" },

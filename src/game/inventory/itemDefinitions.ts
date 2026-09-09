@@ -67,9 +67,9 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
     attackVfxId: "water-thunderbolt",
   },
   "armor-munmu": {
-    id: "armor-munmu", name: "문무왕의 갑옷", type: "armor", rarity: "rare",
-    description: "삼국 통일을 완성한 문무왕을 상징하는 희귀 갑옷.",
-    icon: `${import.meta.env.BASE_URL}assets/items/munmu-armor.png`, stackable: false,
+    id: "armor-munmu", name: "실학자의 수첩", type: "armor", rarity: "rare",
+    description: "조선 후기 실학자의 개혁 사상이 담긴 수첩.",
+    icon: `${import.meta.env.BASE_URL}assets/items/silhak-scholar-notebook.png`, stackable: false,
     equipmentStats: { maxHpBonus: getArmorMaxHpBonusForFloor(5) },
   },
   "weapon-silla-ring-pommel-sword": {

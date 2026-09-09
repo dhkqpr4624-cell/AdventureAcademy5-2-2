@@ -20,8 +20,6 @@ import {
   removeCollectionQuestItems,
 } from "../game/quest/itemCollectionQuestRules";
 import { createDebugFloorJumpState } from "../debug/debugFloorJump";
-import { changeItemQuantity } from "../game/inventory/inventoryState";
-import { completeQuestStateAfterRewardClaim } from "../game/quest/questRewardCompletionResolver";
 import { playRandomizedOneShot } from "../game/audioOneShot";
 import { playBgm, stopBgm } from "../game/audioBgm";
 
@@ -257,18 +255,6 @@ export function App() {
         onBestCorrect={(correctCount) => setGame((current) => ({ ...current, floorBestCorrect: { ...current.floorBestCorrect, [activeFloorId]: Math.max(current.floorBestCorrect[activeFloorId] ?? 0, correctCount) } }))}
         floorQuestStarted={game.questState[activeFloorQuestId] === "active" || game.questState[activeFloorQuestId] === "completed"}
         floorQuestStatus={game.questState[activeFloorQuestId]}
-        onFloor5RewardClaim={(rareUnlocked) => {
-          setGame((current) => ({ ...current,
-            playerState: { ...current.playerState, gold: current.playerState.gold + 5 },
-            inventoryState: rareUnlocked ? changeItemQuantity(current.inventoryState, "armor-munmu", 1) : current.inventoryState,
-            questState: completeQuestStateAfterRewardClaim(current.questState, "quest-floor-5-unified-silla"),
-            rewardClaimed: { ...current.rewardClaimed, "quest-floor-5-unified-silla": true },
-            achievementReceived: rareUnlocked
-              ? { ...current.achievementReceived, "achievement-floor-5-rare-reward": true }
-              : current.achievementReceived,
-          }));
-          requestSave("questCompleted");
-        }}
         onFloorCleared={() => { setGame((current) => ({ ...current, currentFloorId: null, currentFloorRun: null, playerState: { ...current.playerState, currentHp: current.playerState.maxHp }, clearedFloorIds: [...new Set([...current.clearedFloorIds, activeFloorId])] })); requestSave("floorCleared"); }}
         onDungeon10EndingStarted={() => {
           endingSequenceActiveRef.current = true;

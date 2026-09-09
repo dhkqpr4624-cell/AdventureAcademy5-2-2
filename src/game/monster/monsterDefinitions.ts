@@ -24,6 +24,9 @@ export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   "chapter2-corrupted-armillary-sphere": { id: "chapter2-corrupted-armillary-sphere", name: "오염된 혼천의", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-armillary-sphere.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-imjin-japanese-soldier": { id: "chapter2-imjin-japanese-soldier", name: "임진왜란 일본군", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/imjin-japanese-soldier.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-qing-soldier": { id: "chapter2-qing-soldier", name: "병자호란 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/qing-soldier.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-suwon-fortress-golem": { id: "chapter2-suwon-fortress-golem", name: "수원화성 성벽 골렘", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/suwon-fortress-golem.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-sinmungo-spirit": { id: "chapter2-sinmungo-spirit", name: "신문고 정령", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/sinmungo-spirit.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-east-west-factions": { id: "chapter2-east-west-factions", name: "사이 나쁜 동인 서인", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/east-west-factions.png`, displayScale: 1.08, aspectRatio: 1278 / 1230, anchor: [0, -0.03, 0] },
   "garlic-king": {
     id: "garlic-king",
     name: "마늘킹",

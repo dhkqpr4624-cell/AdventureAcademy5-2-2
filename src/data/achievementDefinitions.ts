@@ -63,10 +63,10 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
   },
   {
     id: "achievement-floor-5-rare-reward", floorId: "floor-5", floorTitle: "던전 5층",
-    title: "삼국 통일의 과정", rewardIcon: `${import.meta.env.BASE_URL}assets/items/munmu-armor.png`,
+    title: "실학자의 수첩 획득", rewardIcon: `${import.meta.env.BASE_URL}assets/items/silhak-scholar-notebook.png`,
     rewardItemId: "armor-munmu", rewardStateId: "quest-floor-5-unified-silla",
     requiredCorrect: floor5RareRewardCondition.requiredCorrect, totalQuestions: floor5RareRewardCondition.totalQuestions,
-    description: "던전 5층 정답",
+    description: "던전 5층 희귀 보상 획득",
   },
   {
     id: "achievement-floor-6-rare-reward", floorId: "floor-6", floorTitle: "던전 6층",
