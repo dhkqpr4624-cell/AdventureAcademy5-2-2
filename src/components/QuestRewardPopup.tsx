@@ -9,6 +9,7 @@ export function QuestRewardPopup({
   requiredCorrect = 6,
   baseGold = 5,
   showRareReward = true,
+  showLockedRareReward = true,
   guaranteedItemReward = false,
   onClaim,
   onCancel,
@@ -20,20 +21,22 @@ export function QuestRewardPopup({
   requiredCorrect?: number;
   baseGold?: number;
   showRareReward?: boolean;
+  showLockedRareReward?: boolean;
   guaranteedItemReward?: boolean;
   onClaim: () => void;
   onCancel: () => void;
 }) {
   const required = requiredCorrect;
   const rareUnlocked = bestCorrect >= required;
+  const displayRareReward = showRareReward && (rareUnlocked || showLockedRareReward);
   const rareReward = getItemDefinition(rareRewardItemId)!;
   return (
     <div className="pixel-popup-backdrop">
       <section className="pixel-rpg-popup quest-reward-popup" role="dialog" aria-modal="true" aria-labelledby="quest-reward-title">
         <header><p className="eyebrow">QUEST COMPLETE</p><h2 id="quest-reward-title">{questTitle}</h2></header>
-        <div className={`quest-reward-grid ${showRareReward ? "" : "is-base-only"}`}>
+        <div className={`quest-reward-grid ${displayRareReward ? "" : "is-base-only"}`}>
           <article><p className="eyebrow">기본 보상</p><span className="reward-icon">G</span><strong>{baseGold} Gold</strong><small>퀘스트 완료 기본 보상</small></article>
-          {showRareReward && <article className={rareUnlocked ? "is-unlocked" : "is-locked"}>
+          {displayRareReward && <article className={rareUnlocked ? "is-unlocked" : "is-locked"}>
             <p className="eyebrow">{guaranteedItemReward ? "장비 보상" : "희귀 보상"}</p><span className="reward-icon"><ItemIcon item={rareReward} /></span><strong>{rareReward.name}</strong>
             <small className={rareUnlocked ? "" : "reward-condition-failed"}>
               {guaranteedItemReward ? "퀘스트 완료 확정 보상" : <>희귀 보상 조건: 정답 {required}개 이상 달성<br />달성: {bestCorrect}개</>}

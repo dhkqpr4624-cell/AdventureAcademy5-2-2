@@ -2,6 +2,7 @@ import { applyFloorMonsterData } from "./screens/DungeonScreen/DungeonScreen";
 import { createDungeonRun } from "./game/dungeon/generation/floor1DungeonRuntime";
 import { createDebugFloorJumpState } from "./debug/debugFloorJump";
 import { getItemQuantity } from "./game/inventory/inventoryState";
+import { ACHIEVEMENT_DEFINITIONS } from "./data/achievementDefinitions";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(message);
@@ -26,15 +27,25 @@ export function runPhase29_11Checks() {
     const state = createDebugFloorJumpState(floor);
     assert(state.questState[questIds[index]] === "available", `${floor} target quest must be available`);
     assert(state.clearedFloorIds.length === index, `${floor} cleared floor count mismatch`);
-    assert(state.playerState.gold === index * 5, `${floor} gold mismatch`);
+    assert(state.playerState.gold === 0, `${floor} debug jump must not grant prior-floor base gold`);
     assert(Object.keys(state.rewardClaimed).length === index, `${floor} claimed reward count mismatch`);
-    const expectedAchievementCount = index > 2 ? 1 : 0;
+    const previousFloorIds = new Set(floorIds.slice(0, index));
+    const priorRareRewards = ACHIEVEMENT_DEFINITIONS.filter((achievement) => previousFloorIds.has(achievement.floorId as typeof floorIds[number]));
+    const expectedAchievementCount = priorRareRewards.length;
     assert(Object.keys(state.achievementReceived).length === expectedAchievementCount, `${floor} achievement count mismatch`);
     assert(state.floorUnlockState.unlockedFloorIds.includes(floor), `${floor} target floor must be unlocked`);
     assert(state.questState[questIds[index]] !== "active", `${floor} target quest must remain unaccepted`);
     assert(!Object.keys(state.inventoryState.items).some((id) => id.startsWith("quest-")), `${floor} must not retain quest items`);
     for (let previous = 0; previous < index; previous += 1) assert(state.questState[questIds[previous]] === "completed", `${floor} previous quest incomplete`);
-    assert(getItemQuantity(state.inventoryState, "armor-angbuilgu-helmet") === (index > 2 ? 1 : 0), `${floor} Dungeon 3 guaranteed helmet mismatch`);
-    assert(getItemQuantity(state.inventoryState, "weapon-chiljido") === 0, `${floor} debug jump must not force Dungeon 4 rare reward`);
+    assert(getItemQuantity(state.inventoryState, "weapon-yangban-folding-fan") === (index > 1 ? 1 : 0), `${floor} Dungeon 2 rare reward mismatch`);
+    assert(getItemQuantity(state.inventoryState, "armor-angbuilgu-helmet") === (index > 2 ? 1 : 0), `${floor} Dungeon 3 rare reward mismatch`);
+    assert(getItemQuantity(state.inventoryState, "weapon-chiljido") === (index > 3 ? 1 : 0), `${floor} Dungeon 4 rare reward mismatch`);
+    for (const achievement of ACHIEVEMENT_DEFINITIONS) {
+      const expectedQuantity = previousFloorIds.has(achievement.floorId as typeof floorIds[number]) ? 1 : 0;
+      assert(getItemQuantity(state.inventoryState, achievement.rewardItemId) === expectedQuantity, `${floor} ${achievement.rewardItemId} quantity mismatch`);
+      assert(Boolean(state.achievementReceived[achievement.id]) === Boolean(expectedQuantity), `${floor} ${achievement.id} state mismatch`);
+    }
+    assert(state.inventoryState.equippedItemIds.weaponSkin === "weapon-wooden-wand", `${floor} debug rare weapon must not auto-equip`);
+    assert(state.inventoryState.equippedItemIds.armor === null, `${floor} debug rare armor must not auto-equip`);
   }
 }

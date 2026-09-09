@@ -2295,7 +2295,7 @@ export function DungeonScreen({
         } as CSSProperties : undefined}
         aria-label="고정 테스트 던전"
       />
-      {attackVfxVisible && <div className={attackVfxVisible === "water-thunderbolt" ? "weapon-water-vfx" : "wooden-wand-fire-vfx"} style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/${attackVfxVisible === "water-thunderbolt" ? "water-thunderbolt.png" : "fire-attack.png"})` }} aria-hidden="true" />}
+      {attackVfxVisible && <div className={attackVfxVisible === "water-thunderbolt" ? "weapon-water-vfx" : "wooden-wand-fire-vfx"} style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/${attackVfxVisible === "water-thunderbolt" ? "water-blade-slash.png" : "fire-attack.png"})` }} aria-hidden="true" />}
       {floorIntroVisible && <DungeonFloorIntro floorId={floorId} />}
       {exitButtonState.visible && floorId !== "floor-10" && (
         <DungeonExitButton

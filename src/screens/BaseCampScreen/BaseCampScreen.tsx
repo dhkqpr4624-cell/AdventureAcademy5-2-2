@@ -49,6 +49,7 @@ import {
 const memoryQuestRareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
+const tornClothQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-3-torn-cloth");
 const jeonQuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6QuestRareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
@@ -669,22 +670,26 @@ export function BaseCampScreen({
         claimed={Boolean(rewardClaimed[tornClothQuestId])}
         questTitle="조선시대의 문화(학문 및 과학) 완료"
         rareRewardItemId="armor-angbuilgu-helmet"
-        requiredCorrect={0}
+        requiredCorrect={tornClothQuestRareRewardCondition.requiredCorrect}
+        showLockedRareReward={false}
         baseGold={10}
-        guaranteedItemReward
         onCancel={() => { endReminiscenceBgm(); setTornClothRewardOpen(false); }}
         onClaim={() => {
           if (rewardClaimed[tornClothQuestId] || dungeon3RewardClaimProcessingRef.current) return;
           dungeon3RewardClaimProcessingRef.current = true;
+          const reward = resolveQuestRewardGrant(
+            floorBestCorrect["floor-3"] ?? 0,
+            tornClothQuestRareRewardCondition.requiredCorrect,
+          );
           setPlayerState((current) => ({ ...current, gold: current.gold + 10 }));
           setInventoryState((current) => {
             let next = removeQuestItemsAfterRewardClaim(current, tornClothQuestId);
-            next = changeItemQuantity(next, "armor-angbuilgu-helmet", 1);
+            if (reward.rareUnlocked) next = changeItemQuantity(next, "armor-angbuilgu-helmet", 1);
             return next;
           });
           setRewardClaimed(tornClothQuestId);
           completeQuestAfterRewardClaim(tornClothQuestId);
-          setAchievementReceived("achievement-floor-3-guaranteed-reward");
+          if (reward.rareUnlocked) setAchievementReceived("achievement-floor-3-guaranteed-reward");
           onAutoSave("questCompleted");
           setTornClothRewardOpen(false);
           endReminiscenceBgm();

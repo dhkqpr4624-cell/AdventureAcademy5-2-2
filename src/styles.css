@@ -2583,8 +2583,8 @@ button:focus-visible {
 
 .wooden-wand-fire-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 800px; height: 800px; transform: translate(-50%, calc(-89.75% + 50px)); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: wooden-wand-fire 1s steps(8) 1 both; }
 @keyframes wooden-wand-fire { from { background-position-x: 0; } to { background-position-x: 114.2857%; } }
-.weapon-water-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 1200px; height: 800px; transform: translate(-50%, calc(-89.75% + 50px)); pointer-events: none; background-position: 0 0; background-size: 1200% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: weapon-water-vfx 1s steps(12) 1 both; }
-@keyframes weapon-water-vfx { from { background-position-x: 0; } to { background-position-x: 109.0909%; } }
+.weapon-water-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 800px; height: 800px; transform: translate(-50%, calc(-89.75% + 50px)); pointer-events: none; background-position: 0 0; background-size: 900% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: weapon-water-vfx 1s steps(8) 1 both; }
+@keyframes weapon-water-vfx { from { background-position-x: 0; } to { background-position-x: -6400px; } }
 .chapter2-stage-deck .chapter2-story-npc-aron { left: 66%; }
 .chapter2-stage-deck .chapter2-story-npc-kapp { left: 77%; }
 .chapter2-story-npc.is-fading-in { animation: chapter2-npc-fade 700ms ease-out both; }

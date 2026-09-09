@@ -42,7 +42,7 @@ export const QUEST_DEFINITIONS: readonly QuestDefinition[] = [
     offerStorySequenceId: "npc-kapp-floor-3-quest-available",
     targetFloorId: "floor-3",
     completeStorySequenceId: "npc-aron-floor-3-quest-complete",
-    rewards: { description: "10 Gold · 앙부일구 투구" },
+    rewards: { description: "10 Gold · 앙부일구 투구(희귀)" },
   },
   {
     id: "quest-floor-4-jeon-rescue",

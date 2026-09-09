@@ -3,16 +3,10 @@ import type { FloorId } from "../game/floor/floorTypes";
 import { changeItemQuantity } from "../game/inventory/inventoryState";
 import { QUEST_DEFINITIONS } from "../game/quest/questDefinitions";
 import { getQuestRareRewardCondition } from "../game/quest/questRareRewardConditions";
+import { ACHIEVEMENT_DEFINITIONS } from "../data/achievementDefinitions";
 import { createInitialGameSaveState, type GameSaveState } from "../save/saveStateAdapter";
 
 const FLOOR_IDS: readonly FloorId[] = ["floor-1", "floor-2", "floor-3", "floor-4", "floor-5", "floor-6", "floor-7", "floor-8", "floor-9", "floor-10"];
-const GUARANTEED_ITEM_REWARDS: Readonly<Record<string, { itemId: string; achievementId?: string }>> = {
-  "quest-floor-3-torn-cloth": {
-    itemId: "armor-angbuilgu-helmet",
-    achievementId: "achievement-floor-3-guaranteed-reward",
-  },
-};
-
 export function createDebugFloorJumpState(targetFloor: FloorId, playerName = "DEBUG"): GameSaveState {
   const state = createInitialGameSaveState();
   const targetIndex = FLOOR_IDS.indexOf(targetFloor);
@@ -36,23 +30,25 @@ export function createDebugFloorJumpState(targetFloor: FloorId, playerName = "DE
     const condition = getQuestRareRewardCondition(questId);
     questState[questId] = "completed";
     rewardClaimed[questId] = true;
-    const guaranteedReward = GUARANTEED_ITEM_REWARDS[questId];
-    if (guaranteedReward) {
-      if ((inventoryState.items[guaranteedReward.itemId] ?? 0) < 1) {
-        inventoryState = changeItemQuantity(inventoryState, guaranteedReward.itemId, 1);
+    const rareRewardAchievement = ACHIEVEMENT_DEFINITIONS.find(
+      (achievement) => achievement.rewardStateId === questId,
+    );
+    if (rareRewardAchievement) {
+      if ((inventoryState.items[rareRewardAchievement.rewardItemId] ?? 0) < 1) {
+        inventoryState = changeItemQuantity(inventoryState, rareRewardAchievement.rewardItemId, 1);
       }
-      if (guaranteedReward.achievementId) achievementReceived[guaranteedReward.achievementId] = true;
+      achievementReceived[rareRewardAchievement.id] = true;
     }
     firstObjectiveEventSeen[floorId] = true;
     firstObjectiveEventSeen[`reward-revealed:${questId}`] = true;
-    floorBestCorrect[floorId] = guaranteedReward ? condition.totalQuestions : 0;
+    floorBestCorrect[floorId] = rareRewardAchievement ? condition.totalQuestions : 0;
   });
   const targetQuest = QUEST_DEFINITIONS.find((quest) => quest.targetFloorId === targetFloor);
   if (!targetQuest) throw new Error(`Missing quest definition for ${targetFloor}`);
   questState[targetQuest.id] = "available";
   return {
     ...state,
-    playerState: { ...state.playerState, name: playerName || "DEBUG", gold: completedQuestIds.length * 5 },
+    playerState: { ...state.playerState, name: playerName || "DEBUG" },
     questState, inventoryState, clearedFloorIds: [...completedFloorIds],
     floorUnlockState: { unlockedFloorIds: [...completedFloorIds, targetFloor] }, floorBestCorrect,
     firstObjectiveEventSeen, rewardClaimed, achievementReceived,

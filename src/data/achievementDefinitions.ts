@@ -16,6 +16,7 @@ export type AchievementDefinition = {
 const floor2RareRewardCondition = getQuestRareRewardCondition(
   "quest-floor-2-memory-fragment",
 );
+const floor3RareRewardCondition = getQuestRareRewardCondition("quest-floor-3-torn-cloth");
 const floor4RareRewardCondition = getQuestRareRewardCondition("quest-floor-4-jeon-rescue");
 const floor5RareRewardCondition = getQuestRareRewardCondition("quest-floor-5-unified-silla");
 const floor6RareRewardCondition = getQuestRareRewardCondition("quest-floor-6-balhae");
@@ -44,9 +45,9 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
     rewardIcon: `${import.meta.env.BASE_URL}assets/items/angbuilgu-helmet.png`,
     rewardItemId: "armor-angbuilgu-helmet",
     rewardStateId: "quest-floor-3-torn-cloth",
-    requiredCorrect: 0,
-    totalQuestions: 10,
-    description: "던전 3층 확정 장비 보상 획득",
+    requiredCorrect: floor3RareRewardCondition.requiredCorrect,
+    totalQuestions: floor3RareRewardCondition.totalQuestions,
+    description: "던전 3층 희귀 보상 획득",
   },
   {
     id: "achievement-floor-4-rare-reward",

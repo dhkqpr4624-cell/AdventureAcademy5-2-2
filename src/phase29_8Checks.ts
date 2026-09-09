@@ -13,6 +13,7 @@ import { NPC_BY_ID } from "./game/npc/npcDefinitions";
 import { QUEST_DEFINITIONS } from "./game/quest/questDefinitions";
 import { applyFloorMonsterData, prepareFloorDungeonMap } from "./screens/DungeonScreen/DungeonScreen";
 import { createDungeon4SeaEnvironment } from "./three/dungeon/Dungeon4SeaEnvironment";
+import { resolveQuestRewardGrant } from "./game/quest/questRewardCompletionResolver";
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) throw new Error(`[phase29_8Checks] ${message}`);
@@ -81,7 +82,9 @@ export function runPhase29_8Checks(): void {
   assert(gwakWrong?.type === "dialogue" && gwakWrong.nextStepId === "gwak-choice", "Gwak wrong answer must repeat its choice");
   assert(yiWrong?.type === "dialogue" && yiWrong.nextStepId === "yi-choice", "Yi wrong answer must repeat its choice");
   assert(DUNGEON4_FINAL_STORY.dialogueSkip === true, "Dungeon 4 final story must support generic skip");
-  assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-3-guaranteed-reward" && entry.rewardItemId === "armor-angbuilgu-helmet"), "Dungeon 3 guaranteed reward achievement missing");
+  assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-3-guaranteed-reward" && entry.rewardItemId === "armor-angbuilgu-helmet" && entry.requiredCorrect === 6), "Dungeon 3 rare reward achievement missing");
+  assert(!resolveQuestRewardGrant(5, 6).rareUnlocked, "Dungeon 3 rare reward must remain locked below the condition");
+  assert(resolveQuestRewardGrant(6, 6).rareUnlocked, "Dungeon 3 rare reward must unlock at the condition");
   assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-4-rare-reward" && entry.rewardItemId === "weapon-chiljido"), "Dungeon 4 rare reward achievement missing");
   const seaEnvironment = createDungeon4SeaEnvironment(floor4Map);
   assert(Boolean(seaEnvironment.root.getObjectByName("Dungeon4DistantIsland-1")), "existing Dungeon 4 triangular island missing");
