@@ -296,7 +296,7 @@ export function BaseCampScreen({
         ? "npc-kaiden-floor-8-quest-complete"
       : npc.id === "theo" && hasClearedFloor7 && effectiveQuestState[floor7QuestId] === "active"
         ? "npc-theo-floor-7-quest-complete"
-      : npc.id === "kaiden" && hasClearedFloor6 && effectiveQuestState[floor6QuestId] === "active"
+      : npc.id === "jeon" && hasClearedFloor6 && effectiveQuestState[floor6QuestId] === "active"
         ? "npc-kaiden-floor-6-quest-complete"
       : npc.id === "kaiden" && hasClearedFloor5 && effectiveQuestState[floor5QuestId] === "active"
         ? "npc-aron-floor-5-quest-complete"

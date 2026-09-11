@@ -303,7 +303,7 @@ export function prepareFloorDungeonMap(
 }
 
 function selectDungeon6StoryRoomIds(map: DungeonMapDefinition): string[] {
-  return selectRequiredStoryRoomIds(map, 2, true);
+  return selectRequiredStoryRoomIds(map, 3, false);
 }
 export function selectDungeon2StoryRoomIds(map: DungeonMapDefinition): string[] {
   return selectRequiredStoryRoomIds(map, 3, false);
@@ -519,7 +519,7 @@ export function DungeonScreen({
         }
       });
     }
-    if ((floorId === "floor-2" || floorId === "floor-3" || floorId === "floor-4" || floorId === "floor-5") && !shouldRestoreSavedFloorRun && restored[dungeonMap.startRoomId]) {
+    if ((floorId === "floor-2" || floorId === "floor-3" || floorId === "floor-4" || floorId === "floor-5" || floorId === "floor-6") && !shouldRestoreSavedFloorRun && restored[dungeonMap.startRoomId]) {
       restored[dungeonMap.startRoomId] = { roomId: dungeonMap.startRoomId, eventCompleted: false };
     }
     return restored;
@@ -712,7 +712,10 @@ export function DungeonScreen({
         setDungeonMode("roomEvent");
         setFloor5EntryStoryVisible(true);
       }
-      if (questStoryEnabled && floorId === "floor-6" && currentRoomId === dungeonMap.startRoomId) setFloor6EntryStoryVisible(true);
+      if (questStoryEnabled && floorId === "floor-6" && floorQuestStarted && currentRoomId === dungeonMap.startRoomId && !roomProgressRef.current[dungeonMap.startRoomId]?.eventCompleted) {
+        setDungeonMode("roomEvent");
+        setFloor6EntryStoryVisible(true);
+      }
       if (questStoryEnabled && floorId === "floor-10" && currentRoomId === dungeonMap.startRoomId) setFloor10EntryStoryVisible(true);
     }, 3200);
     return () => window.clearTimeout(timer);
@@ -2786,7 +2789,10 @@ export function DungeonScreen({
       </div>}
       {floor6EntryStoryVisible && floorId === "floor-6" && <div className="dungeon-story-overlay">
         <StoryPlayer sequence={DUNGEON6_ENTRY_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState}
-          presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => { setFloor6EntryStoryVisible(false); setDungeonMode("exploration"); }} />
+          presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
+            const next = completeRoomEvent(roomProgressRef.current, dungeonMap.startRoomId);
+            roomProgressRef.current = next; setRoomProgress(next); setFloor6EntryStoryVisible(false); setDungeonMode("exploration");
+          }} />
       </div>}
       {floor10EntryStoryVisible && floorId === "floor-10" && <div className="dungeon-story-overlay">
         <StoryPlayer sequence={DUNGEON10_ENTRY_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState}

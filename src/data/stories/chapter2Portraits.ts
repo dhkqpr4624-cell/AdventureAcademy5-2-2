@@ -25,6 +25,7 @@ import yiDefault from "../../assets/portraits/chapter2/yi/default.png";
 import angryYangbanDefault from "../../assets/portraits/chapter2/angry-yangban/default.png";
 import angryCommonerDefault from "../../assets/portraits/chapter2/angry-commoner/default.png";
 import lunaSerious from "../../assets/portraits/chapter2/luna/serious.png";
+import lunaShout from "../../assets/portraits/chapter2/luna/shout.png";
 import theoSurprised from "../../assets/portraits/chapter2/theo/surprised.png";
 import aronShouting from "../../assets/portraits/chapter2/aron/shouting.png";
 import kappSerious from "../../assets/portraits/chapter2/kapp/serious.png";
@@ -36,7 +37,7 @@ import chiefMinisterDefault from "../../assets/portraits/chapter2/chief-minister
 import yeongjoDefault from "../../assets/portraits/chapter2/yeongjo/default.png";
 
 export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
-  luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry, scared: lunaScared, serious: lunaSerious } },
+  luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry, scared: lunaScared, serious: lunaSerious, shout: lunaShout } },
   theo: { defaultExpression: "default", expressions: { default: theoDefault, smile: theoSmile, sad: theoSad, angry: theoAngry, worried: theoWorried, surprised: theoSurprised } },
   aron: { defaultExpression: "default", expressions: { default: aronDefault, smile: aronSmile, sad: aronSad, angry: aronAngry, serious: aronSerious, shouting: aronShouting } },
   kapp: { defaultExpression: "default", expressions: { default: kappDefault, smile: kappSmile, sad: kappSad, angry: kappAngry, surprised: kappSurprised, serious: kappSerious, shouting: kappShouting } },

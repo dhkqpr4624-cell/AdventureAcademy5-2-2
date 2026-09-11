@@ -411,30 +411,36 @@ NPC_STORY_SEQUENCES["npc-aron-floor-5-quest-complete"] = {
 
 NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-available"] = {
   id: "npc-kaiden-floor-6-quest-available", title: "던전 6층 의뢰", replayable: true, skippable: false,
-  onCompleteScreen: "baseCamp", backgrounds: {},
-  actors: { kaiden: actor("kaiden", "serious"), luna: actor("luna", "happy"), theo: actor("theo", "default"), jeon: actor("jeon", "default") },
-  scenes: [{ id: "npc-kaiden-floor-6-quest-available-scene", steps: [
-    ...floor5QuestDialogue("floor6-kaiden-1", "kaiden", "serious", "{{playerName}}, 고생이 많군. 이제 6층을 탐색할 차례이지?"),
-    ...floor5QuestDialogue("floor6-kaiden-2", "kaiden", "serious", "이번에도 먼저 루나가 다녀왔는데.. 아무래도 던전 6층에는 유령이 있는 것 같다고 하더군."),
-    ...floor5QuestDialogue("floor6-luna-1", "luna", "happy", "안녕~ {{playerName}}. 대장, 말하는 중에 끼어들어서 미안해. 직접 설명하는게 좋을 것 같아서."),
-    ...floor5QuestDialogue("floor6-kaiden-3", "kaiden", "serious", "상관 없다. 자세히 설명해 봐."),
-    ...floor5QuestDialogue("floor6-luna-2", "luna", "happy", "그러니까.. 내가 정찰로 던전 6층 입구를 먼저 열어봤는데, 열자마자 어떤 목소리가 들려왔어."),
-    ...floor5QuestDialogue("floor6-luna-3", "luna", "happy", "모습은 보이지 않아서 누구인지는 잘 모르겠는데... 어쨌든 간절한 목소리였어."),
-    ...floor5QuestDialogue("floor6-luna-4", "luna", "happy", "마치.. 나에게 뭔가를 부탁하는 것처럼."),
-    ...floor5QuestDialogue("floor6-theo-1", "theo", "default", "그 부탁을 들어줘야 다음 층으로 보내줄 것 같다는 뜻입니까?"),
-    ...floor5QuestDialogue("floor6-luna-5", "luna", "happy", "정확해.... 그런데 아무래도 {{playerName}} 혼자서는 힘들 수도 있겠다는 생각이 들어서."),
-    ...floor5QuestDialogue("floor6-kaiden-4", "kaiden", "serious", "...그럼 '전'과 함께 가는 게 좋겠군."),
-    ...floor5QuestDialogue("floor6-kaiden-5", "kaiden", "serious", "5층에서 보여준 전의 능력을 보면, 이번에도 전이 큰 역할을 해 줄지도 모른다."),
-    ...floor5QuestDialogue("floor6-kaiden-6", "kaiden", "serious", "어떻게 생각하지?"),
-  ] }],
+  dialogueSkip: true, onCompleteScreen: "baseCamp", backgrounds: {}, actors: chapter2Actors,
+  scenes: chapter2DialogueSequence("npc-kaiden-floor-6-quest-available", [
+    { actor: "aron", expression: "smile", text: "어서오십시오, (플레이어 이름). 조금 휴식하셨습니까?" },
+    { actor: "aron", expression: "smile", text: "여러분이 휴식하는 사이, 저와 카프가 다음 층 입구 부분을 정찰하러 다녀왔습니다." },
+    { actor: "theo", text: "아론님과 카프님, 단 둘이서 말입니까? 위험합니다!" },
+    { actor: "kapp", expression: "smile", text: "이런, 아무래도 잊으셨나 보군요. 아론은 원래 정찰을 담당합니다. 저 또한 어느 정도 전투가 가능하기도 하고요." },
+    { actor: "kapp", expression: "smile", text: "여러분이 조금이라도 휴식하셨으면 했어요." },
+    { actor: "luna", expression: "scared", text: "으으.." },
+    { actor: "theo", text: "루나, 발목은 조금 어떻습니까?" },
+    { actor: "luna", expression: "scared", text: "카프 부대장이 치료해주셔서 이제는 괜찮아. 그치만 부대장이 준 약은 정말이지 너무 써!!" },
+    { actor: "luna", expression: "scared", text: "부대장, 나 이제 괜찮은데 약 안 먹으면 안돼요?!" },
+    { actor: "kapp", expression: "smile", text: "안돼요. 통증을 줄여주는 약인걸요. 혹시 모르니 꼬박 꼬박 먹도록 해요." },
+    { actor: "aron", expression: "smile", text: "이제 모두 모였으니 다음층에 대한 이야기를 하죠." },
+    { actor: "aron", expression: "smile", text: "예상했던대로, 던전의 균열이 더욱 심해졌습니다. 아마 바로 근처에 데네브님이 있다는 거겠죠." },
+    { actor: "aron", expression: "smile", text: "그렇지만 6층 입구에서는 눈에 띄는 위협을 발견하지 못했습니다. 오히려 축제 분위기였다고나 해야 할까요.." },
+    { actor: "theo", text: "축제 말씀입니까..?" },
+    { actor: "aron", expression: "smile", text: "예.. 아마 들어가보면 바로 이해되실겁니다." },
+    { actor: "aron", expression: "smile", text: "주의해야 할 점은, 저희가 외부인인것을 들켜선 안 된다는 것입니다." },
+    { actor: "aron", expression: "smile", text: "던전 6층에 있는 인물들에게 우리의 정체를 들켰다간, 오히려 더 위험해질 수 있으니까요." },
+    { actor: "luna", expression: "smile", text: "한 마디로 스파이 작전이라는 거네요!" },
+    { actor: "kapp", expression: "smile", text: "후후, 정확해요." },
+    { actor: "kapp", expression: "smile", text: "(플레이어 이름), 준비되면 던전에 들어갑시다. 조심해서 나아가도록 하죠." },
+  ]).scenes,
 };
-NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-accepted"] = sequence("npc-kaiden-floor-6-quest-accepted", "jeon", "default", ["잘 부탁드립니다, {{playerName}}."]);
-NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-active"] = sequence("npc-kaiden-floor-6-quest-active", "kaiden", "serious", ["전과 함께 던전 6층의 목소리를 조사하도록."]);
-NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-complete"] = sequence("npc-kaiden-floor-6-quest-complete", "kaiden", "serious", [
-  "왔는가. 다음 층의 입구가 열렸다는 것은 알고 있네.",
-  "그래, 발해 유민들의 정체성을 찾아주었다고..",
-  "수고했다. 둘이서 대단한 일을 해냈군.",
-  "이제 다음 계획을 세우지.",
+NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-accepted"] = chapter2DialogueSequence("npc-kaiden-floor-6-quest-accepted", [{ actor: "aron", text: "조심해서 다녀오십시오." }]);
+NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-active"] = chapter2DialogueSequence("npc-kaiden-floor-6-quest-active", [{ actor: "aron", expression: "serious", text: "외부인이라는 사실을 들키지 않도록 조심하십시오." }]);
+NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-complete"] = chapter2DialogueSequence("npc-kaiden-floor-6-quest-complete", [
+  { actor: "kapp", expression: "serious", text: "정말로 데네브가 있는 곳까지 왔네요. 당신 덕분이겠죠, (플레이어 이름)." },
+  { actor: "kapp", expression: "serious", text: "하지만 아직 안심하긴 일러요. 아직 데네브를 구하지 못했고, 이 포탈도 아직 해결하지 못했으니까요." },
+  { actor: "kapp", expression: "serious", text: "이 뒤도 평소처럼 잘 부탁해요, (플레이어 이름)." },
 ]);
 
 NPC_STORY_SEQUENCES["npc-theo-floor-7-quest-available"] = {

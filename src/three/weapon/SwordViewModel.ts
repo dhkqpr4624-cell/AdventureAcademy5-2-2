@@ -84,8 +84,8 @@ export const CHILJIDO_DEFINITION: SwordDefinition = {
 };
 export const SILLA_RING_POMMEL_SWORD_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,
-  id: "silla-ring-pommel-sword",
-  textureUrl: `${import.meta.env.BASE_URL}assets/swords/silla-ring-pommel-sword.png`,
+  id: "kim-hong-do-brush",
+  textureUrl: `${import.meta.env.BASE_URL}assets/swords/kim-hong-do-brush.png`,
 };
 export const CHOE_MUSEON_CANNON_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,

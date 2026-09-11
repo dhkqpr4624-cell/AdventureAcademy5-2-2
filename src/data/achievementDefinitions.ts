@@ -70,10 +70,10 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
   },
   {
     id: "achievement-floor-6-rare-reward", floorId: "floor-6", floorTitle: "던전 6층",
-    title: "발해 유민의 정체", rewardIcon: `${import.meta.env.BASE_URL}assets/items/silla-ring-pommel-sword.png`,
+    title: "김홍도의 붓 획득", rewardIcon: `${import.meta.env.BASE_URL}assets/items/kim-hong-do-brush.png`,
     rewardItemId: "weapon-silla-ring-pommel-sword", rewardStateId: "quest-floor-6-balhae",
     requiredCorrect: floor6RareRewardCondition.requiredCorrect, totalQuestions: floor6RareRewardCondition.totalQuestions,
-    description: "던전 6층 정답",
+    description: "던전 6층 희귀 보상 획득",
   },
   {
     id: "achievement-floor-7-rare-reward", floorId: "floor-7", floorTitle: "던전 7층",

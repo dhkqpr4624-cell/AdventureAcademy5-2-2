@@ -19,18 +19,19 @@ export function runQuestMarkerChecks() {
   assert(resolveNpcQuestMarker(NPC_BY_ID.theo, { [floor4QuestId]: "readyToComplete" }) === "readyToComplete", "Dungeon 4 completion marker must resolve to Theo");
   assert(resolveNpcQuestMarker(kaiden, { [floor4QuestId]: "readyToComplete" }) === "none", "Dungeon 4 completion marker must leave Aron");
   assert(
-    resolveNpcQuestMarker(kaiden, { [questId]: "readyToComplete" }) ===
+    resolveNpcQuestMarker(NPC_BY_ID.jeon, { [questId]: "readyToComplete" }) ===
       "readyToComplete",
     "ready-to-complete quest must resolve to ?",
   );
   assert(
-    resolveNpcQuestMarker(kaiden, { [questId]: "active" }) === "none",
+    resolveNpcQuestMarker(NPC_BY_ID.jeon, { [questId]: "active" }) === "none",
     "active quest must not show a marker",
   );
   assert(
-    resolveNpcQuestMarker(kaiden, { [questId]: "completed" }) === "none",
+    resolveNpcQuestMarker(NPC_BY_ID.jeon, { [questId]: "completed" }) === "none",
     "completed quest must not show a marker",
   );
+  assert(resolveNpcQuestMarker(kaiden, { [questId]: "readyToComplete" }) === "none", "Dungeon 6 completion marker must leave Aron");
   assert(
     resolveNpcQuestMarker(
       { id: "kaiden", offeredQuestIds: ["available-quest", "ready-quest"] },
