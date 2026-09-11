@@ -593,7 +593,7 @@ export function DungeonScreen({
   );
   const [floatingText, setFloatingText] = useState<string | null>(null);
   const [damageFlash, setDamageFlash] = useState(false);
-  const [attackVfxVisible, setAttackVfxVisible] = useState<"fire-attack" | "water-thunderbolt" | null>(null);
+  const [attackVfxVisible, setAttackVfxVisible] = useState<"fire-attack" | "water-thunderbolt" | "ink-brush-attack" | null>(null);
   const [resolution, setResolution] =
     useState<CombatResolution | null>(null);
   const [goldDrop, setGoldDrop] = useState(0);
@@ -629,7 +629,7 @@ export function DungeonScreen({
     const weaponDefinition = weaponId ? getItemDefinition(weaponId) : null;
     if (!weaponDefinition || weaponDefinition.type !== "weaponSkin") return;
     const attackVfxId = weaponDefinition.attackVfxId ?? "fire-attack";
-    if (attackVfxId !== "fire-attack" && attackVfxId !== "water-thunderbolt") return;
+    if (attackVfxId !== "fire-attack" && attackVfxId !== "water-thunderbolt" && attackVfxId !== "ink-brush-attack") return;
     setAttackVfxVisible(attackVfxId);
     await new Promise<void>((resolve) => {
       fireAttackResolveRef.current = resolve;
@@ -2289,7 +2289,7 @@ export function DungeonScreen({
         } as CSSProperties : undefined}
         aria-label="고정 테스트 던전"
       />
-      {attackVfxVisible && <div className={attackVfxVisible === "water-thunderbolt" ? "weapon-water-vfx" : "wooden-wand-fire-vfx"} style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/${attackVfxVisible === "water-thunderbolt" ? "water-blade-slash.png" : "fire-attack.png"})` }} aria-hidden="true" />}
+      {attackVfxVisible && <div className={attackVfxVisible === "water-thunderbolt" ? "weapon-water-vfx" : attackVfxVisible === "ink-brush-attack" ? "weapon-ink-brush-vfx" : "wooden-wand-fire-vfx"} style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/${attackVfxVisible === "water-thunderbolt" ? "water-blade-slash.png" : attackVfxVisible === "ink-brush-attack" ? "ink-brush-attack.png" : "fire-attack.png"})` }} aria-hidden="true" />}
       {floorIntroVisible && <DungeonFloorIntro floorId={floorId} />}
       {exitButtonState.visible && floorId !== "floor-10" && (
         <DungeonExitButton

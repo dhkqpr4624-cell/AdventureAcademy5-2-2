@@ -25,6 +25,11 @@ export function runDungeon6Chapter2Checks(): void {
   const completion = NPC_STORY_SEQUENCES["npc-kaiden-floor-6-quest-complete"];
   assert(offer.scenes.flatMap((scene) => scene.steps).filter((step) => step.type === "dialogue").length === 20, "offer must have 20 dialogue steps");
   assert(DUNGEON6_ENTRY_STORY.scenes[0].steps.filter((step) => step.type === "dialogue").length === 5, "entry must have 5 dialogue steps");
+  const entrySteps = DUNGEON6_ENTRY_STORY.scenes[0].steps;
+  assert(entrySteps[0]?.type === "illustOverlay" && entrySteps[0].imageUrl?.endsWith("assets/dungeon6/commoner-festival-illustration.png") && entrySteps[0].visible && entrySteps[0].waitForFade && entrySteps[0].hideDialogue, "entry illustration fade-in missing");
+  assert(entrySteps[1]?.type === "wait" && entrySteps[1].durationMs === 1500, "entry illustration hold must be 1.5 seconds");
+  const entryIllustrationOut = entrySteps.at(-1);
+  assert(entryIllustrationOut?.type === "illustOverlay" && !entryIllustrationOut.visible && entryIllustrationOut.removeAfterFade && entryIllustrationOut.waitForFade && entryIllustrationOut.hideDialogue, "entry illustration fade-out cleanup missing");
   assert(DUNGEON6_CLUE_STORIES.length === 3, "exactly three event stories required");
   assert(DUNGEON6_CLUE_STORIES[1].scenes[0].steps.some((step) => step.type === "dialogue" && step.activeActorId === "singer" && step.text.startsWith("이리 보아도")), "pansori continuation speaker mismatch");
   assert(completion.scenes.flatMap((scene) => scene.steps).filter((step) => step.type === "dialogue").length === 3, "completion must have 3 dialogue steps");
@@ -47,6 +52,7 @@ export function runDungeon6Chapter2Checks(): void {
 
   const item = getItemDefinition("weapon-silla-ring-pommel-sword");
   assert(item?.name === "김홍도의 붓" && item.type === "weaponSkin", "legacy reward item id was not reused");
+  assert(item.attackVfxId === "ink-brush-attack", "brush-specific attack VFX mapping missing");
   assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-6-rare-reward" && entry.rewardItemId === "weapon-silla-ring-pommel-sword"), "rare achievement mismatch");
   const debugFloor7 = createDebugFloorJumpState("floor-7");
   assert(getItemQuantity(debugFloor7.inventoryState, "weapon-silla-ring-pommel-sword") === 1, "Dungeon7 debug state must contain one brush");

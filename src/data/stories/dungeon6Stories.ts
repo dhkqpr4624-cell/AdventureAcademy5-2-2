@@ -21,12 +21,14 @@ export const DUNGEON6_ENTRY_STORY: StorySequence = {
   id: "dungeon6-entry-story", title: "던전 6층 시작방", replayable: false, skippable: false,
   dialogueSkip: true, onCompleteScreen: "dungeon", backgrounds: {}, actors,
   scenes: [{ id: "entry", steps: [
+    { id: "d6-entry-illust-in", type: "illustOverlay", imageUrl: asset("commoner-festival-illustration.png"), visible: true, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
     { id: "d6-entry-wait", type: "wait", durationMs: 1500, advanceMode: "auto" },
     d("d6-entry-1", "luna", "와~! 정말 축제잖아?!", "smile"),
     d("d6-entry-2", "luna", "백성들이 재미있게 뛰노는 것 같은데요?!", "smile"),
     d("d6-entry-3", "theo", "맞습니다. 서민들이 다양한 문화를 즐기고 있는 모습을 보니.. 어느새 조선시대 후기인가보군요.", "smile"),
     d("d6-entry-4", "theo", "대장님 말씀대로, 평화롭게 이 층을 지나가려면 아무래도 같은 서민인 척 하는 것이 좋겠습니다.", "smile"),
     d("d6-entry-5", "kapp", "네, 조심해서 나아가죠. 모두, 저희의 뒤로 붙으세요."),
+    { id: "d6-entry-illust-out", type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
   ] }],
 };
 

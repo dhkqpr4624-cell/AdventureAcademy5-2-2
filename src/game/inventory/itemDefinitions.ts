@@ -75,7 +75,7 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
   "weapon-silla-ring-pommel-sword": {
     id: "weapon-silla-ring-pommel-sword", name: "김홍도의 붓", type: "weaponSkin", rarity: "rare",
     description: "김홍도의 풍속화를 떠올리게 하는 붓 모양 마법 지팡이 스킨이다.",
-    icon: `${import.meta.env.BASE_URL}assets/items/kim-hong-do-brush.png`, stackable: false,
+    icon: `${import.meta.env.BASE_URL}assets/items/kim-hong-do-brush.png`, stackable: false, attackVfxId: "ink-brush-attack",
   },
   "accessory-gungye-eyepatch": {
     id: "accessory-gungye-eyepatch", name: "궁예의 안대", type: "armor", rarity: "rare",
