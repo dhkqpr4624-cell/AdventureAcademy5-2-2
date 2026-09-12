@@ -10,6 +10,20 @@ import aronStanding from "../assets/story/npcs/chapter2/aron/standing_R.png";
 
 const base = `${import.meta.env.BASE_URL}assets/dungeon7/`;
 const hitSfx = `${import.meta.env.BASE_URL}assets/audio/hit-sfx.mp3`;
+export const DUNGEON7_PRISON_PARTY_LAYOUT = {
+  displayScale: 0.5,
+  groundBottomPercent: 13,
+  initialLeftPercent: [8, 13, 18, 23],
+  relocatedLeftPercent: [39, 44, 49, 54],
+} as const;
+export type Dungeon7RescuePhase = "arrival" | "party" | "left" | "pan" | "center" | "hits" | "black" | "fallen";
+export function getDungeon7PartyVisibility(phase: Dungeon7RescuePhase) {
+  return {
+    initial: phase === "arrival" || phase === "party" || phase === "left" || phase === "pan",
+    relocated: phase === "center" || phase === "hits",
+  };
+}
+const partyStanding = [lunaStanding, theoStanding, kappStanding, aronStanding] as const;
 const actors = {
   luna: createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72"), theo: createChapter2Actor("theo", "테오", "보급 담당", "#7fc8ff"), aron: createChapter2Actor("aron", "아론", "지휘관", "#d9b6ff"), kapp: createChapter2Actor("kapp", "카프", "부지휘관", "#ffcf80"), deneb: createChapter2Actor("deneb", "데네브", "잊혀진 지휘관", "#bfe7ff"),
 };
@@ -27,7 +41,7 @@ const FALLEN = sequence("d7-rescue-fallen", [n("r28", "쇠사슬에서 해방된
 
 type Props = { playerName: string; onComplete: () => void };
 export function Dungeon7RescueStory({ playerName, onComplete }: Props) {
-  const [phase, setPhase] = useState<"arrival" | "party" | "left" | "pan" | "center" | "hits" | "black" | "fallen">("arrival");
+  const [phase, setPhase] = useState<Dungeon7RescuePhase>("arrival");
   const [hitStep, setHitStep] = useState(0); const done = useRef(false); const strikeBusy = useRef(false); const timers = useRef<number[]>([]);
   const finish = () => { if (done.current) return; done.current = true; timers.current.forEach(clearTimeout); onComplete(); };
   useEffect(() => { timers.current.push(window.setTimeout(() => setPhase("party"), 2000)); timers.current.push(window.setTimeout(() => setPhase("left"), 4500)); return () => timers.current.forEach(clearTimeout); }, []);
@@ -45,11 +59,12 @@ export function Dungeon7RescueStory({ playerName, onComplete }: Props) {
       }, 400));
     }
   };
-  const positions = phase === "arrival" || phase === "party" || phase === "left" ? ["8%", "15%", "22%", "29%"] : ["37%", "44%", "51%", "58%"];
+  const partyVisibility = getDungeon7PartyVisibility(phase);
   return <div className={`dungeon7-rescue phase-${phase} ${phase === "pan" || phase === "center" || phase === "hits" ? "is-centered" : ""}`}>
     <div className="dungeon7-prison-camera"><div className="dungeon7-prison-map">
       <img className="d7-layer d7-background" src={`${base}prison-background.png`} alt="" /><img className="d7-layer d7-foreground" src={`${base}prison-foreground.png`} alt="" /><img key={hitStep} className={`d7-layer d7-captive ${hitStep === 1 || hitStep === 3 || hitStep === 5 ? "is-hit" : ""}`} src={`${base}captive-deneb.png`} alt="붙잡힌 데네브" />
-      <div className="d7-party">{[lunaStanding,theoStanding,kappStanding,aronStanding].map((src,i)=><div className="d7-party-member" style={{ left: positions[i] }} key={src}><img src={src} alt="" />{i===0&&phase==="left"&&<span className="d7-exclamation" style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/story/chapter2/intro/exclamation-sheet.png)` }} />}</div>)}</div>
+      {partyVisibility.initial && <div className="d7-party d7-party-initial">{partyStanding.map((src, i) => <div className="d7-party-member" style={{ left: `${DUNGEON7_PRISON_PARTY_LAYOUT.initialLeftPercent[i]}%` }} key={src}><img src={src} alt="" />{i === 0 && phase === "left" && <span className="d7-exclamation" style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/story/chapter2/intro/exclamation-sheet.png)` }} />}</div>)}</div>}
+      {partyVisibility.relocated && <div className="d7-party d7-party-relocated">{partyStanding.map((src, i) => <div className="d7-party-member" style={{ left: `${DUNGEON7_PRISON_PARTY_LAYOUT.relocatedLeftPercent[i]}%` }} key={src}><img src={src} alt="" /></div>)}</div>}
       <img className="d7-layer d7-ground" src={`${base}prison-ground.png`} alt="" />
     </div></div>
     <button className="story-skip-button" onClick={finish}>건너뛰기</button>

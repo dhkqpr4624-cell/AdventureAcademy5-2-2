@@ -2594,10 +2594,12 @@ button:focus-visible {
 .dungeon7-rescue.is-centered .dungeon7-prison-map { transform: translate3d(calc(50vw - 50%),-50%,0); }
 .d7-layer { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: fill; pointer-events: none; }
 .d7-background { z-index: 1; } .d7-foreground { z-index: 2; } .d7-captive { z-index: 3; } .d7-party { position: absolute; inset: 0; z-index: 4; } .d7-ground { z-index: 5; }
-.d7-party-member { position: absolute; bottom: 13%; width: 9%; height: 48%; transform: translateX(-50%); transition: left 1.8s ease-in-out, opacity .5s; }
+.d7-party-member { position: absolute; bottom: 13%; width: 4.5%; height: 24%; transform: translateX(-50%); transition: opacity .5s; }
 .dungeon7-rescue.phase-arrival .d7-party-member { opacity: 0; }
+.d7-party-relocated .d7-party-member { animation: d7-party-relocated-fade .5s ease-out both; }
+@keyframes d7-party-relocated-fade { from { opacity: 0; } to { opacity: 1; } }
 .d7-party-member img { width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
-.d7-exclamation { position: absolute; left: 50%; top: -42px; width: 60px; height: 60px; transform: translateX(-50%); background-position: 0 0; background-size: 1200% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: d7-exclamation 1.715s steps(12) 1 forwards; }
+.d7-exclamation { position: absolute; left: 50%; top: -30px; width: 60px; height: 60px; transform: translateX(-50%); background-position: 0 0; background-size: 1200% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: d7-exclamation 1.715s steps(12) 1 forwards; }
 @keyframes d7-exclamation { to { background-position-x: -720px; visibility: hidden; } }
 .d7-captive.is-hit { animation: d7-captive-hit .28s linear; }
 @keyframes d7-captive-hit { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-14px); } 75% { transform: translateX(14px); } }

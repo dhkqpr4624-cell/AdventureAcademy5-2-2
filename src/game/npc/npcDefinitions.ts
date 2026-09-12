@@ -117,7 +117,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       ...commonIdle,
       standingImage: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/standing_R.png`,
       blinkSpriteSheet: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/blink_R.png`,
-      blinkFrameCount: 5,
+      blinkFrameCount: 7,
       blinkFrameWidth: 400,
       blinkFrameHeight: 700,
       sourceSheetWidth: 2048,

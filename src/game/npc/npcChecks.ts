@@ -9,6 +9,7 @@ import { resolveNpcStorySequence } from "./npcStoryResolver";
 import type { NpcId } from "./npcTypes";
 import {
   BASE_CAMP_NPC_DISPLAY_SCALE,
+  BASE_CAMP_REDUCED_NPC_DISPLAY_SCALE,
   BASE_CAMP_NPC_SLOT_ASSIGNMENTS,
   BASE_CAMP_NPC_SLOTS,
   getBaseCampNpcFocusTarget,
@@ -58,7 +59,7 @@ export function runNpcChecks() {
     const slot = BASE_CAMP_NPC_SLOTS[npc.baseCampSpawnId as BaseCampNpcSlotId];
     const expectedSize = npc.id === "luna" || npc.id === "theo"
       ? { width: 114, height: 180 }
-      : { width: 120, height: 210 };
+      : { width: 84, height: 147 };
     assert(
       npc.placement.width === expectedSize.width &&
         npc.placement.height === expectedSize.height,
@@ -231,15 +232,37 @@ export function runNpcChecks() {
       getBaseCampNpcPlacement("lunaNpc").y === 602 &&
       getBaseCampNpcPlacement("theoNpc").x === 498 &&
       getBaseCampNpcPlacement("theoNpc").y === 602 &&
-      getBaseCampNpcPlacement("kaidenNpc").x === 1110 &&
-      getBaseCampNpcPlacement("kaidenNpc").y === 572 &&
-      getBaseCampNpcPlacement("jeonNpc").x === 1375 &&
-      getBaseCampNpcPlacement("jeonNpc").y === 572,
+      getBaseCampNpcPlacement("kaidenNpc").x === 1128 &&
+      getBaseCampNpcPlacement("kaidenNpc").y === 635 &&
+      getBaseCampNpcPlacement("jeonNpc").x === 1393 &&
+      getBaseCampNpcPlacement("jeonNpc").y === 635 &&
+      getBaseCampNpcPlacement("denebCommanderNpc").x === 988 &&
+      getBaseCampNpcPlacement("denebCommanderNpc").y === 635,
     "chapter 2 BaseCamp placement coordinates changed",
   );
   assert(
     BASE_CAMP_NPC_DISPLAY_SCALE === 0.3,
     "common NPC source-image display scale must be 0.3",
+  );
+  assert(
+    BASE_CAMP_REDUCED_NPC_DISPLAY_SCALE === 0.21,
+    "Aron, Kapp, and Deneb must render at 70 percent of their previous BaseCamp size",
+  );
+  assert(
+    NPC_BY_ID.luna.placement.width === 114 &&
+      NPC_BY_ID.theo.placement.width === 114 &&
+      NPC_BY_ID.kaiden.placement.width === 84 &&
+      NPC_BY_ID.jeon.placement.width === 84 &&
+      NPC_BY_ID.denebCommander.placement.width === 84,
+    "only Aron, Kapp, and Deneb must use the reduced BaseCamp scale",
+  );
+  assert(
+    NPC_BY_ID.denebCommander.idle.blinkFrameCount === 7 &&
+      NPC_BY_ID.denebCommander.idle.blinkFrameWidth === 400 &&
+      NPC_BY_ID.denebCommander.idle.blinkFrameHeight === 700 &&
+      NPC_BY_ID.denebCommander.idle.sourceSheetWidth === 2048 &&
+      NPC_BY_ID.denebCommander.idle.sourceSheetHeight === 512,
+    "Deneb blink must use all seven verified frames on the 2048 by 512 sheet",
   );
   assert(
     BASE_CAMP_NPC_SLOT_ASSIGNMENTS.luna === "lunaNpc",

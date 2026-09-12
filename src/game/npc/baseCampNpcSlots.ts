@@ -1,4 +1,5 @@
 export const BASE_CAMP_NPC_DISPLAY_SCALE = 0.3;
+export const BASE_CAMP_REDUCED_NPC_DISPLAY_SCALE = BASE_CAMP_NPC_DISPLAY_SCALE * 0.7;
 
 export const BASE_CAMP_NPC_SLOT_IDS = {
   lunaOriginal: "lunaNpc",
@@ -74,10 +75,19 @@ export const BASE_CAMP_NPC_SLOT_ASSIGNMENTS = {
   denebCommander: BASE_CAMP_NPC_SLOT_IDS.denebCommander,
 } as const;
 
+export function getBaseCampNpcDisplayScale(slotId: BaseCampNpcSlotId) {
+  return slotId === BASE_CAMP_NPC_SLOT_IDS.kaidenOriginal ||
+    slotId === BASE_CAMP_NPC_SLOT_IDS.jeon ||
+    slotId === BASE_CAMP_NPC_SLOT_IDS.denebCommander
+    ? BASE_CAMP_REDUCED_NPC_DISPLAY_SCALE
+    : BASE_CAMP_NPC_DISPLAY_SCALE;
+}
+
 export function getBaseCampNpcPlacement(slotId: BaseCampNpcSlotId) {
   const slot = BASE_CAMP_NPC_SLOTS[slotId];
-  const width = slot.baseWidth * BASE_CAMP_NPC_DISPLAY_SCALE;
-  const height = slot.baseHeight * BASE_CAMP_NPC_DISPLAY_SCALE;
+  const displayScale = getBaseCampNpcDisplayScale(slotId);
+  const width = slot.baseWidth * displayScale;
+  const height = slot.baseHeight * displayScale;
   const anchorY = slot.groundY;
 
   return {
