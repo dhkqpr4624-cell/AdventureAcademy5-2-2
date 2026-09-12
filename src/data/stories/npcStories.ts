@@ -10,6 +10,7 @@ const chapter2Actors = {
   theo: createChapter2Actor("theo", "테오", "보급 담당", "#7fc8ff"),
   aron: createChapter2Actor("aron", "아론", "지휘관", "#d9b6ff"),
   kapp: createChapter2Actor("kapp", "카프", "부지휘관", "#ffcf80"),
+  deneb: createChapter2Actor("deneb", "데네브", "잊혀진 지휘관", "#bfe7ff"),
 };
 
 function chapter2DialogueSequence(id: string, entries: Array<{ actor: keyof typeof chapter2Actors; text: string; expression?: string; emphasis?: "danger" | "info" }>): StorySequence {
@@ -631,4 +632,48 @@ theo.scenes[0].steps.push(
       { id: "end-dialogue", label: "대화 끝내기", closeStory: true },
     ],
   },
+);
+
+NPC_STORY_SEQUENCES["npc-aron-floor-7-quest-available"] = chapter2DialogueSequence("npc-aron-floor-7-quest-available", [
+  { actor: "aron", expression: "serious", text: "(플레이어이름), 어서오십시오." },
+  { actor: "aron", expression: "serious", text: "...드디어 데네브님이 계신 곳으로 들어가게 되는군요." },
+  { actor: "aron", expression: "serious", text: "하지만 데네브님이 계신다는 것은, 이 포탈의 중심과 가까워졌다는 뜻이기도 합니다." },
+  { actor: "aron", expression: "serious", text: "그만큼 위험해질 수도 있다는 뜻이죠." },
+  { actor: "aron", expression: "serious", text: "...신중히 나아갑시다. 잊지 마십시오. 모두의 안전이 최우선입니다." },
+]);
+NPC_STORY_SEQUENCES["npc-aron-floor-7-quest-accepted"] = chapter2DialogueSequence("npc-aron-floor-7-quest-accepted", [{ actor: "aron", expression: "serious", text: "모두의 안전을 최우선으로, 조심히 나아갑시다." }]);
+NPC_STORY_SEQUENCES["npc-aron-floor-7-quest-active"] = chapter2DialogueSequence("npc-aron-floor-7-quest-active", [{ actor: "aron", expression: "serious", text: "데네브님이 계신 곳이 가까워졌습니다. 조심하십시오." }]);
+NPC_STORY_SEQUENCES["npc-deneb-default"] = sequence("npc-deneb-default", "denebCommander", "default", ["여러분과 다시 함께할 수 있어 다행이에요."]);
+NPC_STORY_SEQUENCES["npc-deneb-floor-7-quest-complete"] = chapter2DialogueSequence("npc-deneb-floor-7-quest-complete", [
+  { actor: "deneb", text: "..." },
+  { actor: "aron", expression: "shouting", text: "데네브님, 정신이 드십니까?" },
+  { actor: "luna", expression: "shout", text: "데네브님, 데네브님! 괜찮아요?!" },
+  { actor: "deneb", expression: "smile", text: "... 네, 여러분 덕분에요." },
+  { actor: "kapp", expression: "smile", text: "다행이다.." },
+  { actor: "kapp", expression: "smile", text: "정말, 다시는 못 보는 줄 알고..!" },
+  { actor: "deneb", expression: "smile", text: "아론, 카프. 고생시켜서 미안해요." },
+  { actor: "deneb", expression: "smile", text: "시간이 얼마나 흘렀나요..?" },
+  { actor: "aron", expression: "smile", text: "..7년입니다. 꽤 긴 시간이었군요." },
+  { actor: "aron", expression: "smile", text: "데네브님, 아시겠지만 이번에는 저희 말고 다른 분들이 도움을 주셔서 데네브님을 구출할 수 있었습니다." },
+  { actor: "theo", expression: "smile", text: "지휘관님을 뵙습니다. 저는 -" },
+  { actor: "deneb", text: "알고 있어요. 테오와 루나, 그리고 (플레이어 이름)이죠?" },
+  { actor: "deneb", expression: "smile", text: "던전에서 들려오는 소리로 여러분의 목소리를 들었답니다." },
+  { actor: "deneb", expression: "smile", text: "정말, 정말로 고마워요." },
+  { actor: "luna", expression: "smile", text: "응?! 헤헤헤.. 별말씀을요!" },
+  { actor: "luna", expression: "smile", text: "이거 왠지 쑥쓰러운걸!!" },
+  { actor: "deneb", expression: "angry", text: "하지만... 여러분들도 아시겠죠." },
+  { actor: "deneb", expression: "angry", text: "저와 던전의 연결이 끊겼으니, 던전의 균열은 빠른 속도로 심해질거예요." },
+  { actor: "deneb", expression: "angry", text: "제게 남은 힘으로 던전의 침식 속도를 늦출 수는 있겠지만, 효과는 희미할 겁니다." },
+  { actor: "deneb", expression: "angry", text: "(플레이어 이름), 앞으로는 더욱 신중해야 할 거예요. 준비는 되었나요?" },
+]);
+NPC_STORY_SEQUENCES["npc-deneb-floor-7-quest-complete"].scenes[0].steps.push(
+  { id: "d7-complete-choice", type: "choice", advanceMode: "click", options: [
+    { id: "ready", label: "준비됐다.", nextStepId: "d7-ready-a1" },
+    { id: "afraid", label: "조금 무서운데요.", nextStepId: "d7-ready-b1" },
+  ] },
+  { id: "d7-ready-a1", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "... 그래요.", advanceMode: "click" },
+  { id: "d7-ready-a2", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "당신을 믿어요, (플레이어 이름).", nextStepId: "d7-complete-end", advanceMode: "click" },
+  { id: "d7-ready-b1", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "... 후후, 사실 저도 그래요.", advanceMode: "click" },
+  { id: "d7-ready-b2", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "그래도 함께라면 해낼 수 있겠죠. 당신을 믿어요, (플레이어 이름).", nextStepId: "d7-complete-end", advanceMode: "click" },
+  { id: "d7-complete-end", type: "wait", durationMs: 0, advanceMode: "auto" },
 );

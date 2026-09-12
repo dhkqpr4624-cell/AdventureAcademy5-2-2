@@ -31,7 +31,7 @@ export const FLOOR_DEFINITIONS: readonly FloorDefinition[] = [
   },
   { id: "floor-5", order: 5, title: "5층", questId: "quest-floor-5-unified-silla", questionCount: 10 },
   { id: "floor-6", order: 6, title: "6층", questId: "quest-floor-6-balhae", questionCount: 10 },
-  { id: "floor-7", order: 7, title: "7층", questId: "quest-floor-7-goryeo-founding", questionCount: 10 },
+  { id: "floor-7", order: 7, title: "개항 전후의 조선(1)", questId: "quest-floor-7-goryeo-founding", questionCount: 10 },
   { id: "floor-8", order: 8, title: "8층", questId: "quest-floor-8-goryeo-relations", questionCount: 10 },
   { id: "floor-9", order: 9, title: "9층", questId: "quest-floor-9-goryeo-society-culture", questionCount: 10 },
   { id: "floor-10", order: 10, title: "10층", questId: "quest-floor-10-final-source", questionCount: 0 },

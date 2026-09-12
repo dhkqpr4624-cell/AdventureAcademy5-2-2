@@ -30,11 +30,12 @@ import theoSurprised from "../../assets/portraits/chapter2/theo/surprised.png";
 import aronShouting from "../../assets/portraits/chapter2/aron/shouting.png";
 import kappSerious from "../../assets/portraits/chapter2/kapp/serious.png";
 import kappShouting from "../../assets/portraits/chapter2/kapp/shouting.png";
-import denebDefault from "../../assets/portraits/chapter2/deneb/default.png";
 import researcherDefault from "../../assets/portraits/chapter2/researcher/default.png";
 import sejongDefault from "../../assets/portraits/chapter2/sejong/default.png";
 import chiefMinisterDefault from "../../assets/portraits/chapter2/chief-minister/default.png";
 import yeongjoDefault from "../../assets/portraits/chapter2/yeongjo/default.png";
+
+const denebPortrait = (name: string) => `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/${name}`;
 
 export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
   luna: { defaultExpression: "default", expressions: { default: lunaDefault, smile: lunaSmile, sad: lunaSad, angry: lunaAngry, scared: lunaScared, serious: lunaSerious, shout: lunaShout } },
@@ -47,7 +48,7 @@ export const CHAPTER2_PORTRAITS: Record<string, StoryNpcPortraitDefinition> = {
   angryYangban: { defaultExpression: "default", expressions: { default: angryYangbanDefault } },
   angryCommoner: { defaultExpression: "default", expressions: { default: angryCommonerDefault } },
   commoner: { defaultExpression: "default", expressions: { default: angryCommonerDefault } },
-  deneb: { defaultExpression: "default", expressions: { default: denebDefault } },
+  deneb: { defaultExpression: "default", expressions: { default: denebPortrait("portrait-default.png"), smile: denebPortrait("portrait-smile.png"), angry: denebPortrait("portrait-angry.png"), sad: denebPortrait("portrait-sad.png"), hurt: denebPortrait("portrait-hurt.png") } },
   researcher: { defaultExpression: "default", expressions: { default: researcherDefault } },
   sejong: { defaultExpression: "default", expressions: { default: sejongDefault } },
   chiefMinister: { defaultExpression: "default", expressions: { default: chiefMinisterDefault } },

@@ -78,9 +78,9 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
     icon: `${import.meta.env.BASE_URL}assets/items/kim-hong-do-brush.png`, stackable: false, attackVfxId: "ink-brush-attack",
   },
   "accessory-gungye-eyepatch": {
-    id: "accessory-gungye-eyepatch", name: "궁예의 안대", type: "armor", rarity: "rare",
-    description: "후고구려의 궁예를 상징하는 희귀 방어구다.",
-    icon: `${import.meta.env.BASE_URL}assets/items/gungye-eyepatch.png`, stackable: false,
+    id: "accessory-gungye-eyepatch", name: "척화비", type: "armor", rarity: "rare",
+    description: "통상 수교 거부 정책의 역사를 담은 척화비를 본뜬 방어구다.",
+    icon: `${import.meta.env.BASE_URL}assets/items/anti-foreign-stele.png`, stackable: false,
     equipmentStats: { maxHpBonus: getArmorMaxHpBonusForFloor(7) },
   },
   "weapon-choe-museon-cannon": {

@@ -60,7 +60,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
     },
     portraits: { default: theoPortrait },
     dialogue: { defaultStorySequenceId: "npc-theo-default", questAvailableStorySequenceId: "npc-theo-floor-1-quest-available", questActiveStorySequenceId: "npc-theo-floor-1-quest-active" },
-    offeredQuestIds: ["quest-floor-1-prehistory", "quest-floor-7-goryeo-founding"],
+    offeredQuestIds: ["quest-floor-1-prehistory"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.theo),
   },
   {
@@ -83,7 +83,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-kaiden-quest-available",
       questActiveStorySequenceId: "npc-kaiden-quest-active",
     },
-    offeredQuestIds: ["quest-floor-4-jeon-rescue", "quest-floor-6-balhae", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
+    offeredQuestIds: ["quest-floor-4-jeon-rescue", "quest-floor-6-balhae", "quest-floor-7-goryeo-founding", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.kaiden),
   },
   {
@@ -106,6 +106,31 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
     dialogue: { defaultStorySequenceId: "npc-jeon-default" },
     offeredQuestIds: ["quest-floor-3-torn-cloth"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.jeon),
+  },
+  {
+    id: "denebCommander",
+    displayName: "데네브",
+    role: "잊혀진 지휘관",
+    baseCampDisplayRole: "잊혀진 지휘관",
+    baseCampSpawnId: BASE_CAMP_NPC_SLOT_ASSIGNMENTS.denebCommander,
+    idle: {
+      ...commonIdle,
+      standingImage: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/standing_R.png`,
+      blinkSpriteSheet: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/blink_R.png`,
+      blinkFrameCount: 5,
+      blinkFrameWidth: 400,
+      blinkFrameHeight: 700,
+      sourceSheetWidth: 2048,
+      sourceSheetHeight: 512,
+    },
+    portraits: {
+      default: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/portrait-default.png`,
+      happy: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/portrait-smile.png`,
+      serious: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/portrait-angry.png`,
+    },
+    dialogue: { defaultStorySequenceId: "npc-deneb-default" },
+    offeredQuestIds: [],
+    placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.denebCommander),
   },
 ];
 

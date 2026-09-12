@@ -77,10 +77,10 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
   },
   {
     id: "achievement-floor-7-rare-reward", floorId: "floor-7", floorTitle: "던전 7층",
-    title: "고려의 기둥", rewardIcon: `${import.meta.env.BASE_URL}assets/items/gungye-eyepatch.png`,
+    title: "척화비 획득", rewardIcon: `${import.meta.env.BASE_URL}assets/items/anti-foreign-stele.png`,
     rewardItemId: "accessory-gungye-eyepatch", rewardStateId: "quest-floor-7-goryeo-founding",
     requiredCorrect: floor7RareRewardCondition.requiredCorrect, totalQuestions: floor7RareRewardCondition.totalQuestions,
-    description: "던전 7층 정답",
+    description: "던전 7층 희귀 보상 획득",
   },
   {
     id: "achievement-floor-8-rare-reward", floorId: "floor-8", floorTitle: "던전 8층",

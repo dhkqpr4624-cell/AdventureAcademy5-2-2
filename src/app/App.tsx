@@ -9,6 +9,7 @@ import { runFloorUnlockChecks } from "../game/floor/floorUnlockChecks";
 import { runQuestMarkerChecks } from "../game/quest/questMarkerChecks";
 import { runBaseCampInteractionChecks } from "../game/baseCamp/baseCampInteractionChecks";
 import { runDungeon6Chapter2Checks } from "../dungeon6Chapter2Checks";
+import { runDungeon7Chapter2Checks } from "../dungeon7Chapter2Checks";
 import { SaveManagementPanel } from "../components/SaveManagementPanel";
 import { SaveManager } from "../save/SaveManager";
 import { AutoSaveCoordinator } from "../save/AutoSaveCoordinator";
@@ -119,7 +120,7 @@ export function App() {
 
   useEffect(() => {
     if (import.meta.env.DEV) {
-      runNpcChecks(); runQuestChecks(); runPlayerStatusChecks(); runFloorUnlockChecks(); runQuestMarkerChecks(); runBaseCampInteractionChecks(); runDungeon6Chapter2Checks();
+      runNpcChecks(); runQuestChecks(); runPlayerStatusChecks(); runFloorUnlockChecks(); runQuestMarkerChecks(); runBaseCampInteractionChecks(); runDungeon6Chapter2Checks(); runDungeon7Chapter2Checks();
       console.info("npc checks: PASS\nquest checks: PASS\nplayer status checks: PASS\nfloor unlock checks: PASS\nquest marker checks: PASS\nbase camp interaction checks: PASS\ndungeon6 chapter2 checks: PASS");
     }
   }, []);

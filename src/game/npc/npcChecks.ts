@@ -93,7 +93,7 @@ export function runNpcChecks() {
       );
     }
   }
-  assert(occupiedSlots.size === 4, "all four NPCs must use different slots");
+  assert(occupiedSlots.size === 5, "all five NPCs must use different slots");
   const identityExpectations = {
     luna: {
       displayName: "루나",
@@ -118,6 +118,12 @@ export function runNpcChecks() {
       role: "부지휘관",
       baseCampDisplayRole: "부지휘관",
       defaultStorySequenceId: "npc-jeon-default",
+    },
+    denebCommander: {
+      displayName: "데네브",
+      role: "잊혀진 지휘관",
+      baseCampDisplayRole: "잊혀진 지휘관",
+      defaultStorySequenceId: "npc-deneb-default",
     },
   } as const satisfies Record<
     NpcId,

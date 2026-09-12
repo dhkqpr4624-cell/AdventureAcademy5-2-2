@@ -1,125 +1,31 @@
 import type { StoryActor, StorySequence, StoryStep } from "../../types/story";
-import { NPC_PORTRAIT_REGISTRY } from "../../game/npc/npcPortraitRegistry";
+import { createChapter2Actor } from "./chapter2Portraits";
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/dungeon7/${name}`;
-
-const jeon: StoryActor = {
-  id: "jeon",
-  name: "전",
-  role: "기억을 잃은 남자",
-  portraits: {
-    default: {
-      imageUrl: NPC_PORTRAIT_REGISTRY["jeon.default"],
-      placeholder: {
-        label: "전",
-        subtitle: "기억을 잃은 남자",
-        gradient: "linear-gradient(135deg,#30291f,#111)",
-      },
-    },
-  },
+const custom = (id: string, name: string, file: string): StoryActor => ({ id, name, defaultExpression: "default", portraits: { default: { imageUrl: asset(file), placeholder: { label: name, gradient: "linear-gradient(135deg,#30291f,#111)" } } } });
+const actors = {
+  luna: createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72"), theo: createChapter2Actor("theo", "테오", "보급 담당", "#7fc8ff"), aron: createChapter2Actor("aron", "아론", "지휘관", "#d9b6ff"), kapp: createChapter2Actor("kapp", "카프", "부지휘관", "#ffcf80"),
+  commoner: createChapter2Actor("commoner", "이름 모를 백성", "", "#ddd"), commoner2: custom("commoner2", "이름 모를 백성2", "portrait-commoner-2.png"), sedo: custom("sedo", "세도정치 세력", "portrait-sedo-faction.png"), french: custom("french", "프랑스군", "portrait-french-soldier.png"), joseon: custom("joseon", "조선군", "portrait-joseon-soldier.png"), american: custom("american", "미군", "portrait-american-soldier.png"), eoyeon: custom("eoyeon", "어재연 장군", "portrait-eo-jae-yeon.png"), japanese: custom("japanese", "일본군", "portrait-japanese-soldier.png"), gojong: custom("gojong", "고종", "portrait-gojong.png"),
 };
+type ActorId = keyof typeof actors;
+const d = (id: string, actorId: ActorId, text: string, expression = "default"): StoryStep => ({ id, type: "dialogue", speakerId: actorId, speakerName: actors[actorId].name, activeActorId: actorId, expression, text, advanceMode: "click" });
+const n = (id: string, text: string): StoryStep => ({ id, type: "narration", text, advanceMode: "click" });
+const imageIn = (id: string, image: string, hold = 1500): StoryStep[] => [{ id: `${id}-in`, type: "illustOverlay", imageUrl: asset(image), visible: true, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" }, { id: `${id}-hold`, type: "wait", durationMs: hold, advanceMode: "auto" }];
+const imageOut = (id: string): StoryStep => ({ id: `${id}-out`, type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, hideDialogue: true, waitForFade: true, advanceMode: "auto" });
 
-const dialogue = (id: string, text: string, emphasis?: "danger"): StoryStep => ({
-  id,
-  type: "dialogue",
-  speakerId: "jeon",
-  speakerName: "전",
-  activeActorId: "jeon",
-  text,
-  ...(emphasis ? { emphasis } : {}),
-  advanceMode: "click",
-});
+export const DUNGEON7_ENTRY_STORY: StorySequence = { id: "dungeon7-entry-story", title: "던전 7층 시작방", replayable: false, skippable: false, dialogueSkip: true, onCompleteScreen: "dungeon", backgrounds: {}, actors, scenes: [{ id: "entry", steps: [
+  ...imageIn("d7-entry", "chaotic-joseon-illustration.png"), d("d7-entry-1", "luna", "헉! 이게 대체 무슨 일이야?", "shout"), d("d7-entry-2", "theo", "이건... 총체적 난국이로군요.", "worried"), d("d7-entry-3", "kapp", "모두가 아시다시피 이 시기 조선은 안팎으로 매우 혼란스러웠죠.", "angry"), d("d7-entry-4", "kapp", "그런데.. 던전 균열의 영향을 받은 탓인지, 그 혼란이 더 증폭되어 있어요!", "angry"), d("d7-entry-5", "aron", "한 마디로 매우 위험하다는 뜻이지요. 모두, 떨어지지 말고 조심히 나아가도록 합시다!", "angry"), imageOut("d7-entry"),
+] }] };
 
-const showJeon = (id: string): StoryStep => ({
-  id,
-  type: "showPortrait",
-  actorId: "jeon",
-  portraitId: "default",
-  position: "left",
-  transition: "fade",
-  durationMs: 0,
-});
+const events: ReadonlyArray<{ title: string; image: string; steps: StoryStep[] }> = [
+  { title: "세도정치", image: "sedo-politics-illustration.png", steps: [d("d7-e1-1", "commoner", "어째서 세금을 그렇게나 내야 한단 말입니까..!"), d("d7-e1-2", "sedo", "아~ 거 참! 나라 법이 그렇다니까 글쎄!"), d("d7-e1-3", "commoner2", "그게 정말입니까?! 나랏님들께서 돈을 불리고 싶어서 이렇게 저희 백성들을 수탈하는 게 아닙니까!"), d("d7-e1-4", "sedo", "지금 뭐라는 게야?!"), d("d7-e1-5", "sedo", "여봐라! 이 사람을 끌고 가거라! 감히 왕족을 능멸한 죄로다!"), n("d7-e1-6", "백성들과 양반들의 모습은 그 이후 온데간데 없이 사라졌다."), n("d7-e1-7", "백성들의 통곡소리만이 남아 빈 방을 채우고 있다.")] },
+  { title: "병인양요", image: "french-campaign-illustration.png", steps: [d("d7-e2-1", "french", "조선은 우리의 말을 들어라!"), d("d7-e2-2", "french", "당신들이 우리 프랑스의 선교사를 멋대로 처형했으니, 그 죄를 인정하고 나라를 열으시오!"), d("d7-e2-3", "french", "하루 빨리 개항하여, 우리 프랑스와 통상 조약을 체결해야 할 것이다!"), d("d7-e2-4", "joseon", "말도 안 되는 소리!"), d("d7-e2-5", "joseon", "우리는 당신들과 통상하지 않을 것이오!"), d("d7-e2-6", "french", "(쳇, 생각보다 조선군의 저항이 거세구나.)"), d("d7-e2-7", "french", "흥, 어쩔 수 없지. 모두 철수한다!"), d("d7-e2-8", "french", "마을을 불태우고, 빼앗을 수 있는 것은 빼앗아라!"), d("d7-e2-9", "commoner2", "꺄아악!"), n("d7-e2-10", "프랑스군이 마을을 불태우고 우리의 문화유산을 빼앗아가고 있는 모습이 보이며, 과거의 잔상들이 사라졌다."), n("d7-e2-11", "백성들의 비명 소리만이 남아 빈 방을 채우고 있다.")] },
+  { title: "신미양요", image: "american-campaign-illustration.png", steps: [d("d7-e3-1", "american", "조선은 우리의 말을 들어라!"), d("d7-e3-2", "american", "당신들이 우리 미군의 함선 제너럴셔먼호를 침몰시켰으니, 그 대가를 치러야 할 것이다!"), d("d7-e3-3", "american", "하루 빨리 개항하여, 우리 미국와 통상 조약을 체결하라!"), d("d7-e3-4", "eoyeon", "모두 동요하지 말라!"), d("d7-e3-5", "eoyeon", "우리는 미국과 통상하지 않는다! 맞서 싸워라!"), imageOut("d7-e3-first"), { id: "d7-e3-delay", type: "wait", durationMs: 500, advanceMode: "auto" }, ...imageIn("d7-e3-fallen", "fallen-eo-jae-yeon-illustration.png", 0), d("d7-e3-6", "american", "(쳇, 생각보다 조선군의 저항이 거세구나.)"), d("d7-e3-7", "american", "흥, 어쩔 수 없지. 모두 철수한다! 조선 장군의 깃발은 빼앗아 오도록!"), d("d7-e3-8", "joseon", "장군님, 어재연 장군님! 정신 차리십시오!"), n("d7-e3-9", "미군이 철수하는 모습이 보이면서 과거의 잔상들이 사라졌다."), n("d7-e3-10", "어재연 장군의 전사를 슬퍼하는 조선군의 울음소리만이 방을 가득 채운다.")] },
+];
+export const DUNGEON7_CLUE_STORIES = events.map((event, index): StorySequence => ({ id: `dungeon7-event-${index + 1}`, title: event.title, replayable: false, skippable: false, dialogueSkip: true, onCompleteScreen: "dungeon", backgrounds: {}, actors, scenes: [{ id: `event-${index + 1}`, steps: [...imageIn(`d7-e${index + 1}`, event.image), ...event.steps, imageOut(`d7-e${index + 1}`)] }] }));
 
-const clueTexts = [
-  [
-    "이것은...! 사성 제도와 관련된 문서입니다.",
-    "태조 왕건은 호족을 포섭하기 위해 유력 호족들에게 왕씨 성을 하사했지요.",
-    "호족의 증표라 할 수 있겠습니다. 가져갑시다.",
-  ],
-  [
-    "이것은...! 혼인과 관련된 문서입니다.",
-    "태조 왕건은 지방 호족들과 정략혼인을 치렀습니다.",
-    "호족의 증표라 할 수 있겠습니다. 가져갑시다.",
-  ],
-  [
-    "이것은...! 기인 제도와 관련된 문서입니다.",
-    "지방 호족을 포섭하면서도 견제하기 위해 호족 자제를 수도에 머무르게 했습니다.",
-    "호족의 증표라 할 수 있겠습니다. 가져갑시다.",
-  ],
-] as const;
-
-function clueStory(index: 0 | 1 | 2): StorySequence {
-  return {
-    id: `dungeon7-clue-${index + 1}`,
-    title: `호족의 증표 ${index + 1}`,
-    replayable: false,
-    skippable: false,
-    onCompleteScreen: "dungeon",
-    backgrounds: {},
-    actors: { jeon },
-    scenes: [{
-      id: `clue-${index + 1}`,
-      steps: [
-        { id: "document-in", type: "illustOverlay", imageUrl: asset("document-fragment.png"), visible: true, fadeMs: 350, advanceMode: "auto" },
-        showJeon("show-jeon"),
-        dialogue("line-1", clueTexts[index][0]),
-        dialogue("line-2", clueTexts[index][1]),
-        dialogue("line-3", clueTexts[index][2]),
-        { id: "document-out", type: "illustOverlay", visible: false, fadeMs: 350, advanceMode: "auto" },
-      ],
-    }],
-  };
-}
-
-export const DUNGEON7_CLUE_STORIES = [clueStory(0), clueStory(1), clueStory(2)] as const;
-
-export const DUNGEON7_FINAL_STORY: StorySequence = {
-  id: "dungeon7-final-story",
-  title: "고려의 기둥",
-  replayable: false,
-  skippable: false,
-  onCompleteScreen: "dungeon",
-  backgrounds: {},
-  actors: { jeon },
-  scenes: [{
-    id: "final",
-    steps: [
-      { id: "broken-door-in", type: "illustOverlay", imageUrl: asset("broken-door.png"), visible: true, fadeMs: 350, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
-      { id: "broken-door-pause", type: "wait", durationMs: 1500, advanceMode: "auto" },
-      showJeon("show-jeon"),
-      dialogue("jeon-1", "...사진에서 본 그대로군요."),
-      dialogue("jeon-2", "저희의 추측이 맞다면 호족의 증표로 문을 열 수 있을 것입니다."),
-      dialogue("jeon-3", "(플레이어 이름), 문을 열어주시겠습니까?"),
-      { id: "submit-choice", type: "choice", advanceMode: "click", options: [
-        { id: "submit-tokens", label: "호족의 증표를 제출한다.", nextStepId: "broken-door-out" },
-      ] },
-      { id: "broken-door-out", type: "illustOverlay", visible: false, fadeMs: 300, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
-      { id: "closed-door-in", type: "illustOverlay", imageUrl: asset("closed-door.png"), visible: true, fadeMs: 350, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
-      { id: "closed-door-pause", type: "wait", durationMs: 1500, advanceMode: "auto" },
-      dialogue("jeon-4", "...! 기둥이 세워졌습니다!"),
-      { id: "open-choice", type: "choice", advanceMode: "click", options: [
-        { id: "open-door", label: "문을 연다.", nextStepId: "closed-door-out" },
-      ] },
-      { id: "closed-door-out", type: "illustOverlay", visible: false, fadeMs: 300, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
-      { id: "open-door-in", type: "illustOverlay", imageUrl: asset("open-door.png"), visible: true, fadeMs: 350, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
-      { id: "open-door-pause", type: "wait", durationMs: 1500, advanceMode: "auto" },
-      dialogue("jeon-6", "성공이군요!!"),
-      dialogue("jeon-7", "윽!!", "danger"),
-      { id: "collapse-shake", type: "shake", durationMs: 1000, amplitude: 12, hideDialogue: true, advanceMode: "auto" },
-      { id: "hide-jeon", type: "hidePortrait", actorId: "jeon", durationMs: 0, advanceMode: "auto" },
-      { id: "collapse-1", type: "narration", text: "이런! 전이 쓰러졌다!!", advanceMode: "click" },
-      { id: "collapse-2", type: "narration", text: "이마가 불덩이같다. 어서 베이스캠프로 데려가자.", advanceMode: "click" },
-      { id: "open-door-out", type: "illustOverlay", visible: false, fadeMs: 250, advanceMode: "auto" },
-    ],
-  }],
-};
+export const DUNGEON7_FINAL_STORY: StorySequence = { id: "dungeon7-final-story", title: "던전 7층 마지막 방", replayable: false, skippable: false, dialogueSkip: true, persistentIllustBackdrop: true, onCompleteScreen: "dungeon", backgrounds: {}, actors, scenes: [{ id: "final", steps: [
+  ...imageIn("d7-stele", "anti-foreign-stele-illustration.png"), d("d7-f-1", "theo", "이건... 척화비로군요.", "serious"), d("d7-f-2", "luna", "맞아. 흥선대원군이 다른 나라와 통상하지 않겠다는 의지를 널리 알리기 위해 세운 비석이지.", "serious"), d("d7-f-3", "luna", "하지만 결국 흥선대원군이 물러난 이후... 조선은 나라 문을 열게 될 수밖에 없었어.", "serious"), d("d7-f-4", "kapp", "그래요. 우리 앞에 보이는 바로 저 상황이죠.", "angry"), imageOut("d7-stele"), { id: "d7-treaty-delay", type: "wait", durationMs: 500, advanceMode: "auto" }, ...imageIn("d7-treaty", "ganghwa-treaty-illustration.png", 0),
+  d("d7-f-5", "japanese", "당신들 조선이 우리 일본의 운요호를 포격했기 때문에 우리가 여기까지 쳐들어온 것 아닙니까."), d("d7-f-6", "japanese", "나라 문을 열고, 우리와 조약을 맺으시죠."), d("d7-f-7", "gojong", "(일본군이 말하는 조약은 결코 평등하지 않은 조약이다. 반드시 우리 조선이 불리해지겠지.)"), d("d7-f-8", "gojong", "(하지만 이대로 있을 수만은 없다... 모험을 할 수밖에 없겠구나... )"), d("d7-f-9", "gojong", "그렇게 하지. 당신들 일본과 조약을 맺겠소."), imageOut("d7-treaty"), d("d7-f-10", "aron", "저때 일본과 조선이 맺은 조약이 바로 강화도조약이로군..", "serious"), d("d7-f-11", "luna", "앗, 대장! 저것 봐요!", "shout"),
+  ...imageIn("d7-broken", "broken-stele-illustration.png"), d("d7-f-12", "luna", "척화비가..!", "shout"), d("d7-f-13", "kapp", "척화비가 부서졌어요!", "angry"), d("d7-f-14", "theo", "잠깐, 척화비가 세워져 있던 곳 바닥을 보십시오!", "angry"), ...imageIn("d7-passage", "secret-passage-illustration.png", 500), imageOut("d7-broken"), d("d7-f-15", "aron", "....!", "angry"), d("d7-f-16", "kapp", "저 곳에서... 데네브의 기운이 강하게 느껴져요!!", "angry"), d("d7-f-17", "theo", "어서 들어가야 합니다! 다시 통로가 막히기 전에, 어서!", "angry"), d("d7-f-18", "aron", "제가 먼저 들어가겠습니다. 제 후방에서 조심히 따라와 주십시오!", "angry"), d("d7-f-19", "luna", "알겠어요, 대장!! 어서 가요!!", "shout"), imageOut("d7-passage"),
+] }] };

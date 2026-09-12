@@ -115,6 +115,7 @@ export function BaseCampScreen({
   const dungeon3RewardClaimProcessingRef = useRef(false);
   const dungeon4RewardClaimProcessingRef = useRef(false);
   const dungeon5RewardClaimProcessingRef = useRef(false);
+  const dungeon7RewardClaimProcessingRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -294,8 +295,8 @@ export function BaseCampScreen({
         ? "npc-luna-floor-9-quest-complete"
       : npc.id === "kaiden" && hasClearedFloor8 && effectiveQuestState[floor8QuestId] === "active"
         ? "npc-kaiden-floor-8-quest-complete"
-      : npc.id === "theo" && hasClearedFloor7 && effectiveQuestState[floor7QuestId] === "active"
-        ? "npc-theo-floor-7-quest-complete"
+      : npc.id === "denebCommander" && hasClearedFloor7 && effectiveQuestState[floor7QuestId] === "active"
+        ? "npc-deneb-floor-7-quest-complete"
       : npc.id === "jeon" && hasClearedFloor6 && effectiveQuestState[floor6QuestId] === "active"
         ? "npc-kaiden-floor-6-quest-complete"
       : npc.id === "kaiden" && hasClearedFloor5 && effectiveQuestState[floor5QuestId] === "active"
@@ -361,7 +362,7 @@ export function BaseCampScreen({
     if (finishedSequenceId === "npc-kaiden-floor-6-quest-complete") {
       revealReward(floor6QuestId); setFloor6RewardOpen(true); return;
     }
-    if (finishedSequenceId === "npc-theo-floor-7-quest-complete") {
+    if (finishedSequenceId === "npc-deneb-floor-7-quest-complete") {
       revealReward(floor7QuestId); setFloor7RewardOpen(true); return;
     }
     if (finishedSequenceId === "npc-kaiden-floor-8-quest-complete") {
@@ -470,7 +471,7 @@ export function BaseCampScreen({
         }
         interactionsDisabled={interactionLocked}
         questState={markerQuestState}
-        visibleNpcIds={["luna", "theo", "kaiden", "jeon"]}
+        visibleNpcIds={hasClearedFloor7 ? ["luna", "theo", "kaiden", "jeon", "denebCommander"] : ["luna", "theo", "kaiden", "jeon"]}
         jeonSick={false}
       />
 
@@ -763,10 +764,12 @@ export function BaseCampScreen({
       {floor7RewardOpen && <QuestRewardPopup
         bestCorrect={floorBestCorrect["floor-7"] ?? 0} claimed={Boolean(rewardClaimed[floor7QuestId])}
         questTitle="던전 7층 조사 완료" rareRewardItemId="accessory-gungye-eyepatch" requiredCorrect={floor7QuestRareRewardCondition.requiredCorrect}
+        baseGold={20}
         onCancel={() => setFloor7RewardOpen(false)} onClaim={() => {
-          if (rewardClaimed[floor7QuestId]) return;
+          if (rewardClaimed[floor7QuestId] || dungeon7RewardClaimProcessingRef.current) return;
+          dungeon7RewardClaimProcessingRef.current = true;
           const rareUnlocked = (floorBestCorrect["floor-7"] ?? 0) >= floor7QuestRareRewardCondition.requiredCorrect;
-          setPlayerState((current) => ({ ...current, gold: current.gold + 5 }));
+          setPlayerState((current) => ({ ...current, gold: current.gold + 20 }));
           if (rareUnlocked) {
             setInventoryState((current) => changeItemQuantity(current, "accessory-gungye-eyepatch", 1));
             setAchievementReceived("achievement-floor-7-rare-reward");
