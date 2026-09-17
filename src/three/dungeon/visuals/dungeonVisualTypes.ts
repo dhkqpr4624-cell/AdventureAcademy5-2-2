@@ -34,7 +34,11 @@ export type OpenPassageSocket = {
   localYaw: number;
 };
 
-export type DungeonTextureSet = Record<DungeonMaterialKey, THREE.Texture>;
+export type DungeonTextureSet = Record<DungeonMaterialKey, THREE.Texture> & {
+  crackedWall?: THREE.Texture;
+  crackedFloor?: THREE.Texture;
+  crackedCeiling?: THREE.Texture;
+};
 
 export type DungeonVisualAssembly = {
   root: THREE.Group;
@@ -50,4 +54,5 @@ export type AssembleDungeonVisualsInput = {
   roomTemplate: RoomVisualTemplate;
   corridorTemplate: CorridorTemplate;
   textures: DungeonTextureSet;
+  visualSeed?: string;
 };

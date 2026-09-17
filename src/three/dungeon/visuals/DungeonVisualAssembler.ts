@@ -9,12 +9,16 @@ import type {
   DungeonVisualAssembly,
   OpenPassageSocket,
 } from "./dungeonVisualTypes";
+import { selectCrackedTileSlot } from "./crackedTileResolver";
 
 type Owned = { geometries: THREE.BufferGeometry[]; materials: THREE.Material[] };
 type VisualMaterials = {
   wall: THREE.MeshBasicMaterial;
   floor: THREE.MeshBasicMaterial;
   ceiling: THREE.MeshBasicMaterial;
+  crackedWall?: THREE.MeshBasicMaterial;
+  crackedFloor?: THREE.MeshBasicMaterial;
+  crackedCeiling?: THREE.MeshBasicMaterial;
 };
 
 function scaleUv(geometry: THREE.BufferGeometry, u: number, v: number) {
@@ -108,7 +112,43 @@ function createMaterials(input: AssembleDungeonVisualsInput): VisualMaterials {
     wall: new THREE.MeshBasicMaterial({ map: input.textures.wall, side: THREE.FrontSide }),
     floor: new THREE.MeshBasicMaterial({ map: input.textures.floor, side: THREE.FrontSide }),
     ceiling: new THREE.MeshBasicMaterial({ map: input.textures.ceiling, side: THREE.FrontSide }),
+    ...(input.textures.crackedWall ? { crackedWall: new THREE.MeshBasicMaterial({ map: input.textures.crackedWall, side: THREE.FrontSide }) } : {}),
+    ...(input.textures.crackedFloor ? { crackedFloor: new THREE.MeshBasicMaterial({ map: input.textures.crackedFloor, side: THREE.FrontSide }) } : {}),
+    ...(input.textures.crackedCeiling ? { crackedCeiling: new THREE.MeshBasicMaterial({ map: input.textures.crackedCeiling, side: THREE.FrontSide }) } : {}),
   };
+}
+
+function addRoomCrackedTiles(
+  input: AssembleDungeonVisualsInput,
+  room: DungeonRoomNode,
+  open: Set<WorldCardinalDirection>,
+  group: THREE.Group,
+  owned: Owned,
+  materials: VisualMaterials,
+) {
+  if (!materials.crackedFloor || !materials.crackedWall || !materials.crackedCeiling) return;
+  const template = input.roomTemplate;
+  const seed = input.visualSeed ?? "dungeon";
+  const slots: ReadonlyArray<readonly [number, number]> = [[-2.5, -2.5], [2.5, -2.5], [-2.5, 2.5], [2.5, 2.5]];
+  const floorSlot = slots[selectCrackedTileSlot(seed, room.id, "floor", slots.length)]!;
+  const ceilingSlot = slots[selectCrackedTileSlot(seed, room.id, "ceiling", slots.length)]!;
+  const patchSize = 3.2;
+  plane(group, owned, materials.crackedFloor, [patchSize, patchSize], [floorSlot[0], -template.height / 2 + 0.006, floorSlot[1]], [-Math.PI / 2, 0, 0], [1, 1]);
+  plane(group, owned, materials.crackedCeiling, [patchSize, patchSize], [ceilingSlot[0], template.height / 2 - 0.006, ceilingSlot[1]], [Math.PI / 2, 0, 0], [1, 1]);
+
+  const closed = (["north", "east", "south", "west"] as const).filter((direction) => !open.has(direction));
+  const direction = closed[selectCrackedTileSlot(seed, room.id, "wall", closed.length)];
+  if (!direction) return;
+  const wallPosition: Record<WorldCardinalDirection, [number, number, number]> = {
+    north: [0, 0, -template.depth / 2 + 0.006],
+    east: [template.width / 2 - 0.006, 0, 0],
+    south: [0, 0, template.depth / 2 - 0.006],
+    west: [-template.width / 2 + 0.006, 0, 0],
+  };
+  const wallRotation: Record<WorldCardinalDirection, [number, number, number]> = {
+    north: [0, 0, 0], south: [0, Math.PI, 0], east: [0, -Math.PI / 2, 0], west: [0, Math.PI / 2, 0],
+  };
+  plane(group, owned, materials.crackedWall, [3.2, 2.7], wallPosition[direction], wallRotation[direction], [1, 1]);
 }
 
 function buildRoom(input: AssembleDungeonVisualsInput, room: DungeonRoomNode, open: Set<WorldCardinalDirection>, owned: Owned) {
@@ -117,12 +157,13 @@ function buildRoom(input: AssembleDungeonVisualsInput, room: DungeonRoomNode, op
   group.name = `RoomVisual:${room.id}`;
   group.position.set(room.position.x, room.position.y, room.position.z);
   const materials = createMaterials(input);
-  owned.materials.push(...Object.values(materials));
+  owned.materials.push(...Object.values(materials).filter((material): material is THREE.MeshBasicMaterial => Boolean(material)));
   plane(group, owned, materials.floor, [template.width, template.depth], [0, -template.height / 2, 0], [-Math.PI / 2, 0, 0], [template.width / 5, template.depth / 5]);
   plane(group, owned, materials.ceiling, [template.width, template.depth], [0, template.height / 2, 0], [Math.PI / 2, 0, 0], [template.width / 5, template.depth / 5]);
   (["north", "east", "south", "west"] as const).forEach((direction) =>
     addWall(group, owned, materials.wall, direction, open.has(direction), template.width, template.depth, template.height, template.passageWidth, template.passageHeight),
   );
+  addRoomCrackedTiles(input, room, open, group, owned, materials);
   return { group, materials };
 }
 
@@ -199,7 +240,7 @@ export function assembleDungeonVisuals(input: AssembleDungeonVisualsInput): Dung
     const group = new THREE.Group();
     group.name = `CorridorVisual:${connection.id}`;
     const materials = createMaterials(input);
-    owned.materials.push(...Object.values(materials));
+    owned.materials.push(...Object.values(materials).filter((material): material is THREE.MeshBasicMaterial => Boolean(material)));
     corridorMaterials.set(connection.id, materials);
     const direction = worldDirectionBetween(source, target);
     const halfRoom = direction === "east" || direction === "west" ? input.roomTemplate.width / 2 : input.roomTemplate.depth / 2;
@@ -235,9 +276,7 @@ export function assembleDungeonVisuals(input: AssembleDungeonVisualsInput): Dung
         }
       }
       const tint = (materials: VisualMaterials, brightness: number) => {
-        Object.values(materials).forEach((material) =>
-          material.color.setRGB(brightness, brightness, brightness),
-        );
+        Object.values(materials).forEach((material) => material?.color.setRGB(brightness, brightness, brightness));
       };
       for (const [id, materials] of roomMaterials) {
         tint(materials, id === roomId ? 1 : adjacentRoomIds.has(id) ? 0.42 : 0.22);

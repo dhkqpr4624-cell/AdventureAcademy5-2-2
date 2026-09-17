@@ -116,6 +116,7 @@ export function BaseCampScreen({
   const dungeon4RewardClaimProcessingRef = useRef(false);
   const dungeon5RewardClaimProcessingRef = useRef(false);
   const dungeon7RewardClaimProcessingRef = useRef(false);
+  const dungeon8RewardClaimProcessingRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -293,8 +294,8 @@ export function BaseCampScreen({
     const sequenceId =
       npc.id === "luna" && hasClearedFloor9 && effectiveQuestState[floor9QuestId] === "active"
         ? "npc-luna-floor-9-quest-complete"
-      : npc.id === "kaiden" && hasClearedFloor8 && effectiveQuestState[floor8QuestId] === "active"
-        ? "npc-kaiden-floor-8-quest-complete"
+      : npc.id === "denebCommander" && hasClearedFloor8 && effectiveQuestState[floor8QuestId] === "active"
+        ? "npc-deneb-floor-8-quest-complete"
       : npc.id === "denebCommander" && hasClearedFloor7 && effectiveQuestState[floor7QuestId] === "active"
         ? "npc-deneb-floor-7-quest-complete"
       : npc.id === "jeon" && hasClearedFloor6 && effectiveQuestState[floor6QuestId] === "active"
@@ -365,7 +366,7 @@ export function BaseCampScreen({
     if (finishedSequenceId === "npc-deneb-floor-7-quest-complete") {
       revealReward(floor7QuestId); setFloor7RewardOpen(true); return;
     }
-    if (finishedSequenceId === "npc-kaiden-floor-8-quest-complete") {
+    if (finishedSequenceId === "npc-deneb-floor-8-quest-complete") {
       revealReward(floor8QuestId); setFloor8RewardOpen(true); return;
     }
     if (finishedSequenceId === "npc-luna-floor-9-quest-complete") {
@@ -783,10 +784,12 @@ export function BaseCampScreen({
       {floor8RewardOpen && <QuestRewardPopup
         bestCorrect={floorBestCorrect["floor-8"] ?? 0} claimed={Boolean(rewardClaimed[floor8QuestId])}
         questTitle="던전 8층 조사 완료" rareRewardItemId="weapon-choe-museon-cannon" requiredCorrect={floor8QuestRareRewardCondition.requiredCorrect}
+        baseGold={15}
         onCancel={() => setFloor8RewardOpen(false)} onClaim={() => {
-          if (rewardClaimed[floor8QuestId]) return;
+          if (rewardClaimed[floor8QuestId] || dungeon8RewardClaimProcessingRef.current) return;
+          dungeon8RewardClaimProcessingRef.current = true;
           const rareUnlocked = (floorBestCorrect["floor-8"] ?? 0) >= floor8QuestRareRewardCondition.requiredCorrect;
-          setPlayerState((current) => ({ ...current, gold: current.gold + 5 }));
+          setPlayerState((current) => ({ ...current, gold: current.gold + 15 }));
           if (rareUnlocked) {
             setInventoryState((current) => changeItemQuantity(current, "weapon-choe-museon-cannon", 1));
             setAchievementReceived("achievement-floor-8-rare-reward");

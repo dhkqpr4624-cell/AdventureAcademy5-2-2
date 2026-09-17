@@ -82,9 +82,9 @@ export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   "later-baekje-soldier-spirit": { id: "later-baekje-soldier-spirit", name: "병인양요 프랑스군", image: `${import.meta.env.BASE_URL}assets/dungeon7/french-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "later-goguryeo-soldier-spirit": { id: "later-goguryeo-soldier-spirit", name: "강화도 조약 일본군", image: `${import.meta.env.BASE_URL}assets/dungeon7/ganghwa-japanese-soldier.png`, displayScale: 1.15, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "dungeon7-american-soldier": { id: "dungeon7-american-soldier", name: "신미양요 미군", image: `${import.meta.env.BASE_URL}assets/dungeon7/american-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
-  "khitan-soldier-spirit": { id: "khitan-soldier-spirit", name: "거란 병사의 원혼", image: `${import.meta.env.BASE_URL}assets/dungeon8/khitan-soldier-spirit.png`, displayScale: 1.12, aspectRatio: 2 / 3, anchor: [0, -0.04, 0] },
-  "jurchen-soldier-spirit": { id: "jurchen-soldier-spirit", name: "여진족 병사의 원혼", image: `${import.meta.env.BASE_URL}assets/dungeon8/jurchen-soldier-spirit.png`, displayScale: 1.12, aspectRatio: 2 / 3, anchor: [0, -0.04, 0] },
-  "mongol-general-armor": { id: "mongol-general-armor", name: "몽골 장군의 갑주", image: `${import.meta.env.BASE_URL}assets/dungeon8/mongol-general-armor.png`, displayScale: 1.18, aspectRatio: 2 / 3, anchor: [0, -0.04, 0] },
+  "khitan-soldier-spirit": { id: "khitan-soldier-spirit", name: "균열 침식 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-qing-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "jurchen-soldier-spirit": { id: "jurchen-soldier-spirit", name: "균열 침식 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-qing-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "mongol-general-armor": { id: "mongol-general-armor", name: "균열 침식 일반군 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-regular-army-soldier.png`, displayScale: 1.18, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "goryeo-spirit": { id: "goryeo-spirit", name: "고려의 영혼", image: `${import.meta.env.BASE_URL}assets/dungeon9/goryeo-spirit.png`, displayScale: 1.12, aspectRatio: 3 / 2, anchor: [0, -0.04, 0] },
   "vengeful-goryeo-spirit": { id: "vengeful-goryeo-spirit", name: "한 맺힌 고려의 영혼", image: `${import.meta.env.BASE_URL}assets/dungeon9/vengeful-goryeo-spirit.png`, displayScale: 1.18, aspectRatio: 3 / 2, anchor: [0, -0.04, 0] },
 };

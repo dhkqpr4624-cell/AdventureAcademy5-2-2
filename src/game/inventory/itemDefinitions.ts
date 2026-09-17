@@ -84,9 +84,10 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
     equipmentStats: { maxHpBonus: getArmorMaxHpBonusForFloor(7) },
   },
   "weapon-choe-museon-cannon": {
-    id: "weapon-choe-museon-cannon", name: "고려 최무선 화포", type: "weaponSkin", rarity: "rare",
-    description: "고려에서 최무선이 화약 기술을 발전시켜 만든 화포를 본뜬 희귀 무기 스킨이다.",
-    icon: `${import.meta.env.BASE_URL}assets/items/choe-museon-cannon.png`, stackable: false,
+    id: "weapon-choe-museon-cannon", name: "동학농민군 죽창", type: "weaponSkin", rarity: "rare",
+    description: "동학농민군의 굳센 의지를 담은 죽창 모양 무기 스킨이다.",
+    icon: `${import.meta.env.BASE_URL}assets/items/donghak-bamboo-spear.png`, stackable: false,
+    attackVfxId: "powerful-impact",
   },
   "armor-tripitaka-koreana": {
     id: "armor-tripitaka-koreana", name: "팔만대장경", type: "armor", rarity: "rare",

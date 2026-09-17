@@ -18,7 +18,7 @@ export function resolveDungeonCompletion(
     .filter((room) => roomProgress[room.id]?.eventCompleted !== true)
     .map((room) => room.id);
   const remainingRequiredRoomIds = map.rooms
-    .filter((room) => room.type !== "start" && !room.isFinalQuestRoom)
+    .filter((room) => room.type !== "start" && !room.isFinalQuestRoom && room.isRequired !== false)
     .filter((room) => roomProgress[room.id]?.eventCompleted !== true)
     .map((room) => room.id);
   return {

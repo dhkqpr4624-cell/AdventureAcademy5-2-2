@@ -83,7 +83,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-kaiden-quest-available",
       questActiveStorySequenceId: "npc-kaiden-quest-active",
     },
-    offeredQuestIds: ["quest-floor-4-jeon-rescue", "quest-floor-6-balhae", "quest-floor-7-goryeo-founding", "quest-floor-8-goryeo-relations", "quest-floor-10-final-source"],
+    offeredQuestIds: ["quest-floor-4-jeon-rescue", "quest-floor-6-balhae", "quest-floor-7-goryeo-founding", "quest-floor-10-final-source"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.kaiden),
   },
   {
@@ -129,7 +129,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       serious: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/portrait-angry.png`,
     },
     dialogue: { defaultStorySequenceId: "npc-deneb-default" },
-    offeredQuestIds: [],
+    offeredQuestIds: ["quest-floor-8-goryeo-relations"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.denebCommander),
   },
 ];

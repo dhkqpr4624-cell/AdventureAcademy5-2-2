@@ -84,10 +84,10 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
   },
   {
     id: "achievement-floor-8-rare-reward", floorId: "floor-8", floorTitle: "던전 8층",
-    title: "고려와 주변 국가의 관계", rewardIcon: `${import.meta.env.BASE_URL}assets/items/choe-museon-cannon.png`,
+    title: "동학농민군 죽창 획득", rewardIcon: `${import.meta.env.BASE_URL}assets/items/donghak-bamboo-spear.png`,
     rewardItemId: "weapon-choe-museon-cannon", rewardStateId: "quest-floor-8-goryeo-relations",
     requiredCorrect: floor8RareRewardCondition.requiredCorrect, totalQuestions: floor8RareRewardCondition.totalQuestions,
-    description: "던전 8층 정답",
+    description: "던전 8층 희귀 보상 획득",
   },
   {
     id: "achievement-floor-9-rare-reward", floorId: "floor-9", floorTitle: "던전 9층",

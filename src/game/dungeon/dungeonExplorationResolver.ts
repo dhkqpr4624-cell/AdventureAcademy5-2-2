@@ -7,7 +7,7 @@ export function getRequiredExplorationRoomIds(
   map: DungeonMapDefinition,
 ): string[] {
   return map.rooms
-    .filter((room) => room.type !== "start" && !room.isFinalQuestRoom)
+    .filter((room) => room.type !== "start" && !room.isFinalQuestRoom && room.isRequired !== false)
     .map((room) => room.id);
 }
 

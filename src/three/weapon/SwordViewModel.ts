@@ -89,8 +89,8 @@ export const SILLA_RING_POMMEL_SWORD_DEFINITION: SwordDefinition = {
 };
 export const CHOE_MUSEON_CANNON_DEFINITION: SwordDefinition = {
   ...BASIC_SWORD_DEFINITION,
-  id: "choe-museon-cannon",
-  textureUrl: `${import.meta.env.BASE_URL}assets/swords/choe-museon-cannon.png`,
+  id: "donghak-bamboo-spear",
+  textureUrl: `${import.meta.env.BASE_URL}assets/swords/donghak-bamboo-spear.png`,
 };
 
 export function getSwordDefinitionForEquippedItem(

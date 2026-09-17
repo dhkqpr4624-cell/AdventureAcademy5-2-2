@@ -523,54 +523,42 @@ NPC_STORY_SEQUENCES["npc-theo-floor-7-quest-complete"] = {
   ] }],
 };
 
-NPC_STORY_SEQUENCES["npc-kaiden-floor-8-quest-available"] = {
-  id: "npc-kaiden-floor-8-quest-available",
-  title: "던전 8층 의뢰",
-  replayable: true,
-  skippable: false,
-  onCompleteScreen: "baseCamp",
-  backgrounds: {},
-  actors: {
-    kaiden: actor("kaiden", "serious"),
-    luna: actor("luna", "happy"),
-    theo: actor("theo", "default"),
-    jeon: actor("jeon", "default"),
-  },
-  scenes: [{ id: "npc-kaiden-floor-8-quest-available-scene", steps: [
-    ...floor5QuestDialogue("floor8-kaiden-1", "kaiden", "serious", " 왔군, (플레이어 이름). "),
-    ...floor5QuestDialogue("floor8-kaiden-2", "kaiden", "serious", " 다음층으로 갈 계획을 세우고자 루나가 정찰을 갔다 왔다고 한다.. 그런데. "),
-    ...floor5QuestDialogue("floor8-luna-1", "luna", "happy", " 헤헤..이번에도 아무런 낌새를 발견하지 못했어. "),
-    ...floor5QuestDialogue("floor8-kaiden-3", "kaiden", "serious", " 아무래도 던전 안쪽에서 직접 단서를 찾아야 할것 같다. "),
-    ...floor5QuestDialogue("floor8-kaiden-4", "kaiden", "serious", " 지난번에 그랬던것처럼, 이번에도 우리 모두 함께 던전에 들어간다는 뜻이지. "),
-    ...floor5QuestDialogue("floor8-theo-1", "theo", "default", " 전은 제외입니다. 전은 부상자이니, 베이스캠프에서 휴식하도록 하죠. "),
-    ...floor5QuestDialogue("floor8-jeon-1", "jeon", "default", " 도움이 되지 못해 죄송합니다.. "),
-    ...floor5QuestDialogue("floor8-luna-2", "luna", "happy", " 그런 말 마요. 지금까지 전 아저씨의 활약이 엄청났는걸요! 이번엔 저희도 좀 활약하게 해 주세요! "),
-    ...floor5QuestDialogue("floor8-jeon-2", "jeon", "default", " 하하.. 믿고 맡기겠습니다. "),
-    ...floor5QuestDialogue("floor8-kaiden-5", "kaiden", "serious", " 준비가 되었다면 바로 출발하지. "),
+NPC_STORY_SEQUENCES["npc-deneb-floor-8-quest-available"] = {
+  id: "npc-deneb-floor-8-quest-available", title: "던전 8층 의뢰", replayable: true,
+  skippable: false, dialogueSkip: true, onCompleteScreen: "baseCamp", backgrounds: {}, actors: chapter2Actors,
+  scenes: [{ id: "npc-deneb-floor-8-quest-available-scene", steps: [
+    { id: "floor8-offer-1", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "오셨군요, (플레이어 이름).", advanceMode: "click" },
+    { id: "floor8-offer-2", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "실제로 만난지 얼마 되지도 않았는데, 바로 다음 층 공략을 부탁드려야 한다니 마음이 편치 않네요.", advanceMode: "click" },
+    { id: "floor8-offer-3", type: "dialogue", speakerId: "luna", speakerName: "루나", activeActorId: "luna", expression: "smile", text: "오, 데네브님~! 8층부터 지휘는 데네브님이 하는거예요? 부상은 어때요?", advanceMode: "click" },
+    { id: "floor8-offer-4", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "덕분에 조금씩 괜찮아지고 있어요. 지휘에 관련해서는-...", advanceMode: "click" },
+    { id: "floor8-offer-5", type: "dialogue", speakerId: "aron", speakerName: "아론", activeActorId: "aron", expression: "smile", text: "지휘권은 데네브님께 넘겨드렸습니다. 이 던전에 대해서 가장 잘 알고계신 것은 데네브님이기도 하고, 애초부터 지휘관님이셨으니까요.", advanceMode: "click" },
+    { id: "floor8-offer-6", type: "dialogue", speakerId: "theo", speakerName: "테오", activeActorId: "theo", expression: "smile", text: "그러시리라 생각했습니다.", advanceMode: "click" },
+    { id: "floor8-offer-7", type: "dialogue", speakerId: "kapp", speakerName: "카프", activeActorId: "kapp", expression: "smile", text: "지휘권을 데네브에게 일임한 이후에 아론과 제가 던전 8층 입구를 살펴봤어요.", advanceMode: "click" },
+    { id: "floor8-offer-8", type: "dialogue", speakerId: "kapp", speakerName: "카프", activeActorId: "kapp", expression: "serious", text: "데네브를 구출한 영향인지.. 던전 이곳저곳에 균열이 가득하더군요.. 확실히 이번 층부터는 더더욱 위험한 일이 많을 거예요.", advanceMode: "click" },
+    { id: "floor8-offer-9", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "이 던전의 중심부에 무엇이 있는지는 저 또한 모릅니다. 유일하게 아는 것은··· 이 던전이 현실 세계까지 잡아먹으려고 하는 것입니다.", advanceMode: "click" },
+    { id: "floor8-portal-in", type: "illustOverlay", imageUrl: `${import.meta.env.BASE_URL}assets/dungeon8/giant-portal.png`, visible: true, fadeMs: 700, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
+    { id: "floor8-portal-hold", type: "wait", durationMs: 1500, advanceMode: "auto" },
+    { id: "floor8-offer-10", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "이 포탈이 처음 생겨났을 때에는 이미 현실세계의 힘을 어느정도 빼앗은 뒤였어요.", advanceMode: "click" },
+    { id: "floor8-offer-11", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "현실세계에서 시간의 힘을 삼킨 던전 속에는··· 여러분도 아시다시피 과거의 인물들이 살아 움직이고 있었죠.", advanceMode: "click" },
+    { id: "floor8-offer-12", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "지금까진 제 힘으로 던전이 현실을 집어삼키는 것을 막고 있었습니다. 하지만 제 영향력이 약해진 지금, 던전은 다시 한 번 현실을 집어삼키려고 할 게 분명해요.", advanceMode: "click" },
+    { id: "floor8-offer-13", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "그렇게 되면··· 던전의 힘이 더욱 강해질겁니다. 어쩌면 절대로 반복되어서는 안 되는 일이 반복될지도 몰라요···.", advanceMode: "click" },
+    { id: "floor8-portal-out", type: "illustOverlay", visible: false, fadeMs: 700, removeAfterFade: true, hideDialogue: true, waitForFade: true, advanceMode: "auto" },
+    { id: "floor8-offer-14", type: "dialogue", speakerId: "theo", speakerName: "테오", activeActorId: "theo", expression: "serious", text: "한시가 급하군요.", advanceMode: "click" },
+    { id: "floor8-offer-15", type: "dialogue", speakerId: "theo", speakerName: "테오", activeActorId: "theo", expression: "serious", text: "데네브님, 포탈이 현실세계를 완전히 집어삼키기까지 남은 시간은 얼마나 됩니까?", advanceMode: "click" },
+    { id: "floor8-offer-16", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "빠르면 반나절 안에도 가능합니다. 제 남은 힘으로 최대한 늦춰보아도, 앞으로 하루밖에 남지 않았겠지요.", advanceMode: "click" },
+    { id: "floor8-offer-17", type: "dialogue", speakerId: "theo", speakerName: "테오", activeActorId: "theo", expression: "angry", text: "이런··· 지체할 시간이 없습니다.", advanceMode: "click" },
+    { id: "floor8-offer-18", type: "dialogue", speakerId: "kapp", speakerName: "카프", activeActorId: "kapp", expression: "angry", text: "(플레이어이름), 들으셔서 잘 아시겠지요. 하루빨리 던전의 중심부로 내려가야 해요.", advanceMode: "click" },
+    { id: "floor8-offer-19", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "angry", text: "저희 모두가 함께하겠습니다. 이번에도 전투를 잘 부탁드리겠습니다, (플레이어이름).", advanceMode: "click" },
   ] }],
 };
-NPC_STORY_SEQUENCES["npc-kaiden-floor-8-quest-accepted"] = sequence(
-  "npc-kaiden-floor-8-quest-accepted",
-  "kaiden",
-  "serious",
-  [" 우리는 단서를 찾을테니, 늘 그렇듯 전투를 잘 부탁하겠다. (플레이어 이름). "],
-);
-NPC_STORY_SEQUENCES["npc-kaiden-floor-8-quest-active"] = sequence(
-  "npc-kaiden-floor-8-quest-active",
-  "kaiden",
-  "serious",
-  ["동료들과 함께 던전 8층 안쪽에서 단서를 찾도록."],
-);
-NPC_STORY_SEQUENCES["npc-kaiden-floor-8-quest-complete"] = sequence(
-  "npc-kaiden-floor-8-quest-complete",
-  "kaiden",
-  "serious",
-  [
-    " (플레이어 이름), 이번에도 수고했다. ",
-    " 전이 사라지니 테오도 루나도 조금 우울해보이지만, 그들도 조금 있으면 잘 이겨내겠지. ",
-    " 조금 휴식한 뒤 출발하는 것이 좋겠군. ",
-  ],
-);
+NPC_STORY_SEQUENCES["npc-deneb-floor-8-quest-accepted"] = sequence("npc-deneb-floor-8-quest-accepted", "denebCommander", "default", ["무리하지 말고 조심해서 나아가요."]);
+NPC_STORY_SEQUENCES["npc-deneb-floor-8-quest-active"] = sequence("npc-deneb-floor-8-quest-active", "denebCommander", "default", ["던전 8층의 균열을 조심하면서 중심부로 향해주세요."]);
+NPC_STORY_SEQUENCES["npc-deneb-floor-8-quest-complete"] = chapter2DialogueSequence("npc-deneb-floor-8-quest-complete", [
+  { actor: "deneb", expression: "smile", text: "눈부신 활약이었습니다, (플레이어이름)." },
+  { actor: "deneb", expression: "smile", text: "당신 덕분에, 아무도 다치지 않고 순조롭게 다음 층으로 향하는 길을 열 수 있었어요." },
+  { actor: "deneb", expression: "smile", text: "다음 계획은 제가 고민하고 있을테니, 잠시동안 휴식하면서 정비해주세요." },
+  { actor: "deneb", expression: "smile", text: "아무리 당신이라도 무적은 아니니까요." },
+]);
 
 NPC_STORY_SEQUENCES["npc-luna-floor-9-quest-available"] = {
   id: "npc-luna-floor-9-quest-available",

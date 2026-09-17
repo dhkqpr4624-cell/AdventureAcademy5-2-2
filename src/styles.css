@@ -2587,6 +2587,8 @@ button:focus-visible {
 @keyframes weapon-water-vfx { from { background-position-x: 0; } to { background-position-x: -6400px; } }
 .weapon-ink-brush-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 800px; height: 800px; transform: translate(-50%, calc(-89.75% + 100px)); pointer-events: none; background-position: 0 0; background-size: 900% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: weapon-ink-brush-vfx 1s steps(1, end) 1 both; }
 @keyframes weapon-ink-brush-vfx { 0% { background-position-x: 0; } 12.5% { background-position-x: -800px; } 25% { background-position-x: -1600px; } 37.5% { background-position-x: -2400px; } 50% { background-position-x: -3200px; } 62.5% { background-position-x: -4000px; } 75% { background-position-x: -4800px; } 87.5%, 100% { background-position-x: -5600px; } }
+.weapon-powerful-impact-vfx { position: absolute; z-index: 18; left: 50%; top: 50%; width: 800px; height: 800px; transform: translate(-50%, calc(-89.75% + 50px)); pointer-events: none; background-position: 0 0; background-size: 800% 100%; background-repeat: no-repeat; image-rendering: pixelated; animation: weapon-powerful-impact-vfx 1s steps(8) 1 both; }
+@keyframes weapon-powerful-impact-vfx { from { background-position-x: 0; } to { background-position-x: 114.2857%; } }
 
 .dungeon7-rescue { position: fixed; inset: 0; z-index: 120; overflow: hidden; background: #05070a; }
 .dungeon7-prison-camera { position: absolute; inset: 0; overflow: hidden; }

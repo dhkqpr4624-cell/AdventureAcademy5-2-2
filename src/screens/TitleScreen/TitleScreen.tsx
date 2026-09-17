@@ -34,7 +34,7 @@ export function TitleScreen({ onNavigate, onOpenSettings, hasSave, onNewGame, on
     <main className="game-screen title-screen">
       <img
         className="title-background"
-        src={`${import.meta.env.BASE_URL}assets/title/title-background.png`}
+        src={`${import.meta.env.BASE_URL}assets/title/chapter2-title-background.png`}
         alt=""
         aria-hidden="true"
         draggable={false}
@@ -52,7 +52,7 @@ export function TitleScreen({ onNavigate, onOpenSettings, hasSave, onNewGame, on
       </div>}
 
       <section className="title-primary-controls" aria-label="게임 시작 메뉴">
-        <p className="title-unit-label">&lt;5학년 2학기 1단원&gt;</p>
+        <p className="title-unit-label">&lt;5학년 2학기 2단원&gt;</p>
         <div className="title-primary-buttons">
           <button type="button" onClick={onNewGame}>
             새로 시작하기
