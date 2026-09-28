@@ -560,53 +560,45 @@ NPC_STORY_SEQUENCES["npc-deneb-floor-8-quest-complete"] = chapter2DialogueSequen
   { actor: "deneb", expression: "smile", text: "아무리 당신이라도 무적은 아니니까요." },
 ]);
 
-NPC_STORY_SEQUENCES["npc-luna-floor-9-quest-available"] = {
-  id: "npc-luna-floor-9-quest-available",
-  title: "던전 9층 의뢰",
-  replayable: true,
-  skippable: false,
-  onCompleteScreen: "baseCamp",
-  backgrounds: {},
-  actors: {
-    luna: actor("luna", "happy"),
-    theo: actor("theo", "default"),
-    kaiden: actor("kaiden", "serious"),
-  },
-  scenes: [{ id: "npc-luna-floor-9-quest-available-scene", steps: [
-    ...floor5QuestDialogue("floor9-luna-1", "luna", "happy", " (플레이어 이름), 왔구나.. "),
-    ...floor5QuestDialogue("floor9-luna-2", "luna", "happy", " 하하.. 얼른 기운 차려야 하는데, 그렇지? 그동안 공민왕 아저씨랑 생각보다 큰 정이 들었나봐.. "),
-    ...floor5QuestDialogue("floor9-luna-3", "luna", "happy", " 공민왕 아저씨가 열어준 문이니까, 어서 나아가야지! 휴, 나도 어서 힘낼게! "),
-    ...floor5QuestDialogue("floor9-luna-4", "luna", "happy", " 열린 문 너머를 먼저 탐색해보고 왔어. 10층으로 통하는 문이 있었는데, 거기에서 이상한 기운이 새어 나오고 있었지. "),
-    ...floor5QuestDialogue("floor9-luna-5", "luna", "happy", " 아마도.. 10층, 그곳에 이 던전이 생긴 원인이 있을 것 같아."),
-    ...floor5QuestDialogue("floor9-theo-1", "theo", "default", "그리고 그 10층으로 가는 문을 열려면 무엇인가 필요한 것이겠죠? "),
-    ...floor5QuestDialogue("floor9-luna-6", "luna", "happy", " 응. 정확해. "),
-    ...floor5QuestDialogue("floor9-luna-7", "luna", "happy", " 9층에는 고려시대 문화를 나타내는 증거들이 곳곳에 떨어져있을 거야. "),
-    ...floor5QuestDialogue("floor9-luna-8", "luna", "happy", " 그것을 모아서, 9층 앞의 제단에 올려놓아야 해."),
-    ...floor5QuestDialogue("floor9-kaiden-1", "kaiden", "serious", " 들었지, (플레이어이름). 이번에도 전투는 너에게 맡기겠다. "),
-  ] }],
-};
-NPC_STORY_SEQUENCES["npc-luna-floor-9-quest-accepted"] = sequence(
-  "npc-luna-floor-9-quest-accepted",
-  "luna",
-  "happy",
-  [" 이제 거의 마지막이네.. 부탁할게, (플레이어 이름)."],
+NPC_STORY_SEQUENCES["npc-deneb-floor-9-quest-available"] = chapter2DialogueSequence("npc-deneb-floor-9-quest-available", [
+  { actor: "deneb", expression: "angry", text: "(플레이어 이름), 이전 층을 공략한 지 얼마 되지 않았지만 바로 다음 층에 관련해서 논의해 보아야겠습니다." },
+  { actor: "deneb", expression: "angry", text: "제가 아직까지는 던전의 힘을 막고 있다고 말씀드렸었죠···. 그래서 지금까지는 괜찮았지만···" },
+  { actor: "deneb", expression: "angry", text: "던전 8층의 문제를 해결한 직후부터 던전의 힘이 강하게 요동치고 있습니다. 더 이상 시간을 끄는 것은 힘들어요." },
+  { actor: "deneb", expression: "angry", text: "다른 분들께는 베이스캠프의 안정화를 부탁드렸습니다. 던전이 요동치면, 저희가 지내는 이 베이스캠프도 어떻게 될지 모르니까요." },
+  { actor: "deneb", expression: "angry", text: "따라서 이번 던전에는··· (플레이어 이름)님과 저, 단 둘이 진입합니다." },
+  { actor: "deneb", expression: "angry", text: "부디, 조심하세요···." },
+]);
+NPC_STORY_SEQUENCES["npc-deneb-floor-9-quest-accepted"] = sequence(
+  "npc-deneb-floor-9-quest-accepted", "denebCommander", "default", ["준비가 끝나면 저와 함께 9층으로 들어가요."],
 );
-NPC_STORY_SEQUENCES["npc-luna-floor-9-quest-active"] = sequence(
-  "npc-luna-floor-9-quest-active",
-  "luna",
-  "happy",
-  ["9층에서 고려시대의 사회와 문화를 나타내는 증거를 모아 제단에 올려놓자."],
+NPC_STORY_SEQUENCES["npc-deneb-floor-9-quest-active"] = sequence(
+  "npc-deneb-floor-9-quest-active", "denebCommander", "default", ["균열의 영향이 큽니다. 저와 떨어지지 말고 조심해서 나아가요."],
 );
-NPC_STORY_SEQUENCES["npc-luna-floor-9-quest-complete"] = sequence(
-  "npc-luna-floor-9-quest-complete",
-  "luna",
-  "happy",
-  [
-    " 윽, (플레이어 이름), 봤어? 10층 문 안에 있는 그거? ",
-    " 완전 괴물의 모습이었어.. 아무래도 그게 이 포탈이 열린 이유겠지. ",
-    " 그 괴물을 쓰러뜨려야만 한다니.. 무섭지만 같이 힘내자. ",
-  ],
-);
+NPC_STORY_SEQUENCES["npc-deneb-floor-9-quest-complete"] = chapter2DialogueSequence("npc-deneb-floor-9-quest-complete", [
+  { actor: "luna", expression: "serious", text: "(플레이어 이름), 데네브 대장! 돌아왔구나!" },
+  { actor: "luna", expression: "serious", text: "대장이랑 (플레이어 이름)이 돌아오기 바로 전에 베이스캠프가 크게 흔들렸어!" },
+  { actor: "luna", expression: "serious", text: "아직 이곳은 괜찮지만, 아론님 말로는 갈라지거나 침식된 곳도 있대!" },
+  { actor: "luna", expression: "serious", text: "던전 안은 괜찮았어?! 던전에서 대체 무슨 일이 있었던 거야?" },
+  { actor: "luna", expression: "serious", text: "잠깐··· 데네브 대장, 표정이 어두운데···" },
+  { actor: "kapp", expression: "angry", text: "데네브···? 괜찮아요?" },
+  { actor: "kapp", expression: "angry", text: "안색이 좋지 않아요." },
+  { actor: "deneb", expression: "hurt", text: "전 괜찮습니다. 단순히 힘을 많이 써서 어지러울 뿐이예요." },
+  { actor: "deneb", expression: "hurt", text: "던전에서 저희는 균열에 침식되어 이성을 잃은 과거의 인물들을 만났습니다." },
+  { actor: "deneb", expression: "hurt", text: "(플레이어 이름) 덕분에 무사히 빠져 나올 수 있었지만···" },
+  { actor: "deneb", expression: "hurt", text: "그 과정에서 제 힘을 다 써 버렸고, 결국 던전과 저의 연결이 끊겨버리고 말았어요···" },
+  { actor: "theo", expression: "surprised", text: "그 말은···." },
+  { actor: "deneb", expression: "angry", text: "네, 맞아요. 이제 더 이상 던전의 흐름을 늦출 수 없습니다." },
+  { actor: "deneb", expression: "angry", text: "그러나, 던전 9층의 문제를 해결한 직후에 저는 직감적으로 알 수 있었어요" },
+  { actor: "deneb", expression: "angry", text: "바로 아래층에, 이 던전의 원흉이 기다리고 있다는 것을요.", emphasis: "danger" },
+  { actor: "aron", expression: "shouting", text: "그렇다는 건···!" },
+  { actor: "luna", expression: "angry", text: "이제 보스전만 남았다는 거지···!" },
+  { actor: "luna", expression: "angry", text: "이이익!!! 우리를 이렇게나 고생시키고!!" },
+  { actor: "luna", expression: "angry", text: "정말 혼쭐을 내 주겠어!" },
+  { actor: "kapp", expression: "angry", text: "이제 정말 최종 결전이군요." },
+  { actor: "kapp", expression: "angry", text: "모두, 최고의 장비를 갖추도록 하죠." },
+  { actor: "kapp", expression: "angry", text: "이 앞에 있는 원흉이라는 것이, 어떤 힘을 갖추고 있을지는 미지수이니까요." },
+]);
+NPC_STORY_SEQUENCES["npc-deneb-floor-9-quest-complete"].dialogueSkip = false;
 
 const theo = NPC_STORY_SEQUENCES["npc-theo-default"];
 theo.scenes[0].steps.push(

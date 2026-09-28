@@ -10,6 +10,7 @@ import { PlayerStatusBar } from "../../components/PlayerStatusBar";
 import { BASE_CAMP_MAP } from "../../data/baseCampMap";
 import { NPC_STORY_SEQUENCES } from "../../data/stories/npcStories";
 import type { NpcDefinition } from "../../game/npc/npcTypes";
+import { NPC_BY_ID } from "../../game/npc/npcDefinitions";
 import { resolveNpcStorySequence } from "../../game/npc/npcStoryResolver";
 import type { PlayerState } from "../../game/player/playerState";
 import { QUEST_DEFINITIONS } from "../../game/quest/questDefinitions";
@@ -117,6 +118,8 @@ export function BaseCampScreen({
   const dungeon5RewardClaimProcessingRef = useRef(false);
   const dungeon7RewardClaimProcessingRef = useRef(false);
   const dungeon8RewardClaimProcessingRef = useRef(false);
+  const dungeon9RewardClaimProcessingRef = useRef(false);
+  const floor9AutoStoryStartedRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -222,6 +225,17 @@ export function BaseCampScreen({
     storySequenceId || questDetail || floorListOpen || inventoryOpen || shopOpen || cameraTransitioning,
   );
 
+  useEffect(() => {
+    if (floor9AutoStoryStartedRef.current || !hasClearedFloor9 || effectiveQuestState[floor9QuestId] !== "active" || rewardRevealed[floor9QuestId]) return;
+    floor9AutoStoryStartedRef.current = true;
+    const deneb = NPC_BY_ID.denebCommander;
+    setSelectedNpc(deneb);
+    setFocusPointId(deneb.baseCampSpawnId);
+    dialogueCompletedRef.current = false;
+    setStorySequenceId("npc-deneb-floor-9-quest-complete");
+    void viewportRef.current?.focus(deneb.baseCampSpawnId, 550);
+  }, [effectiveQuestState, floor9QuestId, hasClearedFloor9, rewardRevealed]);
+
   const buyItem = (itemId: string) => {
     const result = purchaseShopItem(inventoryState, playerState.gold, itemId);
     if (!result.success) {
@@ -292,8 +306,8 @@ export function BaseCampScreen({
       return;
     }
     const sequenceId =
-      npc.id === "luna" && hasClearedFloor9 && effectiveQuestState[floor9QuestId] === "active"
-        ? "npc-luna-floor-9-quest-complete"
+      npc.id === "denebCommander" && hasClearedFloor9 && effectiveQuestState[floor9QuestId] === "active"
+        ? "npc-deneb-floor-9-quest-complete"
       : npc.id === "denebCommander" && hasClearedFloor8 && effectiveQuestState[floor8QuestId] === "active"
         ? "npc-deneb-floor-8-quest-complete"
       : npc.id === "denebCommander" && hasClearedFloor7 && effectiveQuestState[floor7QuestId] === "active"
@@ -369,7 +383,7 @@ export function BaseCampScreen({
     if (finishedSequenceId === "npc-deneb-floor-8-quest-complete") {
       revealReward(floor8QuestId); setFloor8RewardOpen(true); return;
     }
-    if (finishedSequenceId === "npc-luna-floor-9-quest-complete") {
+    if (finishedSequenceId === "npc-deneb-floor-9-quest-complete") {
       revealReward(floor9QuestId); setFloor9RewardOpen(true); return;
     }
     const quest = QUEST_DEFINITIONS.find((candidate) =>
@@ -803,11 +817,12 @@ export function BaseCampScreen({
       {floor9RewardOpen && <QuestRewardPopup
         bestCorrect={floorBestCorrect["floor-9"] ?? 0} claimed={Boolean(rewardClaimed[floor9QuestId])}
         questTitle="던전 9층 조사 완료" rareRewardItemId="armor-tripitaka-koreana" requiredCorrect={floor9QuestRareRewardCondition.requiredCorrect}
-        baseGold={20}
+        baseGold={30}
         onCancel={() => setFloor9RewardOpen(false)} onClaim={() => {
-          if (rewardClaimed[floor9QuestId]) return;
+          if (rewardClaimed[floor9QuestId] || dungeon9RewardClaimProcessingRef.current) return;
+          dungeon9RewardClaimProcessingRef.current = true;
           const rareUnlocked = (floorBestCorrect["floor-9"] ?? 0) >= floor9QuestRareRewardCondition.requiredCorrect;
-          setPlayerState((current) => ({ ...current, gold: current.gold + 20 }));
+          setPlayerState((current) => ({ ...current, gold: current.gold + 30 }));
           if (rareUnlocked) {
             setInventoryState((current) => changeItemQuantity(current, "armor-tripitaka-koreana", 1));
             setAchievementReceived("achievement-floor-9-rare-reward");

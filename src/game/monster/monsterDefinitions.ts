@@ -85,8 +85,10 @@ export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   "khitan-soldier-spirit": { id: "khitan-soldier-spirit", name: "균열 침식 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-qing-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "jurchen-soldier-spirit": { id: "jurchen-soldier-spirit", name: "균열 침식 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-qing-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "mongol-general-armor": { id: "mongol-general-armor", name: "균열 침식 일반군 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-regular-army-soldier.png`, displayScale: 1.18, aspectRatio: 1, anchor: [0, -0.04, 0] },
-  "goryeo-spirit": { id: "goryeo-spirit", name: "고려의 영혼", image: `${import.meta.env.BASE_URL}assets/dungeon9/goryeo-spirit.png`, displayScale: 1.12, aspectRatio: 3 / 2, anchor: [0, -0.04, 0] },
-  "vengeful-goryeo-spirit": { id: "vengeful-goryeo-spirit", name: "한 맺힌 고려의 영혼", image: `${import.meta.env.BASE_URL}assets/dungeon9/vengeful-goryeo-spirit.png`, displayScale: 1.18, aspectRatio: 3 / 2, anchor: [0, -0.04, 0] },
+  "goryeo-spirit": { id: "goryeo-spirit", name: "균열 침식 대한 제국군", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-korean-empire-army.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "dungeon9-seo-jae-pil": { id: "dungeon9-seo-jae-pil", name: "균열 침식 독립 협회 서재필", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-seo-jae-pil.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "vengeful-goryeo-spirit": { id: "vengeful-goryeo-spirit", name: "한 맺힌 명성황후", image: `${import.meta.env.BASE_URL}assets/dungeon9/vengeful-empress-myeongseong.png`, displayScale: 1.18, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "dungeon9-corrupted-citizen": { id: "dungeon9-corrupted-citizen", name: "균열 침식 대한제국 시민", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-korean-empire-citizen.png`, displayScale: 1.15, aspectRatio: 1, anchor: [0, -0.04, 0] },
 };
 
 export function getMonsterVisualDefinition(

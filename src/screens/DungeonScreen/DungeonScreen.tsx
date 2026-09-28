@@ -161,7 +161,8 @@ import { DUNGEON6_CLUE_STORIES, DUNGEON6_ENTRY_STORY, DUNGEON6_FINAL_STORY } fro
 import { DUNGEON7_CLUE_STORIES, DUNGEON7_ENTRY_STORY, DUNGEON7_FINAL_STORY } from "../../data/stories/dungeon7Stories";
 import { Dungeon7RescueStory } from "../../components/Dungeon7RescueStory";
 import { DUNGEON8_CLUE_STORIES, DUNGEON8_ENTRY_STORY, DUNGEON8_FINAL_STORY } from "../../data/stories/dungeon8Stories";
-import { DUNGEON9_CLUE_STORIES, DUNGEON9_FINAL_STORY } from "../../data/stories/dungeon9Stories";
+import { DUNGEON9_CLUE_STORIES } from "../../data/stories/dungeon9Stories";
+import { Dungeon9ScriptedEncounter } from "../../components/Dungeon9ScriptedEncounter";
 import { DUNGEON10_ENTRY_STORY } from "../../data/stories/dungeon10Stories";
 import { DUNGEON1_ENTRY_STORY, DUNGEON1_FINAL_STORY } from "../../data/stories/dungeon1Chapter2Stories";
 import { DUNGEON2_CLUE_STORIES, DUNGEON2_ENTRY_STORY, DUNGEON2_FINAL_STORY } from "../../data/stories/dungeon2Chapter2Stories";
@@ -233,7 +234,7 @@ export function applyFloorMonsterData(
             : floorId === "floor-8"
               ? "khitan-soldier-spirit"
             : floorId === "floor-9"
-              ? "goryeo-spirit"
+              ? random.next() < 0.5 ? "goryeo-spirit" : "dungeon9-seo-jae-pil"
             : room.combatConfig.monsterId;
         return {
           ...room,
@@ -322,7 +323,7 @@ export function selectDungeon8StoryRoomIds(map: DungeonMapDefinition): string[] 
 }
 
 function selectDungeon9StoryRoomIds(map: DungeonMapDefinition): string[] {
-  return selectRequiredStoryRoomIds(map, 3, true);
+  return selectRequiredStoryRoomIds(map, 2, true);
 }
 
 type NormalCombatPhase =
@@ -2913,8 +2914,8 @@ export function DungeonScreen({
           }} />
       </div>}
       {objectiveEvent === "first" && floorId === "floor-9" && <div className="dungeon-story-overlay">
-        <StoryPlayer sequence={DUNGEON9_FINAL_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState}
-          presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
+        <Dungeon9ScriptedEncounter playerName={playerState.name || DEFAULT_PLAYER_NAME} playerState={playerState} setPlayerState={setPlayerState}
+          onComplete={() => {
             playerHpRef.current = maxHp; setPlayerHp(maxHp); onStoryEventSeen("floor-9:tenth-floor-door-opened");
             onObjectiveAcquired(runCorrectCountRef.current); setObjectiveEvent(null); onFloorCleared(); onNavigate("baseCamp");
           }} />

@@ -91,9 +91,9 @@ export const ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
   },
   {
     id: "achievement-floor-9-rare-reward", floorId: "floor-9", floorTitle: "던전 9층",
-    title: "고려시대의 사회와 문화", rewardIcon: `${import.meta.env.BASE_URL}assets/items/tripitaka-koreana.png`,
+    title: "대한제국 국기 뱃지 획득", rewardIcon: `${import.meta.env.BASE_URL}assets/items/korean-empire-flag-badge.png`,
     rewardItemId: "armor-tripitaka-koreana", rewardStateId: "quest-floor-9-goryeo-society-culture",
     requiredCorrect: floor9RareRewardCondition.requiredCorrect, totalQuestions: floor9RareRewardCondition.totalQuestions,
-    description: "던전 9층 정답",
+    description: "던전 9층 희귀 보상 획득",
   },
 ];

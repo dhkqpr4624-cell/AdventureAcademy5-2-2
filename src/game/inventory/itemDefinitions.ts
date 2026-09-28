@@ -90,9 +90,9 @@ export const ITEM_DEFINITION_REGISTRY: Record<string, ItemDefinition> = {
     attackVfxId: "powerful-impact",
   },
   "armor-tripitaka-koreana": {
-    id: "armor-tripitaka-koreana", name: "팔만대장경", type: "armor", rarity: "rare",
-    description: "고려의 불교문화와 국난 극복의 염원을 상징하는 희귀 방어구다.",
-    icon: `${import.meta.env.BASE_URL}assets/items/tripitaka-koreana.png`, stackable: false,
+    id: "armor-tripitaka-koreana", name: "대한제국 국기 뱃지", type: "armor", rarity: "rare",
+    description: "대한제국의 자주독립과 근대 국가 수립 의지를 담은 국기 뱃지다.",
+    icon: `${import.meta.env.BASE_URL}assets/items/korean-empire-flag-badge.png`, stackable: false,
     equipmentStats: { maxHpBonus: getArmorMaxHpBonusForFloor(9) },
   },
   "quest-memory-fragment": {

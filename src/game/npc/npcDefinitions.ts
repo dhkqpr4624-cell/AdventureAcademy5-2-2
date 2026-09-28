@@ -43,7 +43,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       questAvailableStorySequenceId: "npc-luna-floor-3-quest-available",
       questActiveStorySequenceId: "npc-luna-floor-3-quest-active",
     },
-    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-5-unified-silla", "quest-floor-9-goryeo-society-culture"],
+    offeredQuestIds: ["quest-floor-2-memory-fragment", "quest-floor-5-unified-silla"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.luna),
   },
   {
@@ -129,7 +129,7 @@ export const NPC_DEFINITIONS: readonly NpcDefinition[] = [
       serious: `${import.meta.env.BASE_URL}assets/npcs/chapter2/deneb/portrait-angry.png`,
     },
     dialogue: { defaultStorySequenceId: "npc-deneb-default" },
-    offeredQuestIds: ["quest-floor-8-goryeo-relations"],
+    offeredQuestIds: ["quest-floor-8-goryeo-relations", "quest-floor-9-goryeo-society-culture"],
     placement: getBaseCampNpcPlacement(BASE_CAMP_NPC_SLOT_ASSIGNMENTS.denebCommander),
   },
 ];
