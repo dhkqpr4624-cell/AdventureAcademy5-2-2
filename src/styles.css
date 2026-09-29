@@ -3928,90 +3928,51 @@ button:focus-visible {
   animation: dungeon-centered-illust-shake 1500ms ease-in-out;
 }
 
-.dungeon9-scripted-encounter,
-.d9-scripted-stage {
+.dungeon9-scripted-encounter {
   position: fixed;
   inset: 0;
   z-index: 990;
-}
-
-.d9-scripted-stage {
-  display: grid;
-  place-items: center;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 46%, rgba(83, 45, 105, 0.42), rgba(5, 4, 9, 0.92));
+  pointer-events: auto;
+  background: transparent;
 }
 
-.d9-scripted-monster {
-  width: min(44vw, 560px);
-  max-height: 67vh;
-  object-fit: contain;
-  image-rendering: auto;
-  transform-origin: 50% 70%;
-  transition: opacity 800ms ease, transform 800ms ease;
-  filter: drop-shadow(0 12px 28px rgba(81, 22, 115, 0.7));
+.dungeon9-scripted-encounter.phase-blessing {
+  background: #000;
+  animation: dungeon9-backdrop-in 700ms ease both;
 }
 
-.d9-scripted-monster.is-hit {
-  animation: d9-scripted-monster-hit 2s linear 1;
+@keyframes dungeon9-backdrop-in {
+  from { background-color: transparent; }
+  to { background-color: #000; }
 }
 
-.d9-scripted-monster.is-defeated {
-  opacity: 0;
-  transform: scale(0.78) translateY(2rem);
+.dungeon9-scripted-encounter > .combat-dialogue-panel {
+  z-index: 40;
 }
 
-@keyframes d9-scripted-monster-hit {
-  0%, 100% { transform: translateX(0); }
-  8%, 24%, 40%, 56%, 72%, 88% { transform: translateX(-18px); }
-  16%, 32%, 48%, 64%, 80%, 96% { transform: translateX(18px); }
-}
-
-.d9-scripted-dialogue,
-.d9-scripted-command {
+.dungeon9-blessing-overlay,
+.dungeon9-blessing-overlay > .story-player {
   position: fixed;
-  left: 50%;
-  bottom: max(4vh, 2rem);
-  z-index: 1002;
-  transform: translateX(-50%);
-  width: min(860px, calc(100vw - 2rem));
-  padding: 1.25rem;
-  border: 2px solid #927847;
-  border-radius: 12px;
-  background: rgba(24, 18, 26, 0.95);
-  color: #fff4d3;
-  text-align: center;
+  inset: 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
 }
 
-.d9-scripted-dialogue button,
-.d9-scripted-command button {
-  min-width: 9rem;
-  min-height: 3rem;
-  border: 2px solid #d7b15f;
-  border-radius: 8px;
-  background: #3a261d;
-  color: #fff4d3;
-  font: inherit;
-  font-weight: 800;
-  cursor: pointer;
+.dungeon9-blessing-overlay { z-index: 50; }
+.dungeon9-blessing-overlay .story-illust-backdrop { z-index: 10; }
+.dungeon9-blessing-overlay .story-illust-overlay { z-index: 20; }
+.dungeon9-blessing-overlay .story-portrait-layer { z-index: 30; }
+.dungeon9-blessing-overlay .story-dialogue-box {
+  z-index: 31;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  max-height: calc(100svh - 2rem - env(safe-area-inset-bottom));
+  overflow: visible;
 }
-
-.d9-scripted-damage {
-  position: fixed;
-  left: 50%;
-  top: 26%;
-  z-index: 1001;
-  color: #ff453f;
-  font-size: clamp(2.8rem, 8vw, 6rem);
-  font-weight: 1000;
-  text-shadow: 0 4px 12px #000;
-  animation: d9-damage-pop 850ms ease-out both;
-}
-
-@keyframes d9-damage-pop {
-  from { opacity: 0; transform: translate(-50%, 35px) scale(.75); }
-  25% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
-  to { opacity: 0; transform: translate(-50%, -60px) scale(1); }
+.dungeon9-blessing-overlay .story-illust-overlay img {
+  max-height: min(52svh, calc(100svh - 15rem));
 }
 
 .d9-scripted-heal {

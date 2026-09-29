@@ -162,7 +162,7 @@ import { DUNGEON7_CLUE_STORIES, DUNGEON7_ENTRY_STORY, DUNGEON7_FINAL_STORY } fro
 import { Dungeon7RescueStory } from "../../components/Dungeon7RescueStory";
 import { DUNGEON8_CLUE_STORIES, DUNGEON8_ENTRY_STORY, DUNGEON8_FINAL_STORY } from "../../data/stories/dungeon8Stories";
 import { DUNGEON9_CLUE_STORIES } from "../../data/stories/dungeon9Stories";
-import { Dungeon9ScriptedEncounter } from "../../components/Dungeon9ScriptedEncounter";
+import { DUNGEON9_SCRIPTED_ATTACK_DAMAGE, Dungeon9ScriptedEncounter } from "../../components/Dungeon9ScriptedEncounter";
 import { DUNGEON10_ENTRY_STORY } from "../../data/stories/dungeon10Stories";
 import { DUNGEON1_ENTRY_STORY, DUNGEON1_FINAL_STORY } from "../../data/stories/dungeon1Chapter2Stories";
 import { DUNGEON2_CLUE_STORIES, DUNGEON2_ENTRY_STORY, DUNGEON2_FINAL_STORY } from "../../data/stories/dungeon2Chapter2Stories";
@@ -1159,6 +1159,60 @@ export function DungeonScreen({
         resolve();
       }
     });
+  };
+
+  const prepareDungeon9ScriptedMonster = async () => {
+    const visuals = visualsRef.current;
+    if (!visuals) return;
+    visuals.monsterRoot.visible = false;
+    visuals.monster.reset();
+    monsterPositionTargetRef.current.set(0, 0.05, -5);
+    await applyMonsterVisual(getMonsterVisualDefinition("dungeon9-corrupted-citizen"));
+  };
+
+  const revealDungeon9ScriptedMonster = () => {
+    const visuals = visualsRef.current;
+    if (!visuals) return;
+    visuals.monster.reset();
+    visuals.monsterRoot.visible = true;
+  };
+
+  const hideDungeon9ScriptedMonster = () => {
+    if (visualsRef.current) visualsRef.current.monsterRoot.visible = false;
+  };
+
+  const playDungeon9ScriptedEnemyAttack = async () => {
+    const visuals = visualsRef.current;
+    if (!visuals) return;
+    await visuals.monster.play("attack", () => {
+      if (!mountedRef.current) return;
+      playRandomizedOneShot(HIT_SFX_URL);
+      playerHpRef.current = 0;
+      setPlayerHp(0);
+      setFloatingText(`-${DUNGEON9_SCRIPTED_ATTACK_DAMAGE}`);
+      setDamageFlash(true);
+      window.setTimeout(() => {
+        if (!mountedRef.current) return;
+        setFloatingText(null);
+        setDamageFlash(false);
+      }, 240);
+    });
+  };
+
+  const playDungeon9FullHeal = () => {
+    playerHpRef.current = maxHp;
+    setPlayerHp(maxHp);
+    playRandomizedOneShot(HEAL_SFX_URL);
+  };
+
+  const playDungeon9ScriptedStrike = async () => {
+    const visuals = visualsRef.current;
+    if (!visuals) return;
+    playRandomizedOneShot(HIT_SFX_URL);
+    await visuals.monster.play("scriptedShake");
+    if (!mountedRef.current) return;
+    await visuals.monster.play("defeat");
+    visuals.monsterRoot.visible = false;
   };
 
   const playDungeon10PlayerAttack = (): Promise<void> => {
@@ -2914,7 +2968,13 @@ export function DungeonScreen({
           }} />
       </div>}
       {objectiveEvent === "first" && floorId === "floor-9" && <div className="dungeon-story-overlay">
-        <Dungeon9ScriptedEncounter playerName={playerState.name || DEFAULT_PLAYER_NAME} playerState={playerState} setPlayerState={setPlayerState}
+        <Dungeon9ScriptedEncounter playerName={playerState.name || DEFAULT_PLAYER_NAME} playerState={playerState}
+          prepareMonster={prepareDungeon9ScriptedMonster}
+          revealMonster={revealDungeon9ScriptedMonster}
+          playEnemyAttack={playDungeon9ScriptedEnemyAttack}
+          playPlayerStrike={playDungeon9ScriptedStrike}
+          playFullHeal={playDungeon9FullHeal}
+          hideMonster={hideDungeon9ScriptedMonster}
           onComplete={() => {
             playerHpRef.current = maxHp; setPlayerHp(maxHp); onStoryEventSeen("floor-9:tenth-floor-door-opened");
             onObjectiveAcquired(runCorrectCountRef.current); setObjectiveEvent(null); onFloorCleared(); onNavigate("baseCamp");

@@ -5,6 +5,7 @@ type MonsterAnimation =
   | "criticalHit"
   | "miss"
   | "attack"
+  | "scriptedShake"
   | "stagger"
   | "defeat"
   | "escape";
@@ -23,6 +24,7 @@ const DURATIONS: Record<MonsterAnimation, number> = {
   criticalHit: 0.48,
   miss: 0.34,
   attack: 0.62,
+  scriptedShake: 2,
   stagger: 0.42,
   defeat: 0.7,
   escape: 0.75,
@@ -126,6 +128,9 @@ export class MonsterAnimationController {
       case "attack":
         this.mesh.position.z += pulse * 1.15;
         this.mesh.position.y += pulse * 0.08;
+        break;
+      case "scriptedShake":
+        this.mesh.position.x += Math.sin(t * Math.PI * 24) * 0.18;
         break;
       case "stagger":
         this.mesh.position.x += Math.sin(t * Math.PI * 5) * 0.11;

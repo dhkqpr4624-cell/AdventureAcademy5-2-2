@@ -102,6 +102,7 @@ export const DUNGEON9_FINAL_STORY: StorySequence = {
 export const DUNGEON9_BLESSING_STORY: StorySequence = {
   id: "dungeon9-blessing-story", title: "데네브의 가호", replayable: false, skippable: false, dialogueSkip: false, onCompleteScreen: "dungeon", backgrounds: {}, actors,
   scenes: [{ id: "blessing", steps: [
+    { id: "d9-blessing-black-delay", type: "wait", durationMs: 1500, advanceMode: "auto" },
     ...imageIn("d9-blessing", "deneb-blessing-illustration.png"),
     d("d9-blessing-1", "deneb", "(플레이어 이름)!! 정신 차리세요!", "angry"),
     d("d9-blessing-2", "deneb", "이 곳에서 당신을 잃을 수 없습니다!", "angry"),

@@ -12,7 +12,7 @@ import { NPC_BY_ID } from "./game/npc/npcDefinitions";
 import { QUEST_DEFINITIONS } from "./game/quest/questDefinitions";
 import { getQuestRareRewardCondition } from "./game/quest/questRareRewardConditions";
 import { completeQuestStateAfterRewardClaim } from "./game/quest/questRewardCompletionResolver";
-import { getDungeon9ScriptedCommands, resolveDungeon9BlessingHeal, resolveDungeon9ScriptedKnockout, DUNGEON9_SCRIPTED_ATTACK_DAMAGE, DUNGEON9_SCRIPTED_SHAKE_MS } from "./components/Dungeon9ScriptedEncounter";
+import { getDungeon9ScriptedCommands, resolveDungeon9BlessingHeal, resolveDungeon9ScriptedKnockout, DUNGEON9_MONSTER_APPEAR_DELAY_MS, DUNGEON9_SCRIPTED_ATTACK_DAMAGE, DUNGEON9_SCRIPTED_SHAKE_MS } from "./components/Dungeon9ScriptedEncounter";
 import { prepareFloorDungeonMap } from "./screens/DungeonScreen/DungeonScreen";
 import type { StorySequence, StoryStep } from "./types/story";
 
@@ -48,11 +48,14 @@ export function runDungeon9ContentChecks(): void {
   assert(DUNGEON9_BLESSING_STORY.dialogueSkip === false && DUNGEON9_POST_COMBAT_STORY.dialogueSkip === false, "encounter story skip disabled");
   assert(dialogueSteps(DUNGEON9_FINAL_STORY).length === 13, "final pre-encounter dialogue count");
   assert(dialogueSteps(DUNGEON9_POST_COMBAT_STORY).length === 7, "post combat dialogue count");
-  assert(DUNGEON9_SCRIPTED_ATTACK_DAMAGE === 100 && DUNGEON9_SCRIPTED_SHAKE_MS === 2000, "scripted damage and shake timing");
+  assert(DUNGEON9_SCRIPTED_ATTACK_DAMAGE === 100 && DUNGEON9_SCRIPTED_SHAKE_MS === 2000 && DUNGEON9_MONSTER_APPEAR_DELAY_MS === 1000, "scripted damage and transition timing");
   const samplePlayer = { name: "검사", currentHp: 37, maxHp: 143, gold: 0 };
   assert(resolveDungeon9ScriptedKnockout(samplePlayer).currentHp === 0, "scripted attack forces exact zero HP");
   assert(resolveDungeon9BlessingHeal({ ...samplePlayer, currentHp: 0 }).currentHp === samplePlayer.maxHp, "blessing restores max HP");
-  assert(getDungeon9ScriptedCommands("command").join(",") === "공격한다" && getDungeon9ScriptedCommands("enemyAttack").length === 0, "attack-only command state");
+  assert(getDungeon9ScriptedCommands("command").join(",") === "공격한다" && getDungeon9ScriptedCommands("enemyTurn").length === 0, "attack-only command state");
+  const blessingSteps = DUNGEON9_BLESSING_STORY.scenes.flatMap((scene) => scene.steps);
+  assert(blessingSteps[0]?.type === "wait" && blessingSteps[0].durationMs === 1500, "blackout waits before blessing illustration");
+  assert(dialogueSteps(DUNGEON9_BLESSING_STORY).map((step) => `${step.speakerName}:${step.expression}:${step.text}`).join("|") === "데네브:angry:(플레이어 이름)!! 정신 차리세요!|데네브:angry:이 곳에서 당신을 잃을 수 없습니다!", "blessing dialogue order and expression");
 
   assert(getMonsterVisualDefinition("goryeo-spirit").name === "균열 침식 대한 제국군", "normal monster one");
   assert(getMonsterVisualDefinition("dungeon9-seo-jae-pil").name === "균열 침식 독립 협회 서재필", "normal monster two");

@@ -10,7 +10,6 @@ import { PlayerStatusBar } from "../../components/PlayerStatusBar";
 import { BASE_CAMP_MAP } from "../../data/baseCampMap";
 import { NPC_STORY_SEQUENCES } from "../../data/stories/npcStories";
 import type { NpcDefinition } from "../../game/npc/npcTypes";
-import { NPC_BY_ID } from "../../game/npc/npcDefinitions";
 import { resolveNpcStorySequence } from "../../game/npc/npcStoryResolver";
 import type { PlayerState } from "../../game/player/playerState";
 import { QUEST_DEFINITIONS } from "../../game/quest/questDefinitions";
@@ -119,7 +118,6 @@ export function BaseCampScreen({
   const dungeon7RewardClaimProcessingRef = useRef(false);
   const dungeon8RewardClaimProcessingRef = useRef(false);
   const dungeon9RewardClaimProcessingRef = useRef(false);
-  const floor9AutoStoryStartedRef = useRef(false);
   const dialogueCompletedRef = useRef(false);
   const [focusPointId, setFocusPointId] = useState("campCenter");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -224,17 +222,6 @@ export function BaseCampScreen({
   const interactionLocked = Boolean(
     storySequenceId || questDetail || floorListOpen || inventoryOpen || shopOpen || cameraTransitioning,
   );
-
-  useEffect(() => {
-    if (floor9AutoStoryStartedRef.current || !hasClearedFloor9 || effectiveQuestState[floor9QuestId] !== "active" || rewardRevealed[floor9QuestId]) return;
-    floor9AutoStoryStartedRef.current = true;
-    const deneb = NPC_BY_ID.denebCommander;
-    setSelectedNpc(deneb);
-    setFocusPointId(deneb.baseCampSpawnId);
-    dialogueCompletedRef.current = false;
-    setStorySequenceId("npc-deneb-floor-9-quest-complete");
-    void viewportRef.current?.focus(deneb.baseCampSpawnId, 550);
-  }, [effectiveQuestState, floor9QuestId, hasClearedFloor9, rewardRevealed]);
 
   const buyItem = (itemId: string) => {
     const result = purchaseShopItem(inventoryState, playerState.gold, itemId);
