@@ -1058,7 +1058,12 @@ export function DungeonScreen({
         monsterPositionTargetRef.current,
         positionBlend,
       );
-      monsterBillboard.lookAt(camera.position);
+      if (monsterBillboard.userData.monsterId === "dungeon9-corrupted-citizen") {
+        // A camera-parallel plane preserves the source aspect after projection.
+        monsterBillboard.quaternion.copy(camera.quaternion);
+      } else {
+        monsterBillboard.lookAt(camera.position);
+      }
       renderer.render(scene, camera);
       animationFrameId = window.requestAnimationFrame(render);
     };
@@ -1118,6 +1123,7 @@ export function DungeonScreen({
           texture.generateMipmaps = false;
           const previousTexture = visuals.monsterTexture;
           visuals.monsterTexture = texture;
+          visuals.monsterRoot.userData.monsterId = definition.id;
           visuals.monsterMesh.material.map = texture;
           visuals.monsterMesh.material.needsUpdate = true;
           visuals.monsterMesh.scale.set(
@@ -1175,7 +1181,7 @@ export function DungeonScreen({
     visuals.monster.reset();
     const room = getDungeonRoom(currentRoomId);
     monsterPositionTargetRef.current.set(
-      ...applyDungeonEventVisualVerticalOffset(room.explorationCameraPose.lookAt),
+      ...room.explorationCameraPose.lookAt,
     );
     visuals.monsterRoot.position.copy(monsterPositionTargetRef.current);
     await applyMonsterVisual(getMonsterVisualDefinition("dungeon9-corrupted-citizen"));
