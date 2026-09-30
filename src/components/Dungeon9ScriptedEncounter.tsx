@@ -18,7 +18,7 @@ type Props = {
   playerName: string;
   playerState: PlayerState;
   prepareMonster: () => Promise<void>;
-  revealMonster: () => void;
+  revealMonster: () => Promise<void>;
   playEnemyAttack: () => Promise<void>;
   playPlayerStrike: () => Promise<void>;
   playFullHeal: () => void;
@@ -48,10 +48,13 @@ export function Dungeon9ScriptedEncounter({ playerName, playerState, prepareMons
     onComplete();
   };
 
-  useEffect(() => () => {
-    mountedRef.current = false;
-    clearTimers();
-    hideMonster();
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      clearTimers();
+      hideMonster();
+    };
   }, []);
 
   const finishOpeningStory = async () => {
@@ -61,9 +64,12 @@ export function Dungeon9ScriptedEncounter({ playerName, playerState, prepareMons
     await prepareMonster();
     if (!mountedRef.current) return;
     later(() => {
-      revealMonster();
-      setPhase("appearance");
-      actionLockedRef.current = false;
+      void (async () => {
+        await revealMonster();
+        if (!mountedRef.current) return;
+        setPhase("appearance");
+        actionLockedRef.current = false;
+      })();
     }, DUNGEON9_MONSTER_APPEAR_DELAY_MS);
   };
 
@@ -86,6 +92,7 @@ export function Dungeon9ScriptedEncounter({ playerName, playerState, prepareMons
   const completeBlessing = () => {
     if (actionLockedRef.current) return;
     actionLockedRef.current = true;
+    void revealMonster();
     setPhase("healing");
     playFullHeal();
     later(() => { setPhase("command"); actionLockedRef.current = false; }, 1000);

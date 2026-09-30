@@ -1,6 +1,7 @@
 import * as THREE from "three";
 
 type MonsterAnimation =
+  | "appear"
   | "hit"
   | "criticalHit"
   | "miss"
@@ -20,6 +21,7 @@ type ActiveAnimation = {
 };
 
 const DURATIONS: Record<MonsterAnimation, number> = {
+  appear: 0.34,
   hit: 0.34,
   criticalHit: 0.48,
   miss: 0.34,
@@ -112,6 +114,9 @@ export class MonsterAnimationController {
     this.mesh.material.color.set(0xffffff);
 
     switch (type) {
+      case "appear":
+        this.mesh.material.opacity = Math.max(0.01, t);
+        break;
       case "hit":
         this.mesh.position.x += Math.sin(t * Math.PI * 8) * 0.16 * (1 - t);
         this.mesh.material.color.setRGB(1, 1, 1 - pulse * 0.65);

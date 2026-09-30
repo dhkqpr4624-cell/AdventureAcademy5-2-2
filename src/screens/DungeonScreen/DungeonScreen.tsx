@@ -477,6 +477,7 @@ export function DungeonScreen({
   const visualsRef = useRef<CombatVisuals | null>(null);
   const visualAssemblyRef = useRef<DungeonVisualAssembly | null>(null);
   const mountedRef = useRef(true);
+  const dungeon9AttackFeedbackTimerRef = useRef<number | null>(null);
   const fireAttackTimerRef = useRef<number | null>(null);
   const fireAttackResolveRef = useRef<(() => void) | null>(null);
   const processingRef = useRef(false);
@@ -789,6 +790,10 @@ export function DungeonScreen({
     }
     return () => {
       mountedRef.current = false;
+      if (dungeon9AttackFeedbackTimerRef.current !== null) {
+        window.clearTimeout(dungeon9AttackFeedbackTimerRef.current);
+        dungeon9AttackFeedbackTimerRef.current = null;
+      }
       if (fireAttackTimerRef.current !== null) {
         window.clearTimeout(fireAttackTimerRef.current);
         fireAttackTimerRef.current = null;
@@ -813,12 +818,14 @@ export function DungeonScreen({
     if (!visuals) {
       return;
     }
+    // The scripted encounter owns this same plane until its defeat completes.
+    if (floorId === "floor-9" && objectiveEvent === "first") return;
     const showMonster =
       dungeonMode === "combat" &&
       activeCombatRoomId === currentRoomId &&
       !roomProgress[currentRoomId]?.eventCompleted;
     visuals.monsterRoot.visible = showMonster;
-  }, [activeCombatRoomId, currentRoomId, dungeonMode, roomProgress]);
+  }, [activeCombatRoomId, currentRoomId, dungeonMode, roomProgress, floorId, objectiveEvent]);
 
   useEffect(() => {
     visualAssemblyRef.current?.setActiveRoom(currentRoomId);
@@ -1166,15 +1173,26 @@ export function DungeonScreen({
     if (!visuals) return;
     visuals.monsterRoot.visible = false;
     visuals.monster.reset();
-    monsterPositionTargetRef.current.set(0, 0.05, -5);
+    const room = getDungeonRoom(currentRoomId);
+    monsterPositionTargetRef.current.set(
+      ...applyDungeonEventVisualVerticalOffset(room.explorationCameraPose.lookAt),
+    );
+    visuals.monsterRoot.position.copy(monsterPositionTargetRef.current);
     await applyMonsterVisual(getMonsterVisualDefinition("dungeon9-corrupted-citizen"));
+    if (!mountedRef.current || visualsRef.current !== visuals) return;
+    const image = visuals.monsterTexture?.image as HTMLImageElement | undefined;
+    if (!image || !image.complete || image.naturalWidth <= 0 || !visuals.monsterMesh.material.map) {
+      throw new Error("Dungeon9 citizen texture did not load");
+    }
+    await image.decode();
   };
 
-  const revealDungeon9ScriptedMonster = () => {
+  const revealDungeon9ScriptedMonster = async () => {
     const visuals = visualsRef.current;
-    if (!visuals) return;
+    if (!visuals || !visuals.monsterMesh.material.map) return;
     visuals.monster.reset();
     visuals.monsterRoot.visible = true;
+    await visuals.monster.play("appear");
   };
 
   const hideDungeon9ScriptedMonster = () => {
@@ -1191,7 +1209,8 @@ export function DungeonScreen({
       setPlayerHp(0);
       setFloatingText(`-${DUNGEON9_SCRIPTED_ATTACK_DAMAGE}`);
       setDamageFlash(true);
-      window.setTimeout(() => {
+      dungeon9AttackFeedbackTimerRef.current = window.setTimeout(() => {
+        dungeon9AttackFeedbackTimerRef.current = null;
         if (!mountedRef.current) return;
         setFloatingText(null);
         setDamageFlash(false);

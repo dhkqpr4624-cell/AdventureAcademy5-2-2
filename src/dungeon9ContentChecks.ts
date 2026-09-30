@@ -61,6 +61,7 @@ export function runDungeon9ContentChecks(): void {
   assert(getMonsterVisualDefinition("dungeon9-seo-jae-pil").name === "균열 침식 독립 협회 서재필", "normal monster two");
   assert(getMonsterVisualDefinition("vengeful-goryeo-spirit").name === "한 맺힌 명성황후", "elite monster");
   assert(getMonsterVisualDefinition("dungeon9-corrupted-citizen").name === "균열 침식 대한제국 시민", "scripted monster");
+  assert(getMonsterVisualDefinition("dungeon9-corrupted-citizen").image === `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-korean-empire-citizen.png`, "scripted citizen PNG uses Pages base");
   const item = getItemDefinition("armor-tripitaka-koreana");
   assert(item?.name === "대한제국 국기 뱃지" && item.type === "armor" && (item.equipmentStats?.maxHpBonus ?? 0) > 0, "rare armor reward");
   assert(ACHIEVEMENT_DEFINITIONS.some((entry) => entry.id === "achievement-floor-9-rare-reward" && entry.rewardItemId === item.id), "floor 9 achievement mapping");
