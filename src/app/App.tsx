@@ -15,6 +15,7 @@ import { SaveManager } from "../save/SaveManager";
 import { AutoSaveCoordinator } from "../save/AutoSaveCoordinator";
 import { applySaveDataToGameState, createInitialGameSaveState, createSaveDataFromGameState, type GameSaveState } from "../save/saveStateAdapter";
 import type { CurrentSaveData, SaveReason } from "../save/saveTypes";
+import { createDungeon10Checkpoint, resolveDungeon10RestoreSave } from "../save/dungeon10Checkpoint";
 import { PlayerNamePopup } from "../components/PlayerNamePopup";
 import {
   clearCollectionQuestEventFlags,
@@ -45,9 +46,8 @@ export function App() {
   const startedAtRef = useRef(Date.now());
   const coordinatorRef = useRef<AutoSaveCoordinator | null>(null);
   const endingSequenceActiveRef = useRef(false);
-  const dungeon10ReturnSaveRef = useRef<CurrentSaveData | null>(
-    loaded.current.success ? loaded.current.data : null,
-  );
+  const dungeon10RestoreSaveRef = useRef<CurrentSaveData | null>(null);
+  const dungeon10EndingCompletedRef = useRef(false);
   gameRef.current = game;
 
   const snapshot = useCallback(() => createSaveDataFromGameState({
@@ -181,20 +181,14 @@ export function App() {
         setPlayerState={(value) => setGame((current) => ({ ...current, playerState: typeof value === "function" ? value(current.playerState) : value }))}
         inventoryState={game.inventoryState}
         setInventoryState={(value) => setGame((current) => ({ ...current, inventoryState: typeof value === "function" ? value(current.inventoryState) : value }))}
-        questState={game.questState} setQuestState={(value) => setGame((current) => {
-          const nextQuestState = typeof value === "function" ? value(current.questState) : value;
-          if (
-            current.questState["quest-floor-10-final-source"] !== "active" &&
-            nextQuestState["quest-floor-10-final-source"] === "active"
-          ) {
-            dungeon10ReturnSaveRef.current = createSaveDataFromGameState({
-              ...current,
-              currentFloorId: null,
-              currentFloorRun: null,
-            });
-          }
-          return { ...current, questState: nextQuestState };
-        })}
+        questState={game.questState} setQuestState={(value) => setGame((current) => ({ ...current, questState: typeof value === "function" ? value(current.questState) : value }))}
+        onDungeon10QuestCheckpoint={() => {
+          setGame((current) => createDungeon10Checkpoint({
+            ...current,
+            playTimeSeconds: current.playTimeSeconds + Math.floor((Date.now() - startedAtRef.current) / 1000),
+          }));
+          requestSave("storyStarted");
+        }}
         floorUnlockState={game.floorUnlockState} setFloorUnlockState={(value) => setGame((current) => ({ ...current, floorUnlockState: typeof value === "function" ? value(current.floorUnlockState) : value }))}
         storyActionState={game.storyActionState} setStoryActionState={(value) => setGame((current) => ({ ...current, storyActionState: typeof value === "function" ? value(current.storyActionState) : value }))}
         onAutoSave={requestSave}
@@ -259,22 +253,29 @@ export function App() {
         floorQuestStatus={game.questState[activeFloorQuestId]}
         onFloorCleared={() => { setGame((current) => ({ ...current, currentFloorId: null, currentFloorRun: null, playerState: { ...current.playerState, currentHp: current.playerState.maxHp }, clearedFloorIds: [...new Set([...current.clearedFloorIds, activeFloorId])] })); requestSave("floorCleared"); }}
         onDungeon10EndingStarted={() => {
+          if (endingSequenceActiveRef.current) return;
           endingSequenceActiveRef.current = true;
+          dungeon10EndingCompletedRef.current = false;
+          // Cancel any pending autosave so the defeated-boss state is never written.
           coordinatorRef.current?.dispose();
-          const preserved = dungeon10ReturnSaveRef.current;
-          if (preserved) {
-            SaveManager.save({ ...preserved, savedAt: new Date().toISOString() }, "manual");
-          }
+          const restoreSave = resolveDungeon10RestoreSave({
+            ...gameRef.current,
+            playTimeSeconds: gameRef.current.playTimeSeconds + Math.floor((Date.now() - startedAtRef.current) / 1000),
+          });
+          dungeon10RestoreSaveRef.current = restoreSave;
+          // A reload during the ending resumes from the pre-quest checkpoint.
+          SaveManager.save(restoreSave, "manual");
         }}
         onDungeon10EndingComplete={() => {
-          const preserved = dungeon10ReturnSaveRef.current;
-          if (preserved) {
-            const restoredSave = { ...preserved, savedAt: new Date().toISOString() };
-            SaveManager.save(restoredSave, "manual");
-            const restoredGame = applySaveDataToGameState(restoredSave);
-            setGame(restoredGame);
-            gameRef.current = restoredGame;
-          }
+          if (dungeon10EndingCompletedRef.current) return;
+          dungeon10EndingCompletedRef.current = true;
+          const restoreSave = dungeon10RestoreSaveRef.current ?? resolveDungeon10RestoreSave(gameRef.current);
+          const finalSave = { ...restoreSave, savedAt: new Date().toISOString() };
+          SaveManager.save(finalSave, "manual");
+          const restoredGame = applySaveDataToGameState(finalSave);
+          setGame(restoredGame);
+          gameRef.current = restoredGame;
+          dungeon10RestoreSaveRef.current = null;
           endingSequenceActiveRef.current = false;
           startedAtRef.current = Date.now();
           setCurrentScreen("title");

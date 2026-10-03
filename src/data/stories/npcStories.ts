@@ -4,6 +4,7 @@ import { resolveNpcPresentation } from "../../game/npc/npcPresentationResolver";
 import type { NpcId } from "../../game/npc/npcTypes";
 import { createChapter2Actor } from "./chapter2Portraits";
 import { DUNGEON3_OFFER_STORY } from "./dungeon3Chapter2Stories";
+import { DUNGEON10_QUEST_ACTIVE_STORY, DUNGEON10_QUEST_OFFER_STORY } from "./dungeon10Stories";
 
 const chapter2Actors = {
   luna: createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72"),
@@ -170,29 +171,6 @@ export const NPC_STORY_SEQUENCES: Record<string, StorySequence> = {
     { actor: "aron", expression: "serious", text: " 확실히 수상하군요. 어찌 되었든, 던전의 정체를 어느정도 파악했으니, 앞으로 나아가는 수밖에요. " },
     { actor: "aron", expression: "serious", text: " 수고했습니다. 루나, (플레이어 이름). 이제 다음 계획을 세우죠. " },
   ]),
-  "npc-kaiden-floor-10-quest-available": sequence(
-    "npc-kaiden-floor-10-quest-available",
-    "kaiden",
-    "serious",
-    [
-      " (플레이어 이름), 아무래도 이번 층이 마지막이겠지. ",
-      " 무엇일진 모르겠지만, 10층 문 너머에 이 포탈의 원흉이 있을 것이다. ",
-      " 그것이 무엇이든 우리는 그것을 쓰러뜨리고 포탈을 소멸시켜야 해.",
-      " (플레이어 이름), 힘든 싸움이 될 것이다. 준비 됐나? ",
-    ],
-  ),
-  "npc-kaiden-floor-10-quest-accepted": sequence(
-    "npc-kaiden-floor-10-quest-accepted",
-    "kaiden",
-    "serious",
-    [" 좋아. 그러면 장비와 포션을 다시 한 번 점검하고 출발하도록 하지. "],
-  ),
-  "npc-kaiden-floor-10-quest-active": sequence(
-    "npc-kaiden-floor-10-quest-active",
-    "kaiden",
-    "serious",
-    [" 좋아. 그러면 장비와 포션을 다시 한 번 점검하고 출발하도록 하지. "],
-  ),
   "npc-luna-default": sequence("npc-luna-default", "luna", "happy", [
     "{{playerName}}! 던전은 항상 내가 먼저 정찰하고 있어. 필요한 게 있으면 언제든지 말해!",
   ]),
@@ -657,3 +635,6 @@ NPC_STORY_SEQUENCES["npc-deneb-floor-7-quest-complete"].scenes[0].steps.push(
   { id: "d7-ready-b2", type: "dialogue", speakerId: "deneb", speakerName: "데네브", activeActorId: "deneb", expression: "smile", text: "그래도 함께라면 해낼 수 있겠죠. 당신을 믿어요, (플레이어 이름).", nextStepId: "d7-complete-end", advanceMode: "click" },
   { id: "d7-complete-end", type: "wait", durationMs: 0, advanceMode: "auto" },
 );
+
+NPC_STORY_SEQUENCES[DUNGEON10_QUEST_OFFER_STORY.id] = DUNGEON10_QUEST_OFFER_STORY;
+NPC_STORY_SEQUENCES[DUNGEON10_QUEST_ACTIVE_STORY.id] = DUNGEON10_QUEST_ACTIVE_STORY;

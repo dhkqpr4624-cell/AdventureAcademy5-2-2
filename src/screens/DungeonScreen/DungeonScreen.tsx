@@ -102,7 +102,7 @@ import { PlayerStatusBar } from "../../components/PlayerStatusBar";
 import { ItemIcon } from "../../components/ItemIcon";
 import { getItemDefinition } from "../../game/inventory/itemDefinitions";
 import type { PlayerState } from "../../game/player/playerState";
-import type { CSSProperties, Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { resolvePlayerDamage } from "../../game/player/playerDamageResolver";
 import { DungeonExitButton } from "../../components/DungeonExitButton";
 import { DungeonExitConfirmDialog } from "../../components/DungeonExitConfirmDialog";
@@ -175,7 +175,11 @@ import {
 import { Dungeon10BossPresentation } from "../../three/dungeon/Dungeon10BossPresentation";
 import { selectRequiredStoryRoomIds } from "../../game/dungeon/generation/DungeonGenerator";
 import { BossCombatScreen } from "../BossCombatScreen/BossCombatScreen";
-import { EndingSequenceScreen } from "../EndingSequenceScreen/EndingSequenceScreen";
+import { Dungeon10FinalSequence } from "../Dungeon10Final/Dungeon10FinalSequence";
+import { Dungeon10BossRoomCollapse } from "../../three/dungeon/Dungeon10BossRoomCollapse";
+import { runDungeon10BossEntrance } from "../../game/dungeon10/dungeon10BossEntrance";
+import { DUNGEON10_ASSET_URLS } from "../../game/dungeon10/dungeon10Assets";
+import { playDungeon10Sfx, stopAllDungeon10Sfx } from "../../game/audio/dungeon10ProceduralSfx";
 
 type DungeonScreenProps = {
   floorId: FloorId;
@@ -205,8 +209,7 @@ type DungeonScreenProps = {
 
 const HIT_SFX_URL = `${import.meta.env.BASE_URL}assets/audio/hit-sfx.mp3`;
 const HEAL_SFX_URL = `${import.meta.env.BASE_URL}assets/audio/heal-sfx.mp3`;
-const DUNGEON10_BOSS_IMAGE_URL = `${import.meta.env.BASE_URL}assets/dungeon10/twisted-civilization-golem.png`;
-const DUNGEON10_BOSS_ROAR_SFX_URL = `${import.meta.env.BASE_URL}assets/audio/golem-shouting-sfx.wav`;
+const DUNGEON10_BOSS_IMAGE_URL = DUNGEON10_ASSET_URLS.bossCombat;
 
 export function applyFloorMonsterData(
   map: DungeonMapDefinition,
@@ -476,6 +479,9 @@ export function DungeonScreen({
   const sceneContainerRef = useRef<HTMLDivElement>(null);
   const visualsRef = useRef<CombatVisuals | null>(null);
   const visualAssemblyRef = useRef<DungeonVisualAssembly | null>(null);
+  const dungeon10CollapseRef = useRef<Dungeon10BossRoomCollapse | null>(null);
+  const dungeon10EntranceTokenRef = useRef(0);
+  const dungeon10EntranceTimersRef = useRef(new Set<number>());
   const mountedRef = useRef(true);
   const dungeon9AttackFeedbackTimerRef = useRef<number | null>(null);
   const fireAttackTimerRef = useRef<number | null>(null);
@@ -529,7 +535,7 @@ export function DungeonScreen({
         }
       });
     }
-    if ((floorId === "floor-2" || floorId === "floor-3" || floorId === "floor-4" || floorId === "floor-5" || floorId === "floor-6" || floorId === "floor-7" || floorId === "floor-8") && !shouldRestoreSavedFloorRun && restored[dungeonMap.startRoomId]) {
+    if ((floorId === "floor-2" || floorId === "floor-3" || floorId === "floor-4" || floorId === "floor-5" || floorId === "floor-6" || floorId === "floor-7" || floorId === "floor-8" || floorId === "floor-10") && !shouldRestoreSavedFloorRun && restored[dungeonMap.startRoomId]) {
       restored[dungeonMap.startRoomId] = { roomId: dungeonMap.startRoomId, eventCompleted: false };
     }
     return restored;
@@ -625,7 +631,6 @@ export function DungeonScreen({
   const [finalGateDialogueStep, setFinalGateDialogueStep] =
     useState<0 | 1 | null>(null);
   const [floor10BossPhase, setFloor10BossPhase] = useState<"idle" | "playing" | "combat" | "ending">("idle");
-  const [floor10BossShake, setFloor10BossShake] = useState(false);
 
   const combatQuestionCount =
     activeCombatKind === "elite" ? ELITE_COMBAT_QUESTION_COUNT : 2;
@@ -738,7 +743,10 @@ export function DungeonScreen({
         setDungeonMode("roomEvent");
         setFloor8EntryStoryVisible(true);
       }
-      if (questStoryEnabled && floorId === "floor-10" && currentRoomId === dungeonMap.startRoomId) setFloor10EntryStoryVisible(true);
+      if (questStoryEnabled && floorId === "floor-10" && floorQuestStarted && currentRoomId === dungeonMap.startRoomId && !roomProgressRef.current[dungeonMap.startRoomId]?.eventCompleted) {
+        setDungeonMode("roomEvent");
+        setFloor10EntryStoryVisible(true);
+      }
     }, 3200);
     return () => window.clearTimeout(timer);
   }, []);
@@ -805,12 +813,12 @@ export function DungeonScreen({
 
   useEffect(() => {
     if (floorId !== "floor-10") return;
-    if (floor10BossPhase === "combat") {
+    if (floor10BossPhase === "combat" || floor10BossPhase === "ending") {
+      // The battle theme carries into the Final map until the devourer flees.
       playBgm("boss-battle", undefined, { loop: true, volume: 0.46 });
-      return () => stopBgm("boss-battle");
+      return;
     }
-    if (floor10BossPhase === "ending") stopBgm("boss-battle");
-    else playBgm("dungeon", undefined, { loop: true, volume: 0.42 });
+    playBgm("dungeon", undefined, { loop: true, volume: 0.42 });
   }, [floor10BossPhase, floorId]);
 
   useEffect(() => {
@@ -970,6 +978,10 @@ export function DungeonScreen({
             bossRoom.scale.set(3, 3, 3);
             bossRoom.position.y += FLOOR1_STANDARD_ROOM.height;
           }
+          dungeon10CollapseRef.current?.dispose();
+          dungeon10CollapseRef.current = new Dungeon10BossRoomCollapse(
+            scene, camera, bossRoom ?? null, `floor-10:${dungeonRun.seed}`, renderer.getPixelRatio(),
+          );
         }
         visualAssemblyRef.current = visualAssembly;
         scene.add(visualAssembly.root);
@@ -979,6 +991,13 @@ export function DungeonScreen({
         buildLegacyWorld();
         buildLegacyCorridors();
         scene.add(dungeonWorld);
+        if (floorId === "floor-10" && !visualCancelled) {
+          // Without the textured room only the space backdrop and camera shake remain.
+          dungeon10CollapseRef.current?.dispose();
+          dungeon10CollapseRef.current = new Dungeon10BossRoomCollapse(
+            scene, camera, null, `floor-10:${dungeonRun.seed}`, renderer.getPixelRatio(),
+          );
+        }
       });
 
     const monsterGeometry = new THREE.PlaneGeometry(
@@ -1053,6 +1072,7 @@ export function DungeonScreen({
       weapon.update(delta);
       monsterAnimation.update(delta);
       bossPresentation.update(delta);
+      dungeon10CollapseRef.current?.update(performance.now());
       const positionBlend = 1 - Math.exp(-MONSTER_POSITION_RESPONSE * delta);
       monsterBillboard.position.lerp(
         monsterPositionTargetRef.current,
@@ -1077,6 +1097,12 @@ export function DungeonScreen({
       visualsRef.current = null;
       dungeonCamera.dispose();
       bossPresentation.dispose();
+      dungeon10EntranceTokenRef.current += 1;
+      dungeon10EntranceTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+      dungeon10EntranceTimersRef.current.clear();
+      dungeon10CollapseRef.current?.dispose();
+      dungeon10CollapseRef.current = null;
+      if (floorId === "floor-10") stopAllDungeon10Sfx(100);
       monsterAnimation.dispose();
       weapon.dispose();
       sword.dispose();
@@ -2006,6 +2032,40 @@ export function DungeonScreen({
     setDungeonMode("exploration");
   };
 
+  /** Boss-room first entry: hold → camera shake → crack ×2 → shatter → space → boss → BossCombat. */
+  const playDungeon10BossEntrance = (presentation: Dungeon10BossPresentation) => {
+    const token = ++dungeon10EntranceTokenRef.current;
+    const isCancelled = () => !mountedRef.current || token !== dungeon10EntranceTokenRef.current;
+    void presentation.preload(DUNGEON10_BOSS_IMAGE_URL);
+    const hold = (durationMs: number) => new Promise<void>((resolve) => {
+      const timer = window.setTimeout(() => {
+        dungeon10EntranceTimersRef.current.delete(timer);
+        resolve();
+      }, durationMs);
+      dungeon10EntranceTimersRef.current.add(timer);
+    });
+    void runDungeon10BossEntrance({
+      hold,
+      cameraShake: (durationMs) => dungeon10CollapseRef.current?.shakeCamera(durationMs) ?? hold(durationMs),
+      crack1: () => {
+        playDungeon10Sfx("crack1");
+        dungeon10CollapseRef.current?.setStage("crack1");
+      },
+      crack2: () => {
+        playDungeon10Sfx("crack2");
+        dungeon10CollapseRef.current?.setStage("crack2");
+      },
+      shatter: () => {
+        playDungeon10Sfx("shatter");
+        dungeon10CollapseRef.current?.shatter();
+      },
+      bossAppear: () => presentation.appear(DUNGEON10_BOSS_IMAGE_URL),
+      combat: () => {
+        if (!isCancelled()) setFloor10BossPhase("combat");
+      },
+    }, isCancelled);
+  };
+
   const handleRoomEntered = (roomId: string) => {
     if (roomEventProcessingRef.current) {
       return;
@@ -2021,16 +2081,7 @@ export function DungeonScreen({
           return;
         }
         setFloor10BossPhase("playing");
-        void presentation.play(DUNGEON10_BOSS_IMAGE_URL, async () => {
-          if (DUNGEON10_BOSS_ROAR_SFX_URL) {
-            playRandomizedOneShot(DUNGEON10_BOSS_ROAR_SFX_URL);
-          }
-          setFloor10BossShake(true);
-          await new Promise<void>((resolve) => window.setTimeout(resolve, 3000));
-          if (mountedRef.current) setFloor10BossShake(false);
-        }).then(() => {
-          if (mountedRef.current) setFloor10BossPhase("combat");
-        });
+        playDungeon10BossEntrance(presentation);
         return;
       }
       if (questStoryEnabled && floorId === "floor-6") {
@@ -2222,6 +2273,11 @@ export function DungeonScreen({
   const restartTestDungeon = (restoreHp = true) => {
     visualsRef.current?.dungeonCamera.cancel();
     if (floorId === "floor-10") {
+      dungeon10EntranceTokenRef.current += 1;
+      dungeon10EntranceTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+      dungeon10EntranceTimersRef.current.clear();
+      dungeon10CollapseRef.current?.reset();
+      stopAllDungeon10Sfx(100);
       visualsRef.current?.bossPresentation.reset();
       setFloor10BossPhase("idle");
       setBossQuizAttemptSeed(createBossQuizAttemptSeed());
@@ -2390,12 +2446,7 @@ export function DungeonScreen({
     >
       <div
         ref={sceneContainerRef}
-        className={`dungeon-scene ${floor10BossShake ? "story-camera is-shaking" : ""}`}
-        style={floor10BossShake ? {
-          "--story-shake-amplitude": "12px",
-          "--story-shake-duration": "1000ms",
-          animationIterationCount: 3,
-        } as CSSProperties : undefined}
+        className="dungeon-scene"
         aria-label="고정 테스트 던전"
       />
       {attackVfxVisible && <div className={attackVfxVisible === "water-thunderbolt" ? "weapon-water-vfx" : attackVfxVisible === "ink-brush-attack" ? "weapon-ink-brush-vfx" : attackVfxVisible === "powerful-impact" ? "weapon-powerful-impact-vfx" : "wooden-wand-fire-vfx"} style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/combat/vfx/${attackVfxVisible === "water-thunderbolt" ? "water-blade-slash.png" : attackVfxVisible === "ink-brush-attack" ? "ink-brush-attack.png" : attackVfxVisible === "powerful-impact" ? "powerful-impact.png" : "fire-attack.png"})` }} aria-hidden="true" />}
@@ -2741,8 +2792,8 @@ export function DungeonScreen({
       )}
 
       {floorId === "floor-10" && floor10BossPhase === "ending" && (
-        <EndingSequenceScreen
-          playerName={playerState.name || "플레이어"}
+        <Dungeon10FinalSequence
+          playerName={playerState.name || DEFAULT_PLAYER_NAME}
           onComplete={onDungeon10EndingComplete}
         />
       )}
@@ -2920,6 +2971,10 @@ export function DungeonScreen({
       {floor10EntryStoryVisible && floorId === "floor-10" && <div className="dungeon-story-overlay">
         <StoryPlayer sequence={DUNGEON10_ENTRY_STORY} playerName={playerState.name || DEFAULT_PLAYER_NAME} playerStatus={playerState}
           presentationMode="baseCampOverlay" onNavigate={onNavigate} onComplete={() => {
+            if (!roomProgressRef.current[dungeonMap.startRoomId]?.eventCompleted) {
+              const next = completeRoomEvent(roomProgressRef.current, dungeonMap.startRoomId);
+              roomProgressRef.current = next; setRoomProgress(next);
+            }
             setFloor10EntryStoryVisible(false);
             setDungeonMode("exploration");
           }} />

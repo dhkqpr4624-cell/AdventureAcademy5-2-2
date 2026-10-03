@@ -9,6 +9,7 @@ import type { ScreenId } from "../../app/routes";
 import { PlayerStatusBar } from "../../components/PlayerStatusBar";
 import { BASE_CAMP_MAP } from "../../data/baseCampMap";
 import { NPC_STORY_SEQUENCES } from "../../data/stories/npcStories";
+import { DUNGEON10_QUEST_OFFER_STORY_ID } from "../../data/stories/dungeon10Stories";
 import type { NpcDefinition } from "../../game/npc/npcTypes";
 import { resolveNpcStorySequence } from "../../game/npc/npcStoryResolver";
 import type { PlayerState } from "../../game/player/playerState";
@@ -81,6 +82,8 @@ type BaseCampScreenProps = {
   achievementReceived: Record<string, boolean>;
   setAchievementReceived: (achievementId: string) => void;
   clearedFloorIds: readonly string[];
+  /** Called right before Deneb's Dungeon10 offer story starts (quest still available). */
+  onDungeon10QuestCheckpoint?: () => void;
 };
 
 export function BaseCampScreen({
@@ -107,6 +110,7 @@ export function BaseCampScreen({
   achievementReceived,
   setAchievementReceived,
   clearedFloorIds,
+  onDungeon10QuestCheckpoint,
 }: BaseCampScreenProps) {
   const viewportRef = useRef<BaseCampViewportController>(null);
   const interactionLockRef = useRef(false);
@@ -316,6 +320,13 @@ export function BaseCampScreen({
               if (dungeon3Done && resolved === "npc-jeon-default") return "npc-kapp-post-dungeon3-default";
               return resolved;
             })();
+    if (
+      npc.id === "denebCommander" &&
+      sequenceId === DUNGEON10_QUEST_OFFER_STORY_ID &&
+      effectiveQuestState[floor10QuestId] === "available"
+    ) {
+      onDungeon10QuestCheckpoint?.();
+    }
     setStorySequenceId(sequenceId);
     interactionLockRef.current = false;
   };

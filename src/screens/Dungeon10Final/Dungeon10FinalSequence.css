@@ -1,0 +1,255 @@
+/* Dungeon10 Final Story: layered above the dungeon scene and its combat UI. */
+.d10-final {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  color: #fff8e8;
+}
+
+.d10-final-cover,
+.d10-final-backdrop {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.d10-final-cover {
+  z-index: 1;
+  transition: opacity 500ms ease;
+}
+
+.d10-final-cover.is-visible {
+  opacity: 1;
+}
+
+.d10-final-map {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--d10-map-fade, 1000ms) ease;
+}
+
+.d10-final-map.is-visible {
+  opacity: 1;
+}
+
+.d10-final-map .final-map-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.d10-final-backdrop {
+  z-index: 3;
+  transition: opacity var(--d10-backdrop-fade, 900ms) ease;
+}
+
+.d10-final-backdrop.is-visible {
+  opacity: 1;
+}
+
+.d10-final-illust {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--d10-illust-fade, 700ms) ease;
+}
+
+.d10-final-illust.is-visible {
+  opacity: 1;
+}
+
+.d10-final-illust img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.d10-final-story {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+}
+
+.d10-final-story > .story-player {
+  height: 100%;
+}
+
+.d10-final-story .story-background-shade {
+  background: transparent;
+}
+
+.d10-final-attack {
+  position: absolute;
+  z-index: 6;
+  inset: 0;
+  display: grid;
+  place-content: end center;
+  padding-bottom: max(14vh, 64px);
+  pointer-events: none;
+}
+
+.d10-final-attack button {
+  min-width: min(78vw, 320px);
+  padding: 16px 28px;
+  border: 2px solid #ffd27a;
+  border-radius: 10px;
+  color: #fff;
+  font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+  font-weight: 800;
+  letter-spacing: .04em;
+  background: rgba(24, 12, 30, .94);
+  box-shadow: 0 0 0 4px rgba(255, 210, 122, .18), 0 10px 28px rgba(0, 0, 0, .45);
+  pointer-events: auto;
+  cursor: pointer;
+  animation: d10-attack-pulse 1.4s ease-in-out infinite;
+}
+
+.d10-final-attack button:disabled {
+  opacity: .6;
+  animation: none;
+}
+
+@keyframes d10-attack-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* Credits */
+.d10-credits {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  background: #000;
+  opacity: 1;
+  transition: opacity 1400ms ease;
+  animation: d10-credits-in 900ms ease both;
+}
+
+.d10-credits.is-fading-out {
+  opacity: 0;
+}
+
+@keyframes d10-credits-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.d10-credits-viewport {
+  position: relative;
+  grid-column: 1;
+  grid-row: 1;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 45%, #141220, #020203 72%);
+}
+
+.d10-credits-track {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  padding: 0 clamp(18px, 5vw, 80px);
+  text-align: center;
+  transform: translate3d(0, 100vh, 0);
+  will-change: transform;
+}
+
+.d10-credit-section {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: clamp(56px, 13vh, 140px) 0;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+.d10-credit-section h1,
+.d10-credit-section h2,
+.d10-credit-section p {
+  margin: 0;
+}
+
+.d10-credit-section h1 {
+  color: #f2d58a;
+  font-size: clamp(1.7rem, 4.2vw, 3.6rem);
+  letter-spacing: .08em;
+  line-height: 1.2;
+}
+
+.d10-credit-section h2 {
+  color: #e8c56f;
+  font-size: clamp(1.25rem, 2.6vw, 2.2rem);
+  letter-spacing: .05em;
+  line-height: 1.3;
+}
+
+.d10-credit-section p {
+  color: #ede6d6;
+  font-size: clamp(1rem, 1.7vw, 1.3rem);
+  line-height: 1.7;
+}
+
+.d10-credit-section strong {
+  color: #fff3ca;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  line-height: 1.6;
+}
+
+.d10-credit-section.is-opening h2 {
+  color: #fff3ca;
+}
+
+.d10-credit-section.is-hero strong {
+  font-size: clamp(1.6rem, 3.6vw, 2.8rem);
+}
+
+.d10-credit-spacer {
+  display: block;
+  height: .7em;
+}
+
+.d10-credits-images {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, #1b1824, #040405 70%);
+}
+
+.d10-credits-images img {
+  position: absolute;
+  inset: 4% 4%;
+  width: 92%;
+  height: 92%;
+  object-fit: contain;
+  opacity: 0;
+}
+
+@media (max-width: 760px), (max-aspect-ratio: 1/1) {
+  .d10-credits {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 38%) minmax(0, 1fr);
+  }
+
+  .d10-credits-images {
+    grid-column: 1;
+    grid-row: 1;
+    border-bottom: 1px solid rgb(255 255 255 / 10%);
+  }
+
+  .d10-credits-viewport {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}

@@ -31,6 +31,12 @@ import {
 import type { PlayerState } from "../../game/player/playerState";
 import type { QuestionResult } from "../../types/question";
 import { QuestionScreen } from "../QuestionScreen/QuestionScreen";
+import {
+  DUNGEON10_BOSS_NAME,
+  DUNGEON10_MAX_SUPPORT_COUNT,
+  DUNGEON10_SUPPORT_NPCS,
+  type Dungeon10SupportNpc,
+} from "../../game/dungeon10/dungeon10Assets";
 import "./BossCombatScreen.css";
 
 type BossCombatPhase =
@@ -46,17 +52,10 @@ type BossCombatPhase =
   | "gameOver"
   | "complete";
 
-type SupportNpc = {
-  name: "루나" | "카이든" | "테오";
-  subject: string;
-  imageUrl: string;
-};
+type SupportNpc = Dungeon10SupportNpc;
 
-const SUPPORT_NPCS: readonly SupportNpc[] = [
-  { name: "루나", subject: "루나가", imageUrl: `${import.meta.env.BASE_URL}assets/dungeon10/support/luna-support.png` },
-  { name: "카이든", subject: "카이든이", imageUrl: `${import.meta.env.BASE_URL}assets/dungeon10/support/kaiden-support.png` },
-  { name: "테오", subject: "테오가", imageUrl: `${import.meta.env.BASE_URL}assets/dungeon10/support/theo-support.png` },
-];
+/** Dungeon10 help candidates (Deneb, Karp, Aron), picked uniformly at random. */
+const SUPPORT_NPCS: readonly SupportNpc[] = DUNGEON10_SUPPORT_NPCS;
 
 type BossCombatScreenProps = {
   seed: string;
@@ -143,7 +142,7 @@ export function BossCombatScreen({
   };
 
   const beginNpcSupport = (continuation: () => void) => {
-    if (supportCountRef.current >= 2) {
+    if (supportCountRef.current >= DUNGEON10_MAX_SUPPORT_COUNT) {
       setPhase("gameOver");
       onGameOver();
       return;
@@ -340,7 +339,7 @@ export function BossCombatScreen({
       <section className="boss-combat-layer" aria-label="Dungeon10 보스 전투">
         <header className="boss-combat-hud">
           <p className="eyebrow">BOSS COMBAT</p>
-          <h1>뒤틀린 문명의 골렘</h1>
+          <h1>{DUNGEON10_BOSS_NAME}</h1>
           <small>15개의 문제를 해결하라</small>
         </header>
         <CombatDialoguePanel mode="question" statusBar={statusBar}>
@@ -370,7 +369,7 @@ export function BossCombatScreen({
       )}
       <header className="boss-combat-hud">
         <p className="eyebrow">BOSS COMBAT</p>
-        <h1>뒤틀린 문명의 골렘</h1>
+        <h1>{DUNGEON10_BOSS_NAME}</h1>
         <small>{phase === "complete" ? "전투 종료" : "공격 중"}</small>
       </header>
       <CombatDialoguePanel

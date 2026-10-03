@@ -2,11 +2,19 @@ import * as THREE from "three";
 import { DungeonCameraController } from "./DungeonCameraController";
 import { MonsterAnimationController } from "../monster/MonsterAnimationController";
 
-const wait = (durationMs: number) => new Promise<void>((resolve) => window.setTimeout(resolve, durationMs));
+const BOSS_PLANE_HEIGHT = 18;
+const BOSS_FACE_TARGET = new THREE.Vector3(0, 7.5, -57);
+const APPEAR_FADE_MS = 900;
+const TILT_MS = 1500;
 
+/**
+ * Front-centre boss plane of the Dungeon10 boss room. The plane keeps the
+ * texture's real aspect ratio (uniform X/Y scale) and its bottom rests on the
+ * scaled boss-room floor.
+ */
 export class Dungeon10BossPresentation {
   private readonly root = new THREE.Group();
-  private readonly geometry = new THREE.PlaneGeometry(17.1, 18);
+  private readonly geometry = new THREE.PlaneGeometry(1, 1);
   private readonly material = new THREE.MeshBasicMaterial({
     transparent: true,
     alphaTest: 0.04,
@@ -16,7 +24,9 @@ export class Dungeon10BossPresentation {
   private readonly plane = new THREE.Mesh(this.geometry, this.material);
   private readonly animation = new MonsterAnimationController(this.plane);
   private texture: THREE.Texture | null = null;
-  private frameId: number | null = null;
+  private loading: Promise<void> | null = null;
+  private loadingUrl: string | null = null;
+  private frameIds = new Set<number>();
   private disposed = false;
 
   constructor(
@@ -28,44 +38,16 @@ export class Dungeon10BossPresentation {
     this.root.position.set(0, 6, -57);
     this.root.visible = false;
     this.plane.renderOrder = 80;
+    this.plane.scale.set(BOSS_PLANE_HEIGHT, BOSS_PLANE_HEIGHT, 1);
     this.root.add(this.plane);
     scene.add(this.root);
   }
 
-  private rotateYaw(yaw: number, duration: number): Promise<void> {
-    return new Promise((resolve) => {
-      this.cameraController.moveAlongSteps([{ type: "rotate", yaw, duration }], {
-        reducedMotion: false,
-        onComplete: resolve,
-      });
-    });
-  }
-
-  private tiltToBossFace(duration: number): Promise<void> {
-    return new Promise((resolve) => {
-      const startedAt = performance.now();
-      const fromPitch = this.camera.rotation.x;
-      const target = new THREE.Vector3(0, 11.2, -57);
-      const direction = target.sub(this.camera.position).normalize();
-      const targetPitch = Math.asin(direction.y);
-      const animate = (now: number) => {
-        if (this.disposed) return;
-        const progress = THREE.MathUtils.clamp((now - startedAt) / duration, 0, 1);
-        const eased = THREE.MathUtils.smoothstep(progress, 0, 1);
-        this.camera.rotation.x = fromPitch + (targetPitch - fromPitch) * eased;
-        if (progress >= 1) {
-          this.frameId = null;
-          resolve();
-          return;
-        }
-        this.frameId = requestAnimationFrame(animate);
-      };
-      this.frameId = requestAnimationFrame(animate);
-    });
-  }
-
-  private loadBoss(imageUrl: string): Promise<void> {
-    return new Promise((resolve) => {
+  /** Loads and decodes the boss texture once; safe to call repeatedly. */
+  preload(imageUrl: string): Promise<void> {
+    if (this.loading && this.loadingUrl === imageUrl) return this.loading;
+    this.loadingUrl = imageUrl;
+    this.loading = new Promise((resolve) => {
       new THREE.TextureLoader().load(imageUrl, (texture) => {
         if (this.disposed) {
           texture.dispose();
@@ -74,28 +56,60 @@ export class Dungeon10BossPresentation {
         }
         texture.colorSpace = THREE.SRGBColorSpace;
         texture.magFilter = THREE.LinearFilter;
-        texture.minFilter = THREE.LinearFilter;
+        texture.minFilter = THREE.LinearMipmapLinearFilter;
+        const image = texture.image as { width?: number; height?: number } | undefined;
+        const aspect = image?.width && image?.height ? image.width / image.height : 1;
+        this.plane.scale.set(BOSS_PLANE_HEIGHT * aspect, BOSS_PLANE_HEIGHT, 1);
+        this.texture?.dispose();
         this.texture = texture;
         this.material.map = texture;
         this.material.needsUpdate = true;
         resolve();
       }, undefined, () => resolve());
     });
+    return this.loading;
   }
 
-  async play(imageUrl: string, onRoar: () => Promise<void>): Promise<void> {
+  private animate(duration: number, step: (eased: number) => void): Promise<void> {
+    return new Promise((resolve) => {
+      const startedAt = performance.now();
+      let frameId = 0;
+      const tick = (now: number) => {
+        this.frameIds.delete(frameId);
+        if (this.disposed) {
+          resolve();
+          return;
+        }
+        const progress = THREE.MathUtils.clamp((now - startedAt) / duration, 0, 1);
+        step(THREE.MathUtils.smoothstep(progress, 0, 1));
+        if (progress >= 1) {
+          resolve();
+          return;
+        }
+        frameId = requestAnimationFrame(tick);
+        this.frameIds.add(frameId);
+      };
+      frameId = requestAnimationFrame(tick);
+      this.frameIds.add(frameId);
+    });
+  }
+
+  /** Front-centre appearance: fade in while the camera tilts up to the face. */
+  async appear(imageUrl: string): Promise<void> {
     this.cameraController.cancel();
     this.camera.rotation.order = "YXZ";
-    const loaded = this.loadBoss(imageUrl);
-    await this.rotateYaw(THREE.MathUtils.degToRad(100), 1500);
-    await this.rotateYaw(0, 1500);
-    await this.rotateYaw(THREE.MathUtils.degToRad(-100), 1500);
-    await loaded;
+    await this.preload(imageUrl);
+    if (this.disposed) return;
+    this.material.opacity = 0;
     this.root.visible = true;
-    await this.rotateYaw(0, 1500);
-    await wait(1000);
-    await this.tiltToBossFace(1500);
-    await onRoar();
+    const fromPitch = this.camera.rotation.x;
+    const direction = BOSS_FACE_TARGET.clone().sub(this.camera.position).normalize();
+    const targetPitch = Math.asin(direction.y);
+    await Promise.all([
+      this.animate(APPEAR_FADE_MS, (eased) => { this.material.opacity = eased; }),
+      this.animate(TILT_MS, (eased) => { this.camera.rotation.x = fromPitch + (targetPitch - fromPitch) * eased; }),
+    ]);
+    this.material.opacity = 1;
   }
 
   update(deltaTime: number): void {
@@ -111,6 +125,8 @@ export class Dungeon10BossPresentation {
   }
 
   reset(): void {
+    this.frameIds.forEach((id) => cancelAnimationFrame(id));
+    this.frameIds.clear();
     this.animation.reset();
     this.root.visible = false;
   }
@@ -118,7 +134,8 @@ export class Dungeon10BossPresentation {
   dispose(): void {
     this.disposed = true;
     this.cameraController.cancel();
-    if (this.frameId !== null) cancelAnimationFrame(this.frameId);
+    this.frameIds.forEach((id) => cancelAnimationFrame(id));
+    this.frameIds.clear();
     this.animation.dispose();
     this.root.removeFromParent();
     this.texture?.dispose();
