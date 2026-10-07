@@ -17,6 +17,8 @@ import {
   DUNGEON10_BOSS_NAME,
   DUNGEON10_MAX_SUPPORT_COUNT,
   DUNGEON10_SUPPORT_NPCS,
+  FINAL_MAP_BODY_COLUMNS,
+  FINAL_MAP_SOURCE_BOUNDS,
   getGuardFrameAt,
   getGuardFrameCell,
 } from "./game/dungeon10/dungeon10Assets";
@@ -41,8 +43,14 @@ import { changeItemQuantity } from "./game/inventory/inventoryState";
 import { supportsCrackedTiles } from "./three/dungeon/visuals/crackedTileResolver";
 import { Dungeon10BossRoomCollapse, createCrackData } from "./three/dungeon/Dungeon10BossRoomCollapse";
 import {
+  FINAL_MAP_BARRIER_CLEARANCE,
+  FINAL_MAP_BASE_VIEW_WIDTH,
+  FINAL_MAP_BOSS_VISIBLE_LEFT,
   FINAL_MAP_GROUND_Y,
   FINAL_MAP_PARTY_ORDER,
+  FINAL_MAP_PARTY_SCALE,
+  FINAL_MAP_PARTY_VIEW_RANGE,
+  FINAL_MAP_VISIBLE_HEIGHT,
   computeFinalMapView,
   computeGuardOverlayTransform,
   createFinalMapLayout,
@@ -322,6 +330,41 @@ function checkFinalLayout() {
     const view = computeFinalMapView(layout, aspect);
     assert(view.left <= layout.contentLeft && view.right >= layout.contentRight && view.top >= layout.contentTop && Math.abs(view.viewWidth / view.viewHeight - aspect) < 1e-9, `whole cast visible at aspect ${aspect.toFixed(2)}`);
   }
+
+  // Follow-up: smaller party packed on the left, boss unchanged, larger anchored VFX.
+  const PREVIOUS_GUARD_SCALE = 0.013041688678540692;
+  assert(FINAL_MAP_PARTY_SCALE >= 0.8 && FINAL_MAP_PARTY_SCALE <= 0.85, "party shrinks by 15~20%");
+  for (const id of FINAL_MAP_PARTY_ORDER) {
+    const placed = layout.party[id];
+    const [, top, , bottom] = FINAL_MAP_SOURCE_BOUNDS[id].alphaBox;
+    const shown = placed.visibleTop - placed.footY;
+    assert(Math.abs(shown - FINAL_MAP_VISIBLE_HEIGHT[id] * FINAL_MAP_PARTY_SCALE) < 1e-9, `${id} display height = previous × party scale`);
+    assert(Math.abs(placed.planeWidth / placed.planeHeight - FINAL_MAP_SOURCE_BOUNDS[id].width / FINAL_MAP_SOURCE_BOUNDS[id].height) < 1e-9, `${id} keeps its aspect (uniform scale)`);
+    assert(Math.abs(shown - (bottom - top + 1) * placed.unitsPerPixel) < 1e-9, `${id} uses one units-per-pixel on X and Y`);
+  }
+  assert(layout.bossStanding.visibleLeft === FINAL_MAP_BOSS_VISIBLE_LEFT && Math.abs(layout.bossStanding.visibleTop - FINAL_MAP_GROUND_Y - FINAL_MAP_VISIBLE_HEIGHT.boss) < 1e-9, "devourer keeps its previous position and height");
+  assert(Math.abs(layout.bossStanding.centerX - 5.714421207544392) < 1e-9 && Math.abs(layout.bossStanding.planeWidth - 4.838916256157636) < 1e-9, "devourer plane identical to the previous layout");
+  const base = computeFinalMapView(layout, 16 / 9);
+  assert(Math.abs(base.viewWidth - FINAL_MAP_BASE_VIEW_WIDTH) < 1e-9 && base.viewHeight === 10, "16:9 keeps the previous camera framing");
+  const ratio = (x: number) => (x - base.left) / base.viewWidth;
+  assert(ratio(layout.party.theo.visibleLeft) >= FINAL_MAP_PARTY_VIEW_RANGE[0] - 1e-9 && ratio(layout.party.deneb.visibleRight) <= FINAL_MAP_PARTY_VIEW_RANGE[1] + 1e-9, "party fits 8%~46% of the 16:9 view");
+  const bodies = FINAL_MAP_PARTY_ORDER.map((id) => {
+    const placed = layout.party[id];
+    const left = FINAL_MAP_SOURCE_BOUNDS[id].alphaBox[0];
+    const [bodyLeft, bodyRight] = FINAL_MAP_BODY_COLUMNS[id];
+    return [placed.visibleLeft + (bodyLeft - left) * placed.unitsPerPixel, placed.visibleLeft + (bodyRight + 1 - left) * placed.unitsPerPixel] as const;
+  });
+  const gaps = bodies.slice(1).map((body, index) => body[0] - bodies[index]![1]);
+  assert(gaps.every((gap) => gap >= 0.08 && Math.abs(gap - gaps[0]!) < 1e-9), "bodies never overlap and keep one equal gap");
+  const arcLeft = guardFramePointToWorld(transform, { x: DENEB_GUARD_SHEET.barrierExtentPx.left, y: DENEB_GUARD_SHEET.barrierPx.y });
+  assert(arcLeft.x - layout.party.deneb.visibleRight > FINAL_MAP_BARRIER_CLEARANCE * 0.9, "barrier arc stands clear in front of Deneb's right side");
+  const shieldBottom = guardFramePointToWorld(transform, { x: DENEB_GUARD_SHEET.barrierPx.x, y: DENEB_GUARD_SHEET.barrierPx.y + (DENEB_GUARD_SHEET.barrierPx.y - DENEB_GUARD_SHEET.barrierExtentPx.top) });
+  assert(shieldBottom.y >= FINAL_MAP_GROUND_Y - 0.15, "shield does not sink under the ground line");
+  const scaleRatio = transform.scale / PREVIOUS_GUARD_SCALE;
+  assert(scaleRatio > 1.4 && scaleRatio < 2.2, `VFX clearly larger than before (×${scaleRatio.toFixed(2)})`);
+  const clash = ratio(layout.barrier.x);
+  assert(clash > 0.4 && clash < 0.62, `clash lands near the screen centre (${(clash * 100).toFixed(1)}%)`);
+  assert(ratio(transform.frameCenterX - (DENEB_GUARD_SHEET.frameWidth / 2) * transform.scale) > 0 && ratio(transform.frameCenterX + (DENEB_GUARD_SHEET.frameWidth / 2) * transform.scale) < 1, "VFX frame stays inside the 16:9 view");
 }
 
 function checkCredits() {

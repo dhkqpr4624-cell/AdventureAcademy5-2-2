@@ -100,6 +100,8 @@ const ASSETS = [
   ['assets/dungeon10/ending/credits/aron.png', 1670, 942, false, '011500e7e0c092053d5a2bfe76d3f9ae8418d800c5dec91d649ea7a3516265e5'],
   ['assets/dungeon10/ending/credits/karp.png', 1670, 942, false, '7aa80e3caa33903f105ca11fafc88aaff31f672ecc7303a6e3d8380ebaebf56f'],
   ['assets/dungeon10/ending/credits/deneb.png', 1670, 942, false, '2af6148d00b4333fb628568933599e0b5f51c7568daf56a691fb82532fa49042'],
+  // Powerful Impact weapon VFX (replaced in place, canonical path unchanged).
+  ['assets/combat/vfx/powerful-impact.png', 800, 100, true, '97d823c8d093f574b456958b8238acf7bad2dae9b323b6eb2bb55aeee3a00f9d'],
 ];
 
 const report = [];
@@ -160,6 +162,37 @@ for (const [key, published] of Object.entries(FOOT_SOURCES)) {
   footReport[key] = { size: [png.width, png.height], alphaBox: measured, footRow: measured[3] };
 }
 
+// Body columns (alpha >= 32 coverage >= 35% of the visible height) used to pack the party.
+const bodySource = assetsSource.slice(assetsSource.indexOf('FINAL_MAP_BODY_COLUMNS'));
+const bodyReport = {};
+for (const key of ['theo', 'luna', 'karp', 'aron', 'deneb']) {
+  const match = bodySource.match(new RegExp(`${key}: \\[(\\d+), (\\d+)\\]`));
+  assert.ok(match, `body columns for ${key}`);
+  const png = decoded.get(FOOT_SOURCES[key]);
+  const [left, top, right, bottom] = analyze(png, undefined, 32).bbox;
+  const height = bottom - top + 1;
+  const columns = [];
+  for (let x = left; x <= right; x += 1) {
+    let count = 0;
+    for (let y = top; y <= bottom; y += 1) if (png.pixels[(y * png.width + x) * 4 + 3] >= 32) count += 1;
+    if (count / height >= 0.35) columns.push(x);
+  }
+  const measured = [columns[0], columns[columns.length - 1]];
+  assert.deepEqual([Number(match[1]), Number(match[2])], measured, `${key}: body columns match the PNG`);
+  bodyReport[key] = measured;
+}
+
+// Powerful Impact: 8 frames of 100x100, none empty, no pixel touching a frame edge (no bleeding).
+const impact = decoded.get('assets/combat/vfx/powerful-impact.png');
+const impactFrames = [];
+for (let index = 0; index < 8; index += 1) {
+  const stats = analyze(impact, { x: index * 100, y: 0, width: 100, height: 100 });
+  assert.ok(stats.bbox, `impact frame ${index} is not empty`);
+  const [l, t, r, b] = stats.bbox;
+  assert.ok(l > 0 && t > 0 && r < 99 && b < 99, `impact frame ${index} stays inside its 100x100 cell`);
+  impactFrames.push({ index, bbox: stats.bbox, pixels: stats.opaque + stats.partial });
+}
+
 // Optional: confirm byte-identity against the original uploads.
 const uploadDir = process.argv[2];
 let uploadMatches = null;
@@ -170,6 +203,6 @@ if (uploadDir && fs.existsSync(uploadDir)) {
 }
 
 if (process.env.DUNGEON10_ASSET_REPORT) {
-  fs.writeFileSync(process.env.DUNGEON10_ASSET_REPORT, JSON.stringify({ report, frames, footReport, uploadMatches }, null, 2));
+  fs.writeFileSync(process.env.DUNGEON10_ASSET_REPORT, JSON.stringify({ report, frames, footReport, bodyReport, impactFrames, uploadMatches }, null, 2));
 }
-console.log(`Dungeon10 asset checks: ${report.length} PNG PASS; guard sheet 24/24 frames non-empty PASS; foot bounds ${Object.keys(footReport).length} PASS${uploadMatches ? `; ${uploadMatches.length} byte-identical to uploads PASS` : ''}`);
+console.log(`Dungeon10 asset checks: ${report.length} PNG PASS; guard sheet 24/24 frames non-empty PASS; foot bounds ${Object.keys(footReport).length} PASS; body columns ${Object.keys(bodyReport).length} PASS; powerful-impact 8/8 frames PASS${uploadMatches ? `; ${uploadMatches.length} byte-identical to uploads PASS` : ''}`);

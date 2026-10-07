@@ -60,6 +60,20 @@ export const FINAL_MAP_SOURCE_BOUNDS: Readonly<Record<
   bossCharging: { width: 1254, height: 1254, alphaBox: [6, 2, 1253, 1253] },
 };
 
+/**
+ * Horizontal body columns [left, right] of each party PNG: columns whose
+ * alpha >= 32 coverage is at least 35% of the visible height. Weapons, spear
+ * shafts and loose hair are thin and fall outside, so these columns are what
+ * must never overlap when the party is packed side by side.
+ */
+export const FINAL_MAP_BODY_COLUMNS: Readonly<Record<"theo" | "luna" | "karp" | "aron" | "deneb", readonly [number, number]>> = {
+  theo: [354, 871],
+  luna: [49, 713],
+  karp: [125, 888],
+  aron: [274, 949],
+  deneb: [41, 369],
+};
+
 /** Mouth (beam origin) of the charging devourer, in source pixels (y down). */
 export const BOSS_CHARGING_MOUTH_PX = { x: 384, y: 594 } as const;
 
@@ -84,6 +98,8 @@ export const DENEB_GUARD_SHEET = {
   beamStartPx: { x: 320, y: 89 },
   /** Centre of the cyan barrier (median of its pixels, frame pixels, y down). */
   barrierPx: { x: 147, y: 90 },
+  /** Extent of the cyan barrier over all 24 frames (frame pixels, y down). */
+  barrierExtentPx: { left: 96, top: 6, bottom: 173 },
 } as const;
 
 /** Index → [column, row] in left→right, top→bottom order. */
