@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import { getBaseCampMap } from "../../data/baseCampMaps";
+import { NPC_DEFINITIONS } from "../npc/npcDefinitions";
 import {
   BaseCampViewport,
   type BaseCampViewportController,
@@ -25,12 +26,14 @@ export type BaseCampStoryController = {
 type BaseCampStoryAdapterProps = {
   mapId: string;
   onReady: () => void;
+  /** NPC ids excluded from the story map (sprite, name tag, marker and hit area). */
+  hiddenNpcIds?: readonly string[];
 };
 
 export const BaseCampStoryAdapter = forwardRef<
   BaseCampStoryController,
   BaseCampStoryAdapterProps
->(function BaseCampStoryAdapter({ mapId, onReady }, forwardedRef) {
+>(function BaseCampStoryAdapter({ mapId, onReady, hiddenNpcIds }, forwardedRef) {
   const viewportControllerRef = useRef<BaseCampViewportController>(null);
   const [highlightTargetId, setHighlightTargetId] = useState<string | null>(null);
   const map = getBaseCampMap(mapId);
@@ -95,8 +98,15 @@ export const BaseCampStoryAdapter = forwardRef<
         selectedRegionId={null}
         highlightTargetId={highlightTargetId}
         onSelectRegion={() => undefined}
+        visibleNpcIds={resolveStoryVisibleNpcIds(hiddenNpcIds)}
         onReady={onReady}
       />
     </div>
   );
 });
+
+/** Without hidden ids the story map keeps its original behaviour (every NPC definition). */
+export function resolveStoryVisibleNpcIds(hiddenNpcIds?: readonly string[]): readonly string[] | undefined {
+  if (!hiddenNpcIds || hiddenNpcIds.length === 0) return undefined;
+  return NPC_DEFINITIONS.map((npc) => npc.id).filter((id) => !hiddenNpcIds.includes(id));
+}

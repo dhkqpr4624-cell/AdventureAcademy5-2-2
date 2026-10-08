@@ -1,5 +1,11 @@
 import type { StorySequence, StoryStep } from "../../types/story";
 import { createChapter2Actor } from "./chapter2Portraits";
+import denebUnknownSilhouette from "../../assets/portraits/chapter2/deneb/default.png";
+
+/** Dungeon3 hides Deneb's identity: every "???" line uses the existing black silhouette portrait. */
+const unknownDeneb = createChapter2Actor("deneb", "???", "", "#b9c6da");
+/** World NPCs that must not appear on the BaseCamp map while the Dungeon3 completion story plays. */
+export const DUNGEON3_COMPLETION_HIDDEN_BASECAMP_NPC_IDS: readonly string[] = ["denebCommander"];
 
 const actors = {
   luna: createChapter2Actor("luna", "루나", "정찰 담당", "#ff8b72"),
@@ -9,7 +15,7 @@ const actors = {
   commoner: createChapter2Actor("commoner", "상민", "", "#c8a777"),
   sejong: createChapter2Actor("sejong", "세종대왕", "", "#d6b56f"),
   chiefMinister: createChapter2Actor("chiefMinister", "영의정", "", "#c8a777"),
-  deneb: createChapter2Actor("deneb", "???", "", "#b9c6da"),
+  deneb: { ...unknownDeneb, portraits: { default: { ...unknownDeneb.portraits.default, imageUrl: denebUnknownSilhouette } } },
   researcher: createChapter2Actor("researcher", "연구원A", "", "#b9c6da"),
 };
 type ActorId = keyof typeof actors;
@@ -115,7 +121,7 @@ export const DUNGEON3_FLASHBACK = seq("dungeon3-flashback", "7년 전", [
   d("r-14h","deneb"," 미안해요. 이건 내 고집입니다. 여러분을 위험에 빠뜨릴 순 없어요. "),
   d("r-14i","deneb"," 나를 이해해줘요.. "), d("r-14j","aron"," 하지만... ","sad"),
   d("r-15","deneb"," 난 괜찮아요. "),
-  d("r-16","deneb"," 언젠가 이 준비가 되었을 때, 다시 한 번 이 던전을 공략하러 와 주세요. "), d("r-17","deneb"," 이곳에서 여러분을 기다리고 있겠습니다. "),
+  d("r-16","deneb"," 언젠가 준비가 되었을 때, 다시 한 번 이 던전을 공략하러 와 주세요. "), d("r-17","deneb"," 이곳에서 여러분을 기다리고 있겠습니다. "),
   d("r-18","aron"," ... ","sad"), d("r-19","aron"," 최대한 빨리 돌아오겠습니다, ■■■님..! ","sad"), d("r-20","kapp"," ... ","sad"), d("r-21","kapp"," 기다리고 있어요, ■■■! 반드시 돌아올테니까.. ","sad"),
   {id:"flashback-end-black",type:"checkpoint",checkpointId:"black",advanceMode:"auto"}, d("end-1","aron"," 그리고 저희는 그 분을 두고 던전을 탈출했죠. ","serious"), d("end-2","aron"," 인원을 모아 다시 들어가려고 했지만.. 어째서인지 포탈은 이미 닫혀 있었습니다.. ","serious"), d("end-3","aron"," 그 뒤로, 이 던전을 찾아 헤맨지 벌써 7년이 지났군요.. ","serious"),
 ], { skipTarget:{complete:true}, persistentIllustBackdrop:false, onCompleteScreen:"baseCamp" });

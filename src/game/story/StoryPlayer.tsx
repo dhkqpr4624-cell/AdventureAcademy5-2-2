@@ -35,6 +35,8 @@ type StoryPlayerProps = {
   presentationMode?: StoryPresentationMode;
   onChoiceAction?: (actionId: string) => void;
   playerName?: string;
+  /** World NPC ids left off the BaseCamp map of a showBaseCamp step (story-scoped; default: none). */
+  hiddenBaseCampNpcIds?: readonly string[];
 };
 
 const INITIAL_RENDER_STATE: StoryRenderState = {
@@ -181,6 +183,7 @@ export function StoryPlayer({
   presentationMode = DEFAULT_STORY_PRESENTATION_MODE,
   onChoiceAction,
   playerName = "",
+  hiddenBaseCampNpcIds,
 }: StoryPlayerProps) {
   const steps = useMemo(
     () => sequence.scenes.flatMap((scene) => scene.steps),
@@ -593,6 +596,7 @@ export function StoryPlayer({
         <BaseCampStoryAdapter
           ref={baseCampControllerRef}
           mapId={renderState.baseCampMapId}
+          hiddenNpcIds={hiddenBaseCampNpcIds}
           onReady={() => {
             baseCampReadyRef.current = true;
           }}

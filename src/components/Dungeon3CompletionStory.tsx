@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { PlayerState } from "../game/player/playerState";
 import { StoryPlayer } from "../game/story/StoryPlayer";
-import { DUNGEON3_COMPLETION_PRELUDE, DUNGEON3_CURRENT_STORY, DUNGEON3_FLASHBACK } from "../data/stories/dungeon3Chapter2Stories";
+import { DUNGEON3_COMPLETION_HIDDEN_BASECAMP_NPC_IDS, DUNGEON3_COMPLETION_PRELUDE, DUNGEON3_CURRENT_STORY, DUNGEON3_FLASHBACK } from "../data/stories/dungeon3Chapter2Stories";
 import { Dungeon3FlashbackStage } from "./Dungeon3FlashbackStage";
 
 export function Dungeon3CompletionStory({ player, onComplete, onReminiscenceStart }: { player: PlayerState; onComplete: () => void; onReminiscenceStart: () => void }) {
@@ -12,6 +12,7 @@ export function Dungeon3CompletionStory({ player, onComplete, onReminiscenceStar
     {phase === "flashback" && <Dungeon3FlashbackStage stage={flashbackStage} />}
     <StoryPlayer key={phase} sequence={sequence} playerName={player.name || "플레이어"} playerStatus={player}
       presentationMode="baseCampOverlay" onNavigate={() => undefined}
+      hiddenBaseCampNpcIds={DUNGEON3_COMPLETION_HIDDEN_BASECAMP_NPC_IDS}
       onCheckpointReached={(_, checkpointId) => { if (checkpointId === "hq" || checkpointId === "ruins" || checkpointId === "ruinsAlert" || checkpointId === "black") setFlashbackStage(checkpointId); }}
       onComplete={() => {
         if (phase === "prelude") {

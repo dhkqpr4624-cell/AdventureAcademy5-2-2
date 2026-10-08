@@ -54,6 +54,7 @@ import { runDungeon9ContentChecks } from "./dungeon9ContentChecks";
 import { runDungeon5Chapter2Checks } from "./dungeon5Chapter2Checks";
 import { runDungeon7Chapter2Checks } from "./dungeon7Chapter2Checks";
 import { runDungeon10ContentChecks } from "./dungeon10ContentChecks";
+import { runDungeon3FollowupChecks } from "./dungeon3FollowupChecks";
 
 const checks = [
   ["relative direction checks", runRelativeDirectionChecks],
@@ -115,6 +116,7 @@ const checks = [
   ["dungeon5 chapter2 content checks", runDungeon5Chapter2Checks],
   ["dungeon7 chapter2 content checks", runDungeon7Chapter2Checks],
   ["dungeon10 / ending checks", runDungeon10ContentChecks],
+  ["dungeon3 follow-up portrait/dialogue/basecamp npc checks", runDungeon3FollowupChecks],
 ] as const;
 
 for (const [label, run] of checks) {
