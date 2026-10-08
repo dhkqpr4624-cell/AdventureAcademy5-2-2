@@ -160,6 +160,7 @@ import { DUNGEON5_ENTRY_STORY, DUNGEON5_FINAL_STORY } from "../../data/stories/d
 import { DUNGEON6_CLUE_STORIES, DUNGEON6_ENTRY_STORY, DUNGEON6_FINAL_STORY } from "../../data/stories/dungeon6Stories";
 import { DUNGEON7_CLUE_STORIES, DUNGEON7_ENTRY_STORY, DUNGEON7_FINAL_STORY } from "../../data/stories/dungeon7Stories";
 import { Dungeon7RescueStory } from "../../components/Dungeon7RescueStory";
+import { createMonsterTextureCache, type MonsterTextureCache } from "../../three/dungeon/monsterTextureCache";
 import { DUNGEON8_CLUE_STORIES, DUNGEON8_ENTRY_STORY, DUNGEON8_FINAL_STORY } from "../../data/stories/dungeon8Stories";
 import { DUNGEON9_CLUE_STORIES } from "../../data/stories/dungeon9Stories";
 import { DUNGEON9_SCRIPTED_ATTACK_DAMAGE, Dungeon9ScriptedEncounter } from "../../components/Dungeon9ScriptedEncounter";
@@ -360,6 +361,7 @@ type CombatVisuals = {
   monsterRoot: THREE.Group;
   monsterMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
   monsterTexture: THREE.Texture | null;
+  monsterTextures: MonsterTextureCache;
   camera: THREE.PerspectiveCamera;
   dungeonCamera: DungeonCameraController;
   bossPresentation: Dungeon10BossPresentation;
@@ -1024,6 +1026,16 @@ export function DungeonScreen({
     const sword = new SwordViewModel(camera);
     const weapon = new WeaponAnimationController(sword, camera);
     const bossPresentation = new Dungeon10BossPresentation(scene, camera, dungeonCamera);
+    const monsterTextures = createMonsterTextureCache(renderer);
+    monsterTextures.preload(dungeonMap.rooms.flatMap((room) => {
+      const monsterId = room.eliteConfig?.monsterId ?? room.combatConfig?.monsterId;
+      if (!monsterId) return [];
+      try {
+        return [getMonsterVisualDefinition(monsterId).image];
+      } catch {
+        return [];
+      }
+    }));
     visualsRef.current = {
       sword,
       weapon,
@@ -1031,6 +1043,7 @@ export function DungeonScreen({
       monsterRoot: monsterBillboard,
       monsterMesh: monster,
       monsterTexture: null,
+      monsterTextures,
       camera,
       dungeonCamera,
       bossPresentation,
@@ -1093,7 +1106,6 @@ export function DungeonScreen({
       visualCancelled = true;
       window.cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", updateViewport);
-      const activeMonsterTexture = visualsRef.current?.monsterTexture;
       visualsRef.current = null;
       dungeonCamera.dispose();
       bossPresentation.dispose();
@@ -1106,7 +1118,7 @@ export function DungeonScreen({
       monsterAnimation.dispose();
       weapon.dispose();
       sword.dispose();
-      activeMonsterTexture?.dispose();
+      monsterTextures.dispose();
       monsterBillboard.removeFromParent();
       monster.removeFromParent();
       monsterGeometry.dispose();
@@ -1134,43 +1146,26 @@ export function DungeonScreen({
     visuals.monsterRoot.visible = false;
     visuals.monsterMesh.material.map = null;
     visuals.monsterMesh.material.needsUpdate = true;
-    return new Promise((resolve) => {
-      new THREE.TextureLoader().load(
-        definition.image,
-        (texture) => {
-          if (!visualsRef.current || revision !== monsterVisualRevisionRef.current) {
-            texture.dispose();
-            resolve();
-            return;
-          }
-          texture.colorSpace = THREE.SRGBColorSpace;
-          texture.magFilter = THREE.NearestFilter;
-          texture.minFilter = THREE.NearestFilter;
-          texture.generateMipmaps = false;
-          const previousTexture = visuals.monsterTexture;
-          visuals.monsterTexture = texture;
-          visuals.monsterRoot.userData.monsterId = definition.id;
-          visuals.monsterMesh.material.map = texture;
-          visuals.monsterMesh.material.needsUpdate = true;
-          visuals.monsterMesh.scale.set(
-            definition.displayScale *
-              (definition.aspectRatio / MONSTER_TEXTURE_ASPECT),
-            definition.displayScale,
-            1,
-          );
-          visuals.monsterMesh.position.set(...definition.anchor);
-          if (previousTexture && previousTexture !== texture) previousTexture.dispose();
-          resolve();
-        },
-        undefined,
-        () => {
-          if (revision === monsterVisualRevisionRef.current) {
-            visuals.monsterMesh.material.map = null;
-            visuals.monsterMesh.material.needsUpdate = true;
-          }
-          resolve();
-        },
+    return visuals.monsterTextures.load(definition.image).then((texture) => {
+      if (!visualsRef.current || revision !== monsterVisualRevisionRef.current) {
+        return;
+      }
+      if (!texture) {
+        visuals.monsterMesh.material.map = null;
+        visuals.monsterMesh.material.needsUpdate = true;
+        return;
+      }
+      visuals.monsterTexture = texture;
+      visuals.monsterRoot.userData.monsterId = definition.id;
+      visuals.monsterMesh.material.map = texture;
+      visuals.monsterMesh.material.needsUpdate = true;
+      visuals.monsterMesh.scale.set(
+        definition.displayScale *
+          (definition.aspectRatio / MONSTER_TEXTURE_ASPECT),
+        definition.displayScale,
+        1,
       );
+      visuals.monsterMesh.position.set(...definition.anchor);
     });
   };
 

@@ -6,7 +6,8 @@ export type BgmTrackId =
   | "boss-battle"
   | "sacrifice"
   | "reminiscence"
-  | "ending-credit";
+  | "ending-credit"
+  | "save-deneb";
 
 export type BgmOptions = {
   loop?: boolean;
@@ -19,12 +20,13 @@ export type BgmOptions = {
 export const BGM_URLS: Readonly<Record<BgmTrackId, string>> = {
   airship: `${import.meta.env.BASE_URL}assets/audio/airship-theme.wav`,
   "intro-story": `${import.meta.env.BASE_URL}assets/audio/intro-story-theme.wav`,
-  village: `${import.meta.env.BASE_URL}assets/audio/village-theme.wav`,
+  village: `${import.meta.env.BASE_URL}assets/audio/bgm/basecamp-bgm.wav`,
   dungeon: `${import.meta.env.BASE_URL}assets/audio/dungeon-theme.wav`,
   "boss-battle": `${import.meta.env.BASE_URL}assets/audio/boss-battle-theme.wav`,
   sacrifice: `${import.meta.env.BASE_URL}assets/audio/sacrifice-theme.wav`,
-  reminiscence: `${import.meta.env.BASE_URL}assets/audio/bgm/reminiscence-bgm.wav`,
-  "ending-credit": `${import.meta.env.BASE_URL}assets/audio/ending-credit-bgm.wav`,
+  reminiscence: `${import.meta.env.BASE_URL}assets/audio/bgm/revive-ending-scene.wav`,
+  "ending-credit": `${import.meta.env.BASE_URL}assets/audio/bgm/revive-ending-scene.wav`,
+  "save-deneb": `${import.meta.env.BASE_URL}assets/audio/bgm/save-deneb-dungeon7.wav`,
 };
 
 type ActiveBgm = {
@@ -87,6 +89,7 @@ export function playBgm(
       if (!activeBgm || activeBgm.audio !== audio) return;
       const [minimum, maximum] = restartDelayRangeMs ?? [restartDelayMs, restartDelayMs];
       const delay = Math.max(0, minimum) + Math.random() * Math.max(0, maximum - minimum);
+      if (activeBgm.restartTimer !== null) window.clearTimeout(activeBgm.restartTimer);
       activeBgm.restartTimer = window.setTimeout(() => {
         if (!activeBgm || activeBgm.audio !== audio) return;
         activeBgm.restartTimer = null;

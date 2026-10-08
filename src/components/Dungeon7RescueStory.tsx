@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { StoryPlayer } from "../game/story/StoryPlayer";
 import { playRandomizedOneShot } from "../game/audioOneShot";
+import { playBgm, stopBgm } from "../game/audioBgm";
 import { createChapter2Actor } from "../data/stories/chapter2Portraits";
 import type { StorySequence, StoryStep } from "../types/story";
 import lunaStanding from "../assets/story/npcs/chapter2/luna/standing_R.png";
@@ -10,6 +11,13 @@ import aronStanding from "../assets/story/npcs/chapter2/aron/standing_R.png";
 
 const base = `${import.meta.env.BASE_URL}assets/dungeon7/`;
 const hitSfx = `${import.meta.env.BASE_URL}assets/audio/hit-sfx.mp3`;
+/** Silence between the end of the prison rescue BGM and its replay from the start. */
+export const DUNGEON7_RESCUE_BGM_RESTART_DELAY_MS = 2_500;
+/** Starts the prison rescue BGM; the returned cleanup stops it and its pending replay timer. */
+export function startDungeon7RescueBgm(): () => void {
+  playBgm("save-deneb", undefined, { loop: true, volume: 0.42, restartDelayMs: DUNGEON7_RESCUE_BGM_RESTART_DELAY_MS });
+  return () => stopBgm("save-deneb");
+}
 export const DUNGEON7_PRISON_PARTY_LAYOUT = {
   displayScale: 0.5,
   mapWidth: 2048,
@@ -86,6 +94,7 @@ export function Dungeon7RescueStory({ playerName, onComplete }: Props) {
     window.addEventListener("resize", updateCameraTarget);
     return () => window.removeEventListener("resize", updateCameraTarget);
   }, []);
+  useEffect(startDungeon7RescueBgm, []);
   useEffect(() => { later(() => setPhase("party"), 2000); later(() => setPhase("intro"), 4500); return clearTimers; }, []);
   const beginExclamation = () => { setPhase("exclamation"); later(() => setPhase("left"), 1715); };
   const completeLeft = () => { setPhase("pan"); timers.current.push(window.setTimeout(() => setPhase("center"), 3800)); };
