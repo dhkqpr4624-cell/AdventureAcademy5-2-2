@@ -57,6 +57,7 @@ import { runDungeon10ContentChecks } from "./dungeon10ContentChecks";
 import { runDungeon3FollowupChecks } from "./dungeon3FollowupChecks";
 import { runBgmFollowupChecks } from "./bgmFollowupChecks";
 import { runDungeonPerfFollowupChecks } from "./dungeonPerfFollowupChecks";
+import { runUnit2QuestionContentChecks } from "./unit2QuestionContentChecks";
 
 const checks = [
   ["relative direction checks", runRelativeDirectionChecks],
@@ -121,6 +122,7 @@ const checks = [
   ["dungeon3 follow-up portrait/dialogue/basecamp npc checks", runDungeon3FollowupChecks],
   ["bgm follow-up mapping/delayed-loop/cleanup checks", runBgmFollowupChecks],
   ["dungeon monster texture cache checks", runDungeonPerfFollowupChecks],
+  ["unit 2 question content / Dungeon10 pool checks", runUnit2QuestionContentChecks],
 ] as const;
 
 for (const [label, run] of checks) {

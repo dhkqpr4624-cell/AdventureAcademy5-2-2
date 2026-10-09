@@ -1,6 +1,6 @@
 import { createDungeonRun, createFloor1DungeonRun } from "./generation/floor1DungeonRuntime";
 import { allocateDungeonRunQuestions } from "./dungeonRunQuestionAllocator";
-import { FLOOR1_PREHISTORY_QUESTIONS, FLOOR2_GOJOSEON_QUESTIONS, FLOOR3_THREE_KINGDOMS_QUESTIONS } from "../../data/testQuestions";
+import { DUNGEON1_UNIT2_QUESTIONS, DUNGEON2_UNIT2_QUESTIONS, DUNGEON3_UNIT2_QUESTIONS } from "../../data/unit2Questions";
 import { FLOOR_QUESTION_POOLS } from "../../data/floorQuestionPools";
 import type { FloorId } from "../floor/floorTypes";
 
@@ -15,11 +15,11 @@ export function runDungeonRunQuestionAllocatorChecks() {
   check(JSON.stringify(first) === JSON.stringify(repeated), "same seed repeats");
 
   const assigned = Object.values(first).flat();
-  check(FLOOR1_PREHISTORY_QUESTIONS.length === 15, "floor 1 pool contains 15 questions");
+  check(DUNGEON1_UNIT2_QUESTIONS.length === 20, "floor 1 pool contains 20 questions");
   check(assigned.length === 10, "one floor 1 run assigns exactly 10 questions");
   check(
-    assigned.every((question) => FLOOR1_PREHISTORY_QUESTIONS.some((candidate) => candidate.id === question.id)),
-    "floor 1 only assigns prehistory questions",
+    assigned.every((question) => DUNGEON1_UNIT2_QUESTIONS.some((candidate) => candidate.id === question.id)),
+    "floor 1 only assigns its own question pool",
   );
   check(
     new Set(assigned.map((question) => question.id)).size === assigned.length,
@@ -50,10 +50,10 @@ export function runDungeonRunQuestionAllocatorChecks() {
   const floor2First = allocateDungeonRunQuestions(floor2Run.map, floor2Run.seed, "floor-2");
   const floor2Repeated = allocateDungeonRunQuestions(floor2Run.map, floor2Run.seed, "floor-2");
   const floor2Assigned = Object.values(floor2First).flat();
-  check(FLOOR2_GOJOSEON_QUESTIONS.length === 16, "floor 2 pool contains 16 questions");
+  check(DUNGEON2_UNIT2_QUESTIONS.length === 20, "floor 2 pool contains 20 questions");
   check(floor2Assigned.length === 10, "one floor 2 run assigns exactly 10 questions");
   check(
-    floor2Assigned.every((question) => FLOOR2_GOJOSEON_QUESTIONS.some((candidate) => candidate.id === question.id)),
+    floor2Assigned.every((question) => DUNGEON2_UNIT2_QUESTIONS.some((candidate) => candidate.id === question.id)),
     "floor 2 only assigns its own question pool",
   );
   check(
@@ -79,10 +79,10 @@ export function runDungeonRunQuestionAllocatorChecks() {
   const floor3First = allocateDungeonRunQuestions(floor3Run.map, floor3Run.seed, "floor-3");
   const floor3Repeated = allocateDungeonRunQuestions(floor3Run.map, floor3Run.seed, "floor-3");
   const floor3Assigned = Object.values(floor3First).flat();
-  check(FLOOR3_THREE_KINGDOMS_QUESTIONS.length === 17, "floor 3 pool contains 17 questions");
+  check(DUNGEON3_UNIT2_QUESTIONS.length === 20, "floor 3 pool contains 20 questions");
   check(floor3Assigned.length === 10, "one floor 3 run assigns exactly 10 questions");
   check(
-    floor3Assigned.every((question) => FLOOR3_THREE_KINGDOMS_QUESTIONS.some((candidate) => candidate.id === question.id)),
+    floor3Assigned.every((question) => DUNGEON3_UNIT2_QUESTIONS.some((candidate) => candidate.id === question.id)),
     "floor 3 only assigns its registered question pool",
   );
   check(
@@ -94,15 +94,15 @@ export function runDungeonRunQuestionAllocatorChecks() {
   check(JSON.stringify(floor3First) !== JSON.stringify(floor3Different), "floor 3 new seed reshuffles");
 
   const expectedPoolCounts: Record<Exclude<FloorId, "floor-10">, number> = {
-    "floor-1": 15,
-    "floor-2": 16,
-    "floor-3": 17,
-    "floor-4": 18,
-    "floor-5": 16,
-    "floor-6": 15,
-    "floor-7": 18,
-    "floor-8": 19,
-    "floor-9": 18,
+    "floor-1": 20,
+    "floor-2": 20,
+    "floor-3": 20,
+    "floor-4": 20,
+    "floor-5": 20,
+    "floor-6": 20,
+    "floor-7": 20,
+    "floor-8": 20,
+    "floor-9": 20,
   };
   for (const [floorId, expectedPoolCount] of Object.entries(expectedPoolCounts) as Array<[Exclude<FloorId, "floor-10">, number]>) {
     const pool = FLOOR_QUESTION_POOLS[floorId];

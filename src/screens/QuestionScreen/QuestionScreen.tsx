@@ -289,7 +289,9 @@ export function QuestionScreen({
         : [];
 
   const promptLines = question.prompt.split("\n");
-  const firstQuoteLine = promptLines.findIndex((line) => line.trimStart().startsWith('"'));
+  const quoteLine = promptLines.findIndex((line) => line.trimStart().startsWith('"'));
+  // Multi-line prompts (사건 순서 ㄱ~ㄹ, 제시문) show their later lines as the existing passage block.
+  const firstQuoteLine = quoteLine > 0 ? quoteLine : promptLines.length > 1 ? 1 : -1;
   const hasPromptQuote = firstQuoteLine > 0;
 
   const content = (
