@@ -1,3 +1,4 @@
+import { createQuestionAttemptSeed, getQuestionMapSeed } from "../../game/dungeon/questionAttemptSeed";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import type { ScreenId } from "../../app/routes";
@@ -138,7 +139,6 @@ import potteryFoundUrl from "../../assets/quest/comb-pattern-pottery-found.png";
 import {
   getFloorNumber,
   getMonsterDamageForFloor,
-  getTrapDamageForFloor,
   getWrongAnswerDamageForFloor,
 } from "../../game/balance/floorBalance";
 import { DungeonMinimap } from "../../components/DungeonMinimap";
@@ -461,7 +461,7 @@ export function DungeonScreen({
     : createDungeonRun(
         floorId,
         shouldRestoreSavedFloorRun
-          ? savedFloorRun.seed
+          ? getQuestionMapSeed(savedFloorRun.seed)
           : undefined,
       ));
   const [bossQuizAttemptSeed, setBossQuizAttemptSeed] = useState(() =>
@@ -471,8 +471,11 @@ export function DungeonScreen({
     ? dungeonRun.map
     : prepareFloorDungeonMap(dungeonRun.map, floorId, dungeonRun.seed);
   const maxHp = playerState.maxHp;
-  const [runQuestionAssignments] = useState(() =>
-    allocateDungeonRunQuestions(dungeonMap, dungeonRun.seed, floorId),
+  const [questionAttemptSeed, setQuestionAttemptSeed] = useState(() =>
+    shouldRestoreSavedFloorRun ? savedFloorRun.seed : dungeonRun.seed,
+  );
+  const [runQuestionAssignments, setRunQuestionAssignments] = useState(() =>
+    allocateDungeonRunQuestions(dungeonMap, questionAttemptSeed, floorId),
   );
   const getDungeonRoom = (roomId: string) =>
     getDungeonRoomFromMap(dungeonMap, roomId);
@@ -768,14 +771,14 @@ export function DungeonScreen({
   useEffect(() => {
     onFloorRunChanged({
       floorId,
-      seed: dungeonRun.seed,
+      seed: questionAttemptSeed,
       currentRoomId,
       roomProgress,
       minimapVisible,
     });
   }, [
     currentRoomId,
-    dungeonRun.seed,
+    questionAttemptSeed,
     minimapVisible,
     onFloorRunChanged,
     roomProgress,
@@ -1970,10 +1973,7 @@ export function DungeonScreen({
     eventResultProcessingRef.current = true;
     const room = getDungeonRoom(event.roomId);
     const resolution = resolveDungeonRoomEvent(room, result.isCorrect);
-    const eventDamage =
-      event.kind === "trap" && !result.isCorrect
-        ? getTrapDamageForFloor(activeFloorNumber)
-        : resolution.damage;
+    const eventDamage = resolution.damage;
     if (eventDamage > 0) {
       const damageResult = applyPlayerDamage(eventDamage);
       setFloatingText(`-${eventDamage}`);
@@ -2330,6 +2330,11 @@ export function DungeonScreen({
     if (dungeonExitProcessingRef.current) return;
     dungeonExitProcessingRef.current = true;
     setRunActionBusy(true);
+    if (floorId !== "floor-10") {
+      const nextSeed = createQuestionAttemptSeed(dungeonRun.seed);
+      setQuestionAttemptSeed(nextSeed);
+      setRunQuestionAssignments(allocateDungeonRunQuestions(dungeonMap, nextSeed, floorId));
+    }
     restartTestDungeon(true);
   };
 
@@ -2541,6 +2546,7 @@ export function DungeonScreen({
               embedded
               eyebrow={activeRoomEvent.kind === "treasure" ? "TREASURE QUESTION" : "TRAP QUESTION"}
               questions={activeQuestions}
+              instanceSeed={`${questionAttemptSeed}::${activeRoomEvent.roomId}`}
               onNavigate={onNavigate}
               onReviewChange={(result) => {
                 if (!pendingRoomEventResultRef.current && result.isCorrect) runCorrectCountRef.current += 1;
@@ -2722,6 +2728,7 @@ export function DungeonScreen({
             embedded
             eyebrow={`QUESTION ${questionIndex + 1}`}
             questions={[activeQuestions[questionIndex]]}
+            instanceSeed={`${questionAttemptSeed}::${activeCombatRoomId}::${questionIndex}`}
             onNavigate={onNavigate}
             onReviewChange={(result) => {
               if (!pendingResultRef.current) {

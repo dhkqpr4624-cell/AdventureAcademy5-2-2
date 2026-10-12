@@ -18,7 +18,7 @@ export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   "chapter2-red-turban": { id: "chapter2-red-turban", name: "홍건적", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/red-turban.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-waegu": { id: "chapter2-waegu", name: "왜구", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/waegu.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-powerful-clan": { id: "chapter2-powerful-clan", name: "권문세족", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/powerful-clan.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
-  "chapter2-angry-yangin": { id: "chapter2-angry-yangin", name: "화난 양인", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/angry-yangin.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
+  "chapter2-angry-yangin": { id: "chapter2-angry-yangin", name: "화난 양반", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/angry-yangin.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-angry-cheonin": { id: "chapter2-angry-cheonin", name: "화난 천인", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/angry-cheonin.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-broken-angbuilgu": { id: "chapter2-broken-angbuilgu", name: "부서진 앙부일구", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/broken-angbuilgu.png`, displayScale: 1.08, aspectRatio: 1, anchor: [0, -0.03, 0] },
   "chapter2-corrupted-armillary-sphere": { id: "chapter2-corrupted-armillary-sphere", name: "오염된 혼천의", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-armillary-sphere.png`, displayScale: 1.16, aspectRatio: 1, anchor: [0, -0.03, 0] },
@@ -86,8 +86,8 @@ export const MONSTER_VISUAL_DEFINITIONS: Readonly<
   "jurchen-soldier-spirit": { id: "jurchen-soldier-spirit", name: "균열 침식 청나라 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-qing-soldier.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "mongol-general-armor": { id: "mongol-general-armor", name: "균열 침식 일반군 병사", image: `${import.meta.env.BASE_URL}assets/monsters/chapter2/corrupted-regular-army-soldier.png`, displayScale: 1.18, aspectRatio: 1, anchor: [0, -0.04, 0] },
   "goryeo-spirit": { id: "goryeo-spirit", name: "균열 침식 대한 제국군", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-korean-empire-army.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
-  "dungeon9-seo-jae-pil": { id: "dungeon9-seo-jae-pil", name: "균열 침식 독립 협회 서재필", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-seo-jae-pil.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
-  "vengeful-goryeo-spirit": { id: "vengeful-goryeo-spirit", name: "한 맺힌 명성황후", image: `${import.meta.env.BASE_URL}assets/dungeon9/vengeful-empress-myeongseong.png`, displayScale: 1.18, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "dungeon9-seo-jae-pil": { id: "dungeon9-seo-jae-pil", name: "한 맺힌 독립협회 서재필의 영혼", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-seo-jae-pil.png`, displayScale: 1.12, aspectRatio: 1, anchor: [0, -0.04, 0] },
+  "vengeful-goryeo-spirit": { id: "vengeful-goryeo-spirit", name: "한 맺힌 명성황후", image: `${import.meta.env.BASE_URL}assets/dungeon9/vengeful-empress-myeongseong.png`, displayScale: 1.18, aspectRatio: 1086 / 1448, anchor: [0, -0.04, 0] },
   "dungeon9-corrupted-citizen": { id: "dungeon9-corrupted-citizen", name: "균열 침식 대한제국 시민", image: `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-korean-empire-citizen.png`, displayScale: 1.15, aspectRatio: 1774 / 887, anchor: [0, 0, 0] },
 };
 

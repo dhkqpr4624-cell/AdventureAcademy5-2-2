@@ -348,6 +348,7 @@ export function BossCombatScreen({
             embedded
             eyebrow={`BOSS QUESTION ${questionIndex + 1}`}
             questions={[questions[questionIndex]]}
+            instanceSeed={`${seed}::boss::${questionIndex}`}
             onNavigate={onNavigate}
             onReviewChange={(result) => {
               pendingResultRef.current = result;

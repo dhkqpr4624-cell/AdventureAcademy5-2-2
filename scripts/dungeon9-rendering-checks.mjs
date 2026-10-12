@@ -73,6 +73,12 @@ try {
   let decodeDone = false, textureReady = false, resolveLoad;
   const loaded = new Promise(resolve=>resolveLoad=resolve);
   const image = {complete:true,naturalWidth:png.width,naturalHeight:png.height,decode:async()=>{decodeDone=true}};
+  visuals.monsterTextures = { load: async (url) => {
+    assert.equal(url, definition.image);
+    await loaded;
+    textureReady = true;
+    return new THREE.Texture(image);
+  } };
   class TextureLoader { load(url,onLoad) { assert.equal(url,definition.image);void loaded.then(()=>{const t=new THREE.Texture(image);onLoad(t);textureReady=true;}); } }
   const context = {THREE:{...THREE,TextureLoader},visualsRef:{current:visuals},mountedRef:{current:true},monsterVisualRevisionRef:{current:0},monsterPositionTargetRef:{current:new THREE.Vector3()},currentRoomId:room.id,
     getDungeonRoom:()=>room,getMonsterVisualDefinition,

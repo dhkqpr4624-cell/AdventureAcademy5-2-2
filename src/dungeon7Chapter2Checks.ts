@@ -29,7 +29,7 @@ export function runDungeon7Chapter2Checks() {
   check(NPC_BY_ID.denebCommander.baseCampDisplayRole === "잊혀진 지휘관", "Deneb NPC definition");
   check(DUNGEON7_ENTRY_STORY.dialogueSkip && dialogue(DUNGEON7_ENTRY_STORY).length === 5, "entry story");
   check(DUNGEON7_CLUE_STORIES.length === 3, "three event stories");
-  check(dialogue(DUNGEON7_FINAL_STORY).length === 19 && DUNGEON7_FINAL_STORY.persistentIllustBackdrop, "final story");
+  check(dialogue(DUNGEON7_FINAL_STORY).length === 21 && DUNGEON7_FINAL_STORY.persistentIllustBackdrop, "final story");
   check(MONSTER_VISUAL_DEFINITIONS["later-baekje-soldier-spirit"].name === "병인양요 프랑스군", "French monster");
   check(MONSTER_VISUAL_DEFINITIONS["dungeon7-american-soldier"].name === "신미양요 미군", "American monster");
   check(MONSTER_VISUAL_DEFINITIONS["later-goguryeo-soldier-spirit"].name === "강화도 조약 일본군", "elite monster");

@@ -1,3 +1,4 @@
+import { GENERAL_TRAP_DAMAGE } from "../balance/floorBalance";
 import type {
   DungeonRoomNode,
   DungeonRoomProgress,
@@ -42,8 +43,8 @@ export function resolveDungeonRoomEvent(
         }
       : {
           eventResult: "trapTriggered",
-          message: `함정이 작동했다. ${room.eventConfig.damage}의 피해를 입었다.`,
-          damage: room.eventConfig.damage,
+          message: `함정이 작동했다. ${GENERAL_TRAP_DAMAGE}의 피해를 입었다.`,
+          damage: GENERAL_TRAP_DAMAGE,
         };
   }
   throw new Error(

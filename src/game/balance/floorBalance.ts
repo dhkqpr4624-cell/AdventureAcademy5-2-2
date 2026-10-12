@@ -1,4 +1,5 @@
 export const BASE_PLAYER_MAX_HP = 50;
+export const GENERAL_TRAP_DAMAGE = 10;
 export const ARMOR_MAX_HP_PER_TIER = 5;
 
 export const POTION_CAPS = {
@@ -75,8 +76,8 @@ export function getWrongAnswerDamageForFloor(
   );
 }
 
-export function getTrapDamageForFloor(floorNumber: number): number {
-  return Math.ceil(getMonsterDamageForFloor(floorNumber, "normal") * 1.5);
+export function getTrapDamageForFloor(_floorNumber: number): number {
+  return GENERAL_TRAP_DAMAGE;
 }
 
 export type GoldRewardKind = "normal" | "elite" | "treasure";

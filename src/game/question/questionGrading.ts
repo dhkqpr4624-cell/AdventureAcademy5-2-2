@@ -26,6 +26,25 @@ export function isAcceptedShortAnswer(
   question: ShortAnswerQuestion,
   submitted: string,
 ): boolean {
+  if (question.unorderedAnswerTokens) {
+    // Preserve token boundaries: do not accept a sentence containing the words.
+    let tokens = submitted.normalize("NFKC").trim()
+      .split(/[\p{White_Space}\p{Punctuation}]+/u).filter(Boolean)
+      .map((token) => normalizeShortAnswer(token).collapsed).sort();
+    const expected = question.unorderedAnswerTokens
+      .map((token) => normalizeShortAnswer(token).collapsed).sort();
+    // Keep the previously accepted delimiter-free form, but consume the entire
+    // input as known tokens rather than searching for substrings in a sentence.
+    if (tokens.length === 1 && expected.length > 1) {
+      const joined = tokens[0];
+      const pattern = [...new Set(expected)].sort((a, b) => b.length - a.length)
+        .map((token) => token.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+      const matched = joined.match(new RegExp(pattern, "gu")) ?? [];
+      if (matched.join("") === joined) tokens = matched.sort();
+    }
+    return tokens.length === expected.length &&
+      tokens.every((token, index) => token === expected[index]);
+  }
   const normalizedSubmitted = normalizeShortAnswer(submitted);
 
   return question.acceptedAnswers.some((accepted) => {

@@ -28,6 +28,7 @@ export type MultipleSelectQuestion = QuestionCommon & {
 export type ShortAnswerQuestion = QuestionCommon & {
   type: "shortAnswer";
   acceptedAnswers: string[];
+  unorderedAnswerTokens?: readonly string[];
 };
 
 export type Question =

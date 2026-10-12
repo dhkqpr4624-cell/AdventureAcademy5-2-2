@@ -1,5 +1,8 @@
 import type { StorySequence, StoryStep } from "../../types/story";
 import { createChapter2Actor } from "./chapter2Portraits";
+import denebUnknownSilhouette from "../../assets/portraits/chapter2/deneb/default.png";
+
+const unknownDeneb = createChapter2Actor("deneb", "???", "", "#b9c6da");
 
 const asset = (name: string) => `${import.meta.env.BASE_URL}assets/dungeon5/${name}`;
 const actors = {
@@ -9,7 +12,7 @@ const actors = {
   commoner: createChapter2Actor("commoner", "이름 모를 백성", "", "#d5b27a"),
   yeongjo: createChapter2Actor("yeongjo", "영조", "", "#efcf80"),
   chiefMinister: createChapter2Actor("chiefMinister", "신하", "", "#c7b899"),
-  deneb: createChapter2Actor("deneb", "???", "", "#b9c6da"),
+  deneb: { ...unknownDeneb, portraits: { default: { ...unknownDeneb.portraits.default, imageUrl: denebUnknownSilhouette } } },
 };
 const d = (id: string, actorId: keyof typeof actors, text: string, expression = "default", nextStepId?: string): StoryStep => ({
   id, type: "dialogue", speakerId: actorId, speakerName: actors[actorId].name, activeActorId: actorId,

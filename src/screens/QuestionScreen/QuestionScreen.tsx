@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ScreenId } from "../../app/routes";
 import { TEST_QUESTIONS } from "../../data/testQuestions";
+import { shuffleQuestionOptions } from "../../game/question/questionPresentation";
 import { gradeQuestion } from "../../game/question/questionGrading";
 import { runQuestionGradingChecks } from "../../game/question/questionGradingChecks";
 import type {
@@ -17,6 +18,7 @@ type QuestionScreenProps = {
   embedded?: boolean;
   eyebrow?: string;
   onReviewChange?: (result: QuestionResult) => void;
+  instanceSeed?: string;
 };
 
 function questionTypeLabel(question: Question) {
@@ -159,7 +161,9 @@ export function QuestionScreen({
   embedded = false,
   eyebrow = "QUESTION TEST",
   onReviewChange,
+  instanceSeed,
 }: QuestionScreenProps) {
+  const [localInstanceSeed] = useState(() => `${Date.now()}-${Math.random()}`);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [selectedSingle, setSelectedSingle] = useState<string | null>(null);
   const [selectedMultiple, setSelectedMultiple] = useState<ReadonlySet<string>>(
@@ -181,6 +185,8 @@ export function QuestionScreen({
   }, []);
 
   const question = questions[questionIndex];
+  const optionSeed = `${instanceSeed ?? localInstanceSeed}::${questionIndex}::${question.id}`;
+  const displayOptions = useMemo(() => shuffleQuestionOptions(question, optionSeed), [question, optionSeed]);
   const isSubmitted = submittedAnswer !== null;
 
   const currentAnswer = (): SubmittedAnswer | null => {
@@ -341,10 +347,10 @@ export function QuestionScreen({
             {(question.type === "multipleChoice" ||
               question.type === "multipleSelect") && (
               <div className="question-options">
-                {question.options.map((option) => (
+                {displayOptions.map((option, index) => (
                   <OptionButton
                     key={option}
-                    label={option}
+                    label={`${["①", "②", "③", "④", "⑤", "⑥"][index] ?? `${index + 1}.`} ${option}`}
                     selected={
                       question.type === "multipleChoice"
                         ? selectedSingle === option

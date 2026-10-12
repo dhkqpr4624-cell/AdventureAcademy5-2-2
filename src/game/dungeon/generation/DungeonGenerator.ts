@@ -1,3 +1,4 @@
+import { GENERAL_TRAP_DAMAGE } from "../../balance/floorBalance";
 import type {
   DungeonCameraPose,
   DungeonConnection,
@@ -250,7 +251,7 @@ function createRoom(
       rewardId: "old-key",
     };
   } else if (type === "trap" && questionSetId) {
-    room.eventConfig = { questionSetId, damage: 10 };
+    room.eventConfig = { questionSetId, damage: GENERAL_TRAP_DAMAGE };
   }
   return room;
 }

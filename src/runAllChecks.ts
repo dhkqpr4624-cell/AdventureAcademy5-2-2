@@ -1,3 +1,4 @@
+import { runFinalNineFixesChecks } from "./finalNineFixesChecks";
 import { runPlayerStatusChecks } from "./components/playerStatusChecks";
 import { runCriticalChecks } from "./game/combat/criticalChecks";
 import { runFinalCriticalTurnSkipChecks } from "./game/combat/finalCriticalTurnSkipChecks";
@@ -60,6 +61,7 @@ import { runDungeonPerfFollowupChecks } from "./dungeonPerfFollowupChecks";
 import { runUnit2QuestionContentChecks } from "./unit2QuestionContentChecks";
 
 const checks = [
+  ["final nine fixes checks", runFinalNineFixesChecks],
   ["relative direction checks", runRelativeDirectionChecks],
   ["dungeon navigation path checks", runDungeonNavigationPathChecks],
   ["dungeon navigation label checks", runDungeonNavigationLabelChecks],

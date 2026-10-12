@@ -58,7 +58,7 @@ export function runDungeon9ContentChecks(): void {
   assert(dialogueSteps(DUNGEON9_BLESSING_STORY).map((step) => `${step.speakerName}:${step.expression}:${step.text}`).join("|") === "데네브:angry:(플레이어 이름)!! 정신 차리세요!|데네브:angry:이 곳에서 당신을 잃을 수 없습니다!", "blessing dialogue order and expression");
 
   assert(getMonsterVisualDefinition("goryeo-spirit").name === "균열 침식 대한 제국군", "normal monster one");
-  assert(getMonsterVisualDefinition("dungeon9-seo-jae-pil").name === "균열 침식 독립 협회 서재필", "normal monster two");
+  assert(getMonsterVisualDefinition("dungeon9-seo-jae-pil").name === "한 맺힌 독립협회 서재필의 영혼", "normal monster two");
   assert(getMonsterVisualDefinition("vengeful-goryeo-spirit").name === "한 맺힌 명성황후", "elite monster");
   assert(getMonsterVisualDefinition("dungeon9-corrupted-citizen").name === "균열 침식 대한제국 시민", "scripted monster");
   assert(getMonsterVisualDefinition("dungeon9-corrupted-citizen").image === `${import.meta.env.BASE_URL}assets/dungeon9/corrupted-korean-empire-citizen.png`, "scripted citizen PNG uses Pages base");

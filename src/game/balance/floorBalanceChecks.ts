@@ -60,8 +60,8 @@ export function runFloorBalanceChecks() {
     "monster damage grows with floor HP",
   );
   check(
-    getTrapDamageForFloor(6) > getTrapDamageForFloor(1),
-    "trap damage grows with floor HP",
+    getTrapDamageForFloor(6) === 10 && getTrapDamageForFloor(1) === 10,
+    "trap damage is fixed regardless of floor HP",
   );
   const halfWrongDamage = getWrongAnswerDamageForFloor(1) * 5;
   const accurateTurnDamage = getMonsterDamageForFloor(1) * 4;

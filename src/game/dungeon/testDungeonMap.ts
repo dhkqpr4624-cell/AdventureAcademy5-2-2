@@ -1,3 +1,4 @@
+import { GENERAL_TRAP_DAMAGE } from "../balance/floorBalance";
 import type {
   DungeonMapDefinition,
   DungeonRoomNode,
@@ -107,7 +108,7 @@ export const TEST_DUNGEON_MAP: DungeonMapDefinition = {
       },
       eventConfig: {
         questionSetId: "trap-test-a",
-        damage: 10,
+        damage: GENERAL_TRAP_DAMAGE,
       },
     },
     {
