@@ -1,0 +1,35 @@
+diff --git a/src/data/stories/npcStories.ts b/src/data/stories/npcStories.ts
+index baa5957..c3c96f7 100644
+--- a/src/data/stories/npcStories.ts
++++ b/src/data/stories/npcStories.ts
+@@ -591,6 +591,17 @@ theo.scenes[0].steps.push(
+     ],
+   },
+ );
++// Dungeon1 Quest 진행 중에도 테오 Dialogue 종료 후 기존 상점 선택 메뉴로 이어지도록 한다.
++NPC_STORY_SEQUENCES["npc-theo-floor-1-quest-active"].scenes[0].steps.push({
++  id: "npc-theo-floor-1-quest-active-choice",
++  type: "choice",
++  prompt: "무엇을 하시겠습니까?",
++  advanceMode: "click",
++  options: [
++    { id: "buy-items", label: "아이템 사기", actionId: "open-theo-shop", closeStory: true },
++    { id: "end-dialogue", label: "대화 끝내기", closeStory: true },
++  ],
++});
+ 
+ NPC_STORY_SEQUENCES["npc-aron-floor-7-quest-available"] = chapter2DialogueSequence("npc-aron-floor-7-quest-available", [
+   { actor: "aron", expression: "serious", text: "(플레이어이름), 어서오십시오." },
+diff --git a/src/game/story/storyChoiceChecks.ts b/src/game/story/storyChoiceChecks.ts
+index c40e58b..68bd0f2 100644
+--- a/src/game/story/storyChoiceChecks.ts
++++ b/src/game/story/storyChoiceChecks.ts
+@@ -1,7 +1,7 @@
+ import { NPC_STORY_SEQUENCES } from "../../data/stories/npcStories";
+ 
+ export function runStoryChoiceChecks() {
+-  for (const id of ["npc-theo-default"]) {
++  for (const id of ["npc-theo-default", "npc-theo-floor-1-quest-active", "npc-theo-floor-7-quest-active"]) {
+     const theoSteps = NPC_STORY_SEQUENCES[id].scenes.flatMap((scene) => scene.steps);
+     const choice = theoSteps.find((step) => step.type === "choice");
+     if (!choice || choice.options.map((option) => option.label).join("|") !== "아이템 사기|대화 끝내기") {

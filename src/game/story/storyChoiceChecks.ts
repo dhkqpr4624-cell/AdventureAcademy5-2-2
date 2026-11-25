@@ -1,7 +1,7 @@
 import { NPC_STORY_SEQUENCES } from "../../data/stories/npcStories";
 
 export function runStoryChoiceChecks() {
-  for (const id of ["npc-theo-default"]) {
+  for (const id of ["npc-theo-default", "npc-theo-floor-1-quest-active", "npc-theo-floor-7-quest-active"]) {
     const theoSteps = NPC_STORY_SEQUENCES[id].scenes.flatMap((scene) => scene.steps);
     const choice = theoSteps.find((step) => step.type === "choice");
     if (!choice || choice.options.map((option) => option.label).join("|") !== "아이템 사기|대화 끝내기") {
